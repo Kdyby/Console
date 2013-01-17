@@ -54,7 +54,6 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 	public function __construct(Nette\DI\Container $container)
 	{
 		$this->container = $container;
-
 	}
 
 
