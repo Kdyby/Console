@@ -51,7 +51,9 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 			->addSetup('setHelperSet', array($this->prefix('@helperSet')));
 
 		foreach ($config['commands'] as $command) {
-			$app->addSetup('add', Nette\Config\Compiler::filterArguments(array(is_string($command) ? new Nette\DI\Statement($command) : $command)));
+			$app->addSetup('add', Nette\Config\Compiler::filterArguments(array(
+				is_string($command) ? new Nette\DI\Statement($command) : $command
+			)));
 		}
 
 		$builder->addDefinition($this->prefix('router'))
