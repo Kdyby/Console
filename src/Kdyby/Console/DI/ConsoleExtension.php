@@ -46,15 +46,9 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 				new Nette\DI\Statement('Symfony\Component\Console\Helper\FormatterHelper'),
 			)));
 
-		$app = $builder->addDefinition($this->prefix('application'))
+		$builder->addDefinition($this->prefix('application'))
 			->setClass('Kdyby\Console\Application', array($config['name'], $config['version']))
 			->addSetup('setHelperSet', array($this->prefix('@helperSet')));
-
-		foreach ($config['commands'] as $command) {
-			$app->addSetup('add', Nette\Config\Compiler::filterArguments(array(
-				is_string($command) ? new Nette\DI\Statement($command) : $command
-			)));
-		}
 
 		$builder->addDefinition($this->prefix('router'))
 			->setClass('Kdyby\Console\CliRouter')
@@ -62,6 +56,21 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 
 		$builder->getDefinition('router')
 			->addSetup('offsetSet', array(NULL, $this->prefix('@router')));
+
+		Nette\Utils\Validators::assert($config, 'array');
+		foreach ($config['commands'] as $command) {
+			$def = $builder->addDefinition($this->prefix('command.' . md5(Nette\Utils\Json::encode($command))));
+			list($def->factory) = Nette\Config\Compiler::filterArguments(array(
+				is_string($command) ? new Nette\DI\Statement($command) : $command
+			));
+
+			if (class_exists($def->factory->entity)) {
+				$def->class = $def->factory->entity;
+			}
+
+			$def->setAutowired(FALSE);
+			$def->addTag(self::COMMAND_TAG);
+		}
 	}
 
 

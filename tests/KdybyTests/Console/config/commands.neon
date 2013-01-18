@@ -1,0 +1,3 @@
+console:
+	commands:
+		- KdybyTests\Console\CommandMock
