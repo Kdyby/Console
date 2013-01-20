@@ -16,7 +16,7 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
-		"nette/nette": "2.0.*",
+		"nette/nette": "@dev",
 		"symfony/console": "2.1.*"
 	},
 	"require-dev": {
