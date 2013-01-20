@@ -1,5 +1,5 @@
 {
-	"name": "kdyby/boilerplate",
+	"name": "kdyby/console",
 	"type": "library",
 	"description": "Boilerplate for Kdyby components",
 	"keywords": ["nette", "kdyby"],
