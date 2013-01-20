@@ -13,7 +13,7 @@
 	],
 	"support": {
 		"email": "filip@prochazka.su",
-		"issues": "https://github.com/kdyby/boilerplate/issues"
+		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
 		"nette/nette": "@dev",
