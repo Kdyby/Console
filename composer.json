@@ -1,8 +1,8 @@
 {
 	"name": "kdyby/console",
 	"type": "library",
-	"description": "Boilerplate for Kdyby components",
-	"keywords": ["nette", "kdyby"],
+	"description": "Symfony Console integration for Kdyby components",
+	"keywords": ["nette", "kdyby", "console"],
 	"homepage": "http://kdyby.org",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
