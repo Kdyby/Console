@@ -44,15 +44,18 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 			->setClass('Symfony\Component\Console\Helper\HelperSet', array(array(
 				new Nette\DI\Statement('Symfony\Component\Console\Helper\DialogHelper'),
 				new Nette\DI\Statement('Symfony\Component\Console\Helper\FormatterHelper'),
-			)));
+			)))
+			->setInject(FALSE);
 
 		$builder->addDefinition($this->prefix('application'))
 			->setClass('Kdyby\Console\Application', array($config['name'], $config['version']))
-			->addSetup('setHelperSet', array($this->prefix('@helperSet')));
+			->addSetup('setHelperSet', array($this->prefix('@helperSet')))
+			->setInject(FALSE);
 
 		$builder->addDefinition($this->prefix('router'))
 			->setClass('Kdyby\Console\CliRouter')
-			->setAutowired(FALSE);
+			->setAutowired(FALSE)
+			->setInject(FALSE);
 
 		$builder->getDefinition('router')
 			->addSetup('offsetSet', array(NULL, $this->prefix('@router')));
@@ -69,6 +72,7 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 			}
 
 			$def->setAutowired(FALSE);
+			$def->setInject(FALSE);
 			$def->addTag(self::COMMAND_TAG);
 		}
 	}
