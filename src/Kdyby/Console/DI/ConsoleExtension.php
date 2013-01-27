@@ -60,6 +60,10 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 		$builder->getDefinition('router')
 			->addSetup('offsetSet', array(NULL, $this->prefix('@router')));
 
+		$builder->addDefinition($this->prefix('dicHelper'))
+			->setClass('Kdyby\Console\ContainerHelper')
+			->addTag(self::HELPER_TAG, 'dic');
+
 		Nette\Utils\Validators::assert($config, 'array');
 		foreach ($config['commands'] as $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . md5(Nette\Utils\Json::encode($command))));
