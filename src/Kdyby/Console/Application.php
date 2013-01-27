@@ -13,6 +13,8 @@ namespace Kdyby\Console;
 use Kdyby;
 use Nette;
 use Symfony;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 
 
@@ -32,6 +34,26 @@ class Application extends Symfony\Component\Console\Application
 
 		$this->setCatchExceptions(FALSE);
 		$this->setAutoExit(FALSE);
+	}
+
+
+
+	/**
+	 * @param \Symfony\Component\Console\Input\InputInterface $input
+	 * @param \Symfony\Component\Console\Output\OutputInterface $output
+	 * @return int
+	 * @throws \Exception
+	 */
+	public function run(InputInterface $input = NULL, OutputInterface $output = NULL)
+	{
+		Nette\Diagnostics\Debugger::$productionMode = FALSE; // show in browser, bitch
+		try {
+			return parent::run($input, $output);
+
+		} catch (\Exception $e) {
+			Nette\Diagnostics\Debugger::log($e, 'cli');
+			throw $e;
+		}
 	}
 
 }
