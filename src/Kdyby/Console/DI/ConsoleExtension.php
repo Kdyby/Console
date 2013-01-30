@@ -58,7 +58,7 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 			->setInject(FALSE);
 
 		$builder->getDefinition('router')
-			->addSetup('offsetSet', array(NULL, $this->prefix('@router')));
+			->addSetup('$service = Kdyby\Console\CliRouter::prependTo($service, ?)', array('@container'));
 
 		$builder->addDefinition($this->prefix('dicHelper'))
 			->setClass('Kdyby\Console\ContainerHelper')

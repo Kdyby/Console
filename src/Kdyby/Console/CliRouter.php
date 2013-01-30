@@ -13,6 +13,7 @@ namespace Kdyby\Console;
 use Kdyby;
 use Nette;
 use Nette\Application\Request;
+use Nette\Application\Routers\RouteList;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -111,6 +112,21 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 	public function constructUrl(Request $appRequest, Nette\Http\Url $refUrl)
 	{
 		return NULL;
+	}
+
+
+
+	/**
+	 * @param \Nette\Application\IRouter $router
+	 * @param \Nette\DI\Container $container
+	 * @return \Nette\Application\Routers\RouteList
+	 */
+	public static function prependTo(Nette\Application\IRouter $router, Nette\DI\Container $container)
+	{
+		$routes = new RouteList();
+		$routes[] = new static($container);
+		$routes[] = $router;
+		return $routes;
 	}
 
 }

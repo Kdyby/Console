@@ -39,9 +39,7 @@ class CliRouterTest extends Tester\TestCase
 		/** @var Nette\Application\Routers\RouteList $router */
 		Assert::true($router instanceof Nette\Application\Routers\RouteList);
 
-		list($cliRouter) = array_filter(iterator_to_array($router->getIterator()), function ($router) {
-			return $router instanceof Kdyby\Console\CliRouter;
-		});
+		list($cliRouter) = iterator_to_array($router->getIterator());
 		/** @var Kdyby\Console\CliRouter $cliRouter */
 		Assert::true($cliRouter instanceof Kdyby\Console\CliRouter);
 
