@@ -44,6 +44,7 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 			->setClass('Symfony\Component\Console\Helper\HelperSet', array(array(
 				new Nette\DI\Statement('Symfony\Component\Console\Helper\DialogHelper'),
 				new Nette\DI\Statement('Symfony\Component\Console\Helper\FormatterHelper'),
+				new Nette\DI\Statement('Kdyby\Console\Helpers\ProgressBar'),
 			)))
 			->setInject(FALSE);
 
