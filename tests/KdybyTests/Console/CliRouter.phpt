@@ -11,8 +11,8 @@
 namespace KdybyTests\Console;
 
 use Kdyby;
+use KdybyModule;
 use Nette;
-use NetteModule;
 use Symfony\Component\Console\Input\StringInput;
 use Tester;
 use Tester\Assert;
@@ -49,10 +49,14 @@ class CliRouterTest extends Tester\TestCase
 
 		$appRequest = $router->match(new Nette\Http\Request(new Nette\Http\UrlScript()));
 		Assert::true($appRequest instanceof Nette\Application\Request);
-		Assert::same($appRequest->getPresenterName(), 'Nette:Micro');
+		Assert::same($appRequest->getPresenterName(), 'Kdyby:Cli');
 		Assert::same($appRequest->getMethod(), 'cli');
 
-		$presenter = new NetteModule\MicroPresenter($container);
+		// create presenter
+		$presenter = new KdybyModule\CliPresenter();
+		$container->callInjects($presenter);
+
+		// run presenter
 		$appResponse = $presenter->run($appRequest);
 		/** @var Kdyby\Console\CliResponse $appResponse */
 		Assert::true($appResponse instanceof Kdyby\Console\CliResponse);

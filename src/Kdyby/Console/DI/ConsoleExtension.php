@@ -30,7 +30,8 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 	public $defaults = array(
 		'name' => Nette\Framework::NAME,
 		'version' => Nette\Framework::VERSION,
-		'commands' => array()
+		'commands' => array(),
+		'url' => NULL,
 	);
 
 
@@ -44,6 +45,7 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 			->setClass('Symfony\Component\Console\Helper\HelperSet', array(array(
 				new Nette\DI\Statement('Symfony\Component\Console\Helper\DialogHelper'),
 				new Nette\DI\Statement('Symfony\Component\Console\Helper\FormatterHelper'),
+				new Nette\DI\Statement('Kdyby\Console\Helpers\PresenterHelper'),
 				new Nette\DI\Statement('Kdyby\Console\Helpers\ProgressBar'),
 			)))
 			->setInject(FALSE);
@@ -60,6 +62,16 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 
 		$builder->getDefinition('router')
 			->addSetup('$service = Kdyby\Console\CliRouter::prependTo($service, ?)', array('@container'));
+
+		if (!empty($config['url'])) {
+			Nette\Utils\Validators::assertField($config, 'url', 'url');
+			$builder->getDefinition('nette.httpRequestFactory')
+				->setClass('Kdyby\Console\HttpRequestFactory')
+				->addSetup('setFakeRequestUrl', $config['url']);
+
+		} elseif (PHP_SAPI === 'cli' && empty($config['url'])) {
+			trigger_error("You should probably specify an url key in {$this->name} extension, otherwise you will be unable to generate urls.", E_USER_NOTICE);
+		}
 
 		$builder->addDefinition($this->prefix('dicHelper'))
 			->setClass('Kdyby\Console\ContainerHelper')

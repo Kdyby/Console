@@ -96,12 +96,11 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 			$output = new ConsoleOutput();
 		}
 
-		$dic = $this->container;
-		return new Request('Nette:Micro', 'cli', array('callback' => function () use ($dic, $input, $output) {
-			$app = $dic->getByType('Kdyby\Console\Application');
-			/** @var Application $app */
-			return new CliResponse($app->run($input, $output));
-		}));
+		return new Request('Kdyby:Cli', 'cli', array(
+			'action' => 'default',
+			'input' => $input,
+			'output' => $output,
+		));
 	}
 
 

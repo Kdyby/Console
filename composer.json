@@ -25,6 +25,10 @@
 	"autoload": {
 		"psr-0": {
 			"Kdyby\\Console\\": "src/"
-		}
+		},
+		"classmap": [
+			"src/Kdyby/Console/CliPresenter.php",
+			"src/Kdyby/Console/exceptions.php"
+		]
 	}
 }
