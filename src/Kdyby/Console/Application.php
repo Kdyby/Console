@@ -12,8 +12,10 @@ namespace Kdyby\Console;
 
 use Kdyby;
 use Nette;
+use Nette\Diagnostics\Debugger;
 use Symfony;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
@@ -46,13 +48,25 @@ class Application extends Symfony\Component\Console\Application
 	 */
 	public function run(InputInterface $input = NULL, OutputInterface $output = NULL)
 	{
-		Nette\Diagnostics\Debugger::$productionMode = FALSE; // show in browser, bitch
 		try {
 			return parent::run($input, $output);
 
 		} catch (\Exception $e) {
-			Nette\Diagnostics\Debugger::log($e, 'cli');
-			throw $e;
+			if ($output instanceof ConsoleOutputInterface) {
+				$this->renderException($e, $output->getErrorOutput());
+
+			} else {
+				$this->renderException($e, $output);
+			}
+
+			if ($file = Debugger::log($e, 'cli')) {
+				$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
+				$output->writeln('');
+
+				if (Debugger::$browser) {
+					exec(Debugger::$browser . ' ' . escapeshellarg($file));
+				}
+			}
 		}
 	}
 
