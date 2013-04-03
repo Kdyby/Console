@@ -31,7 +31,7 @@ class ExtensionTest extends Tester\TestCase
 		$config = new Nette\Config\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		Kdyby\Console\DI\ConsoleExtension::register($config);
-		$config->addConfig(__DIR__ . '/config/commands.neon');
+		$config->addConfig(__DIR__ . '/config/commands.neon', FALSE);
 		$container = $config->createContainer();
 
 		$app = $container->getService('console.application');
