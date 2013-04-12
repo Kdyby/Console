@@ -59,7 +59,7 @@ class Application extends Symfony\Component\Console\Application
 				$this->renderException($e, $output);
 			}
 
-			if ($file = Debugger::log($e, 'cli')) {
+			if ($file = Debugger::log($e, Debugger::ERROR)) {
 				$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
 				$output->writeln('');
 
