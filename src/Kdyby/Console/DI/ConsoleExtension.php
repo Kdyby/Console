@@ -61,7 +61,10 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 			->addSetup('$service = Kdyby\Console\CliRouter::prependTo($service, ?)', array('@container'));
 
 		$builder->getDefinition('nette.presenterFactory')
-			->addSetup('if ($service instanceof \Nette\Application\PresenterFactory) { $service->mapping[?] = ?; }', array('Kdyby', 'KdybyModule\*\*Presenter'));
+			->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
+				'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', array(
+				'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
+			));
 
 		if (!empty($config['url'])) {
 			Nette\Utils\Validators::assertField($config, 'url', 'url');
