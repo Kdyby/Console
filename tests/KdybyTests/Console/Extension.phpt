@@ -33,6 +33,7 @@ class ExtensionTest extends Tester\TestCase
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/commands.neon', FALSE);
 		$container = $config->createContainer();
+		/** @var \Nette\DI\Container|\SystemContainer $container */
 
 		$app = $container->getService('console.application');
 		/** @var Kdyby\Console\Application $app */
