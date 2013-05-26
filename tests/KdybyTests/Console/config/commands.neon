@@ -1,3 +1,4 @@
 console:
+	url: http://kdyby.org
 	commands:
 		- KdybyTests\Console\CommandMock
