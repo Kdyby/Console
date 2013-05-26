@@ -15,10 +15,17 @@ use Nette;
 
 
 
+if (!class_exists('Nette\DI\CompilerExtension')) {
+	class_alias('Nette\Config\CompilerExtension', 'Nette\DI\CompilerExtension');
+	class_alias('Nette\Config\Configurator', 'Nette\Configurator');
+	class_alias('Nette\Config\Compiler', 'Nette\DI\Compiler');
+	class_alias('Nette\Config\Helpers', 'Nette\DI\Helpers');
+}
+
 /**
  * @author Filip Procházka <filip@prochazka.su>
  */
-class ConsoleExtension extends Nette\Config\CompilerExtension
+class ConsoleExtension extends Nette\DI\CompilerExtension
 {
 
 	const HELPER_TAG = 'kdyby.console.helper';
@@ -86,7 +93,7 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 		Nette\Utils\Validators::assert($config, 'array');
 		foreach ($config['commands'] as $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . md5(Nette\Utils\Json::encode($command))));
-			list($def->factory) = Nette\Config\Compiler::filterArguments(array(
+			list($def->factory) = Nette\DI\Compiler::filterArguments(array(
 				is_string($command) ? new Nette\DI\Statement($command) : $command
 			));
 
@@ -120,11 +127,11 @@ class ConsoleExtension extends Nette\Config\CompilerExtension
 
 
 	/**
-	 * @param \Nette\Config\Configurator $configurator
+	 * @param \Nette\Configurator $configurator
 	 */
-	public static function register(Nette\Config\Configurator $configurator)
+	public static function register(Nette\Configurator $configurator)
 	{
-		$configurator->onCompile[] = function ($config, Nette\Config\Compiler $compiler) {
+		$configurator->onCompile[] = function ($config, Nette\DI\Compiler $compiler) {
 			$compiler->addExtension('console', new ConsoleExtension());
 		};
 	}
