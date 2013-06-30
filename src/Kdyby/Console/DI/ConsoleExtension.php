@@ -21,7 +21,7 @@ if (!class_exists('Nette\DI\CompilerExtension')) {
 	class_alias('Nette\Config\Helpers', 'Nette\DI\Config\Helpers');
 }
 
-if (!class_exists('Nette\Configurator')) {
+if (class_exists('Nette\Config\Configurator')) {
 	class_alias('Nette\Config\Configurator', 'Nette\Configurator');
 }
 
