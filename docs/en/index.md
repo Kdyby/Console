@@ -87,3 +87,26 @@ First one is command input, which contains all the parsed arguments and options.
 The second one is command output which should be used to provide feedback to the developer which ran the command.
 
 Best practise is to return an exit code which specifies if the command ran successfully and can be read by other applications when executed.
+
+
+Extending
+---------
+
+To add a command, simply register it as a service with tag `kdyby.console.command`
+
+```yml
+services:
+	newsletterCommand:
+		class: App\Console\SendNewslettersCommand
+		tags: [kdyby.console.command]
+```
+
+To add a helper, simply register it as a service with tag `kdyby.console.helper`
+
+
+```yml
+services:
+	fooHelper:
+		class: App\Console\FooHelper
+		tags: [kdyby.console.helper]
+```
