@@ -4,7 +4,7 @@ Quickstart
 This extension is here to provide integration of [Symfony Console](https://github.com/symfony/console) into Nette Framework.
 
 
-Instalation
+Installation
 -----------
 
 The best way to install Kdyby/Console is using  [Composer](http://getcomposer.org/):
