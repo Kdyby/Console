@@ -67,6 +67,8 @@ class Application extends Symfony\Component\Console\Application
 					exec(Debugger::$browser . ' ' . escapeshellarg($file));
 				}
 			}
+
+			return min((int) $e->getCode(), 255);
 		}
 	}
 
