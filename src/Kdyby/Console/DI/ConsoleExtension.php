@@ -72,7 +72,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			->setInject(FALSE);
 
 		$builder->getDefinition('router')
-			->addSetup('$service = Kdyby\Console\CliRouter::prependTo($service, ?)', array('@container'));
+			->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', array($this->prefix('@router')));
 
 		$builder->getDefinition('nette.presenterFactory')
 			->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
