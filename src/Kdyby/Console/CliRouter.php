@@ -117,15 +117,30 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 
 	/**
 	 * @param \Nette\Application\IRouter $router
-	 * @param \Nette\DI\Container $container
+	 * @param CliRouter $cliRouter
+	 * @throws \Nette\Utils\AssertionException
 	 * @return \Nette\Application\Routers\RouteList
 	 */
-	public static function prependTo(Nette\Application\IRouter $router, Nette\DI\Container $container)
+	public static function prependTo(Nette\Application\IRouter &$router, self $cliRouter)
 	{
-		$routes = new RouteList();
-		$routes[] = new static($container);
-		$routes[] = $router;
-		return $routes;
+		if (!$router instanceof RouteList) {
+			throw new Nette\Utils\AssertionException(
+				'If you want to use Kdyby/Console then your main router ' .
+				'must be an instance of Nette\Application\Routers\RouteList'
+			);
+		}
+
+		$router[] = $cliRouter; // need to increase the array size
+
+		$lastKey = count($router) - 1;
+		foreach ($router as $i => $route) {
+			if ($i === $lastKey) {
+				break;
+			}
+			$router[$i + 1] = $route;
+		}
+
+		$router[0] = $cliRouter;
 	}
 
 }
