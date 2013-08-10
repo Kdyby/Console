@@ -41,7 +41,7 @@ class ExtensionTest extends Tester\TestCase
 	public function testFunctionality()
 	{
 		$config = $this->prepareConfigurator();
-		$config->addConfig(__DIR__ . '/config/commands.neon');
+		$config->addConfig(__DIR__ . '/config/commands.neon', $config::NONE);
 		$container = $config->createContainer();
 		/** @var \Nette\DI\Container|\SystemContainer $container */
 
@@ -56,7 +56,7 @@ class ExtensionTest extends Tester\TestCase
 	public function testShortUrl()
 	{
 		$config = $this->prepareConfigurator();
-		$config->addConfig(__DIR__ . '/config/short-url.neon');
+		$config->addConfig(__DIR__ . '/config/short-url.neon', $config::NONE);
 		Assert::true($config->createContainer() instanceof Nette\DI\Container);
 	}
 
