@@ -26,12 +26,22 @@ require_once __DIR__ . '/../bootstrap.php';
 class ExtensionTest extends Tester\TestCase
 {
 
-	public function testFunctionality()
+	private function prepareConfigurator()
 	{
 		$config = new Nette\Config\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
+		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . Nette\Utils\Strings::random())));
 		Kdyby\Console\DI\ConsoleExtension::register($config);
-		$config->addConfig(__DIR__ . '/config/commands.neon', FALSE);
+
+		return $config;
+	}
+
+
+
+	public function testFunctionality()
+	{
+		$config = $this->prepareConfigurator();
+		$config->addConfig(__DIR__ . '/config/commands.neon');
 		$container = $config->createContainer();
 		/** @var \Nette\DI\Container|\SystemContainer $container */
 
@@ -39,6 +49,15 @@ class ExtensionTest extends Tester\TestCase
 		/** @var Kdyby\Console\Application $app */
 		Assert::true($app instanceof Kdyby\Console\Application);
 		Assert::equal(1, count($app->all('test')));
+	}
+
+
+
+	public function testShortUrl()
+	{
+		$config = $this->prepareConfigurator();
+		$config->addConfig(__DIR__ . '/config/short-url.neon');
+		Assert::true($config->createContainer() instanceof Nette\DI\Container);
 	}
 
 }
