@@ -28,7 +28,7 @@ class ExtensionTest extends Tester\TestCase
 
 	private function prepareConfigurator()
 	{
-		$config = new Nette\Config\Configurator();
+		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . Nette\Utils\Strings::random())));
 		Kdyby\Console\DI\ConsoleExtension::register($config);
