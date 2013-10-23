@@ -87,9 +87,6 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			$builder->getDefinition('nette.httpRequestFactory')
 				->setClass('Kdyby\Console\HttpRequestFactory')
 				->addSetup('setFakeRequestUrl', array($config['url']));
-
-		} elseif (PHP_SAPI === 'cli' && empty($config['url'])) {
-			trigger_error("You should probably specify an url key in {$this->name} extension, otherwise you will be unable to generate urls.", E_USER_NOTICE);
 		}
 
 		$builder->addDefinition($this->prefix('dicHelper'))
