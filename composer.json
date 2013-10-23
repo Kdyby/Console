@@ -17,7 +17,7 @@
 	},
 	"require": {
 		"nette/nette": "@dev",
-		"symfony/console": "~2.2"
+		"symfony/console": "~2.3"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"
