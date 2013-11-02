@@ -30,5 +30,10 @@
 			"src/Kdyby/Console/CliPresenter.php",
 			"src/Kdyby/Console/exceptions.php"
 		]
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "2.0-dev"
+		}
 	}
 }
