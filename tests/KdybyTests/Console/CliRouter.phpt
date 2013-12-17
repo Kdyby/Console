@@ -29,7 +29,7 @@ class CliRouterTest extends Tester\TestCase
 
 	public function testFunctionality()
 	{
-		$config = new Nette\Config\Configurator();
+		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/short-url.neon', $config::NONE);
