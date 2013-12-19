@@ -43,18 +43,26 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		'version' => Nette\Framework::VERSION,
 		'commands' => array(),
 		'url' => NULL,
+		'disabled' => TRUE,
 	);
+
+
+
+	public function __construct()
+	{
+		$this->defaults['disabled'] = PHP_SAPI !== 'cli';
+	}
 
 
 
 	public function loadConfiguration()
 	{
-		if (PHP_SAPI !== 'cli') {
-			return;
-		}
-
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
+
+		if ($config['disabled']) {
+			return;
+		}
 
 		$builder->addDefinition($this->prefix('helperSet'))
 			->setClass('Symfony\Component\Console\Helper\HelperSet', array(array(
@@ -118,11 +126,12 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 	public function beforeCompile()
 	{
-		if (PHP_SAPI !== 'cli') {
+		$builder = $this->getContainerBuilder();
+		$config = $this->getConfig($this->defaults);
+
+		if ($config['disabled']) {
 			return;
 		}
-
-		$builder = $this->getContainerBuilder();
 
 		$helperSet = $builder->getDefinition($this->prefix('helperSet'));
 		foreach ($builder->findByTag(self::HELPER_TAG) as $serviceName => $value) {
