@@ -32,6 +32,7 @@ class ExtensionTest extends Tester\TestCase
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . Nette\Utils\Strings::random())));
 		Kdyby\Console\DI\ConsoleExtension::register($config);
+		$config->addConfig(__DIR__ . '/config/allow.neon', $config::NONE);
 
 		return $config;
 	}
