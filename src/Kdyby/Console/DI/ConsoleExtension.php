@@ -49,6 +49,10 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 	public function loadConfiguration()
 	{
+		if (PHP_SAPI !== 'cli') {
+			return;
+		}
+
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
@@ -114,6 +118,10 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 	public function beforeCompile()
 	{
+		if (PHP_SAPI !== 'cli') {
+			return;
+		}
+
 		$builder = $this->getContainerBuilder();
 
 		$helperSet = $builder->getDefinition($this->prefix('helperSet'));
