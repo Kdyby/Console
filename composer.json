@@ -20,7 +20,8 @@
 		"symfony/console": "~2.4"
 	},
 	"require-dev": {
-		"nette/tester": "@dev"
+		"nette/tester": "@dev",
+		"jakub-onderka/php-parallel-lint": "dev-master"
 	},
 	"autoload": {
 		"psr-0": {
