@@ -14,6 +14,12 @@ use Kdyby;
 use Nette;
 use Nette\Diagnostics\Debugger;
 use Symfony;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Event\ConsoleExceptionEvent;
+use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,6 +33,13 @@ class Application extends Symfony\Component\Console\Application
 {
 
 	/**
+	 * @var Nette\DI\Container
+	 */
+	private $serviceLocator;
+
+
+
+	/**
 	 * @param string $name
 	 * @param string $version
 	 */
@@ -36,6 +49,13 @@ class Application extends Symfony\Component\Console\Application
 
 		$this->setCatchExceptions(FALSE);
 		$this->setAutoExit(FALSE);
+	}
+
+
+
+	public function injectServiceLocator(Nette\DI\Container $sl)
+	{
+		$this->serviceLocator = $sl;
 	}
 
 
@@ -70,6 +90,17 @@ class Application extends Symfony\Component\Console\Application
 
 			return min((int) $e->getCode(), 255);
 		}
+	}
+
+
+
+	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
+	{
+		if ($this->serviceLocator) {
+			$this->serviceLocator->callInjects($command);
+		}
+
+		return parent::doRunCommand($command, $input, $output);
 	}
 
 }
