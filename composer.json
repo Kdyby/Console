@@ -22,6 +22,8 @@
 	},
 	"require-dev": {
 		"nette/tester": "@dev",
+		"kdyby/events": "@dev",
+		"symfony/event-dispatcher": "~2.4",
 		"jakub-onderka/php-parallel-lint": "dev-master"
 	},
 	"autoload": {

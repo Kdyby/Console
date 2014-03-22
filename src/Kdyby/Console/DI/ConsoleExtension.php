@@ -143,6 +143,12 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		foreach (array_keys($builder->findByTag(self::COMMAND_TAG)) as $serviceName) {
 			$app->addSetup('add', array('@' . $serviceName));
 		}
+
+		if ($builder->hasDefinition('events.symfonyProxy')
+			&& $builder->getDefinition('events.symfonyProxy')->getClass() === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
+		) {
+			$app->addSetup('setDispatcher');
+		}
 	}
 
 
