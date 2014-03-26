@@ -145,7 +145,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		}
 
 		if ($builder->hasDefinition('events.symfonyProxy')
-			&& $builder->getDefinition('events.symfonyProxy')->getClass() === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
+			&& $builder->getDefinition('events.symfonyProxy')->class === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
 		) {
 			$app->addSetup('setDispatcher');
 		}
