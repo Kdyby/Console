@@ -88,7 +88,7 @@ class Application extends Symfony\Component\Console\Application
 				}
 			}
 
-			return min((int) $e->getCode(), 255);
+			return min((int)$e->getCode(), 255) ?: 255;
 		}
 	}
 
