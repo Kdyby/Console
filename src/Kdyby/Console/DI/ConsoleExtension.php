@@ -79,6 +79,13 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			->addSetup('injectServiceLocator')
 			->setInject(FALSE);
 
+		$builder->getDefinition('application')
+			->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
+				"\t" . '$app->errorPresenter = ?;' . "\n" .
+				"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
+				"\t" . '$self->getService(?)->handleException($e); ' . "\n" .
+				'}', array(FALSE, 254, $this->prefix('application')));
+
 		$builder->addDefinition($this->prefix('router'))
 			->setClass('Kdyby\Console\CliRouter')
 			->setAutowired(FALSE)

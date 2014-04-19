@@ -21,6 +21,7 @@ use Symfony\Component\Console\Event\ConsoleExceptionEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -72,23 +73,31 @@ class Application extends Symfony\Component\Console\Application
 			return parent::run($input, $output);
 
 		} catch (\Exception $e) {
-			if ($output instanceof ConsoleOutputInterface) {
-				$this->renderException($e, $output->getErrorOutput());
-
-			} else {
-				$this->renderException($e, $output);
-			}
-
-			if ($file = Debugger::log($e, Debugger::ERROR)) {
-				$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
-				$output->writeln('');
-
-				if (Debugger::$browser) {
-					exec(Debugger::$browser . ' ' . escapeshellarg($file));
-				}
-			}
-
+			$this->handleException($e, $output);
 			return max(min((int) $e->getCode(), 254), 254);
+		}
+	}
+
+
+
+	public function handleException(\Exception $e, OutputInterface $output = NULL)
+	{
+		$output = $output ?: new ConsoleOutput();
+
+		if ($output instanceof ConsoleOutputInterface) {
+			$this->renderException($e, $output->getErrorOutput());
+
+		} else {
+			$this->renderException($e, $output);
+		}
+
+		if ($file = Debugger::log($e, Debugger::ERROR)) {
+			$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
+			$output->writeln('');
+
+			if (Debugger::$browser) {
+				exec(Debugger::$browser . ' ' . escapeshellarg($file));
+			}
 		}
 	}
 
