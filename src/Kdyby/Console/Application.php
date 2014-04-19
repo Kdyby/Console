@@ -73,7 +73,14 @@ class Application extends Symfony\Component\Console\Application
 			return parent::run($input, $output);
 
 		} catch (\Exception $e) {
-			$this->handleException($e, $output);
+			/** @var Nette\Application\Application $app */
+			if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+				$app->onError($app, $e);
+
+			} else {
+				$this->handleException($e, $output);
+			}
+
 			return max(min((int) $e->getCode(), 254), 254);
 		}
 	}
