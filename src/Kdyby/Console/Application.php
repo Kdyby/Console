@@ -90,13 +90,7 @@ class Application extends Symfony\Component\Console\Application
 	public function handleException(\Exception $e, OutputInterface $output = NULL)
 	{
 		$output = $output ?: new ConsoleOutput();
-
-		if ($output instanceof ConsoleOutputInterface) {
-			$this->renderException($e, $output->getErrorOutput());
-
-		} else {
-			$this->renderException($e, $output);
-		}
+		$this->renderException($e, $output);
 
 		if ($file = Debugger::log($e, Debugger::ERROR)) {
 			$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
@@ -105,6 +99,20 @@ class Application extends Symfony\Component\Console\Application
 			if (Debugger::$browser) {
 				exec(Debugger::$browser . ' ' . escapeshellarg($file));
 			}
+		}
+	}
+
+
+
+	public function renderException($e, $output)
+	{
+		$output = $output ?: new ConsoleOutput();
+
+		if ($output instanceof ConsoleOutputInterface) {
+			parent::renderException($e, $output->getErrorOutput());
+
+		} else {
+			parent::renderException($e, $output);
 		}
 	}
 
