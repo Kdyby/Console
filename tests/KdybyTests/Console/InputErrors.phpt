@@ -107,6 +107,51 @@ class InputErrorsTest extends Tester\TestCase
 		Assert::same(array(), $listener->calls);
 	}
 
+
+
+	public function getNotLoggingUnknownArgumentData()
+	{
+		return array(
+			array(array('arg', 'non-existent-arg' => 1), 'The "%a%" argument does not exist.'),
+			array(array('arg', '--non-existent-option' => NULL), 'The "--%a%" option does not exist.'),
+			array(array('arg', '-q' => NULL), 'The "-%a%" option does not exist.'),
+			array(array('arg', '--no-value' => 1), 'The "--%a%" option does not accept a value.'),
+			array(array('arg', '-x' => 1), 'The "-%a%" option does not accept a value.'),
+			array(array('arg', '-v' => NULL), 'The "-%a%" option requires a value.'),
+			array(array('arg', '--value' => NULL), 'The "--%a%" option requires a value.'),
+			array(array('arg'), 'Not enough arguments.'),
+			array(array('arg', 'first' => 'one', 'second' => 'too', 'third' => 'many'), 'Too many arguments.'),
+		);
+	}
+
+
+	/**
+	 * @dataProvider getNotLoggingUnknownArgumentData
+	 */
+	public function testNotLoggingUnknownArgument($arguments, $message)
+	{
+		Nette\Diagnostics\Debugger::$logger = new TestLogger($message);
+		Nette\Diagnostics\Debugger::$logDirectory = TEMP_DIR . '/log';
+		Tester\Helpers::purge(Nette\Diagnostics\Debugger::$logDirectory);
+
+		/** @var Nette\DI\Container $container */
+		$container = $this->prepareConfigurator()->createContainer();
+
+		/** @var Kdyby\Events\EventManager $evm */
+		$evm = $container->getByType('Kdyby\Events\EventManager');
+		$evm->addEventSubscriber($listener = new ConsoleListener());
+
+		/** @var Kdyby\Console\Application $app */
+		$app = $container->getByType('Kdyby\Console\Application');
+		$tester = new ApplicationTester($app);
+
+		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run($arguments));
+		Assert::same(array(
+			 array('command', 'KdybyTests\\Console\\ArgCommand'),
+			 array('terminate', NULL, 0),
+		), $listener->calls);
+	}
+
 }
 
 
@@ -163,6 +208,22 @@ class TestLogger
 		file_put_contents(__DIR__ . '/../../dump.txt', var_export($message, TRUE));
 		Assert::match($this->pattern, $message[1]);
 	}
+}
+
+
+
+class ArgCommand extends Symfony\Component\Console\Command\Command
+{
+
+	protected function configure()
+	{
+		$this->setName('arg')
+			->addArgument('first', Symfony\Component\Console\Input\InputArgument::REQUIRED)
+			->addArgument('second')
+			->addOption('existent', 'e', Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED)
+			->addOption('no-value', 'x');
+	}
+
 }
 
 

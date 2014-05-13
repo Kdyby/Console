@@ -5,3 +5,4 @@ console:
 		- KdybyTests\Console\AmbiguousCommand2
 		- KdybyTests\Console\NamespaceAmbiguousCommand1
 		- KdybyTests\Console\NamespaceAmbiguousCommand2
+		- KdybyTests\Console\ArgCommand

@@ -93,7 +93,13 @@ class Application extends Symfony\Component\Console\Application
 			return self::INPUT_ERROR_EXIT_CODE;
 
 		} catch (\Exception $e) {
-			if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+			if (in_array(get_class($e), array('RuntimeException', 'InvalidArgumentException'), TRUE)
+				&& preg_match('/^(The "-?-?.+" (option|argument) (does not (exist|accept a value)|requires a value)|(Not enough|Too many) arguments)\.$/', $e->getMessage()) === 1) {
+				$this->handleWrongArgument($e, $output);
+
+				return self::INPUT_ERROR_EXIT_CODE;
+
+			} elseif ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
 				/** @var Nette\Application\Application $app */
 				$app->onError($app, $e);
 
@@ -120,6 +126,22 @@ class Application extends Symfony\Component\Console\Application
 
 		list($message) = explode("\n", $e->getMessage());
 		Debugger::log($message, Debugger::ERROR);
+	}
+
+
+
+	public function handleWrongArgument(\Exception $e, OutputInterface $output = NULL)
+	{
+		$output = $output ?: new ConsoleOutput();
+
+		if ($output instanceof ConsoleOutputInterface) {
+			$this->renderException($e, $output->getErrorOutput());
+
+		} else {
+			$this->renderException($e, $output);
+		}
+
+		Debugger::log($e->getMessage(), Debugger::ERROR);
 	}
 
 
