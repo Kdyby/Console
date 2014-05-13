@@ -68,7 +68,7 @@ class Application extends Symfony\Component\Console\Application
 			return parent::find($name);
 
 		} catch (\InvalidArgumentException $e) {
-			throw new UnknownCommandException('', $e);
+			throw new UnknownCommandException($e->getMessage(), $e);
 		}
 	}
 
@@ -107,13 +107,6 @@ class Application extends Symfony\Component\Console\Application
 
 	public function handleUnknownCommand(\InvalidArgumentException $e, OutputInterface $output = NULL)
 	{
-		$message = NULL;
-		if (get_class($previous = $e->getPrevious()) === 'InvalidArgumentException'
-			&& preg_match('/^(The namespace|Command) ".+" is (not defined|ambiguous \(.+\))\.$/', $previous->getMessage(), $matches) === 1) {
-			$message = rtrim($matches[1]);
-			$e = $previous;
-		}
-
 		$output = $output ?: new ConsoleOutput();
 
 		if ($output instanceof ConsoleOutputInterface) {
@@ -123,7 +116,8 @@ class Application extends Symfony\Component\Console\Application
 			$this->renderException($e, $output);
 		}
 
-		Debugger::log($message === NULL ? $e->getMessage() : $message, Debugger::ERROR);
+		list($message) = explode("\n", $e->getMessage());
+		Debugger::log($message, Debugger::ERROR);
 	}
 
 
