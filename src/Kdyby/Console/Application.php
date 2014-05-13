@@ -109,7 +109,7 @@ class Application extends Symfony\Component\Console\Application
 	{
 		$message = NULL;
 		if (get_class($previous = $e->getPrevious()) === 'InvalidArgumentException'
-			&& preg_match('/^(Command ".*" is (not defined\.\n|ambiguous \(.*\)\.$))/', $previous->getMessage(), $matches) === 1) {
+			&& preg_match('/^(The namespace|Command) ".+" is (not defined|ambiguous \(.+\))\.$/', $previous->getMessage(), $matches) === 1) {
 			$message = rtrim($matches[1]);
 			$e = $previous;
 		}
