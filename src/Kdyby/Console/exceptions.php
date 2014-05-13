@@ -14,6 +14,7 @@ namespace Kdyby\Console;
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Michal Gebauer <mishak@mishak.net>
  */
 interface Exception
 {
@@ -37,5 +38,20 @@ class InvalidArgumentException extends \InvalidArgumentException implements Exce
  */
 class InvalidStateException extends \RuntimeException implements Exception
 {
+
+}
+
+
+
+/**
+ * @author Michal Gebauer <mishak@mishak.net>
+ */
+class UnknownCommandException extends \InvalidArgumentException implements Exception
+{
+
+	public function __construct($message = '', \InvalidArgumentException $e)
+	{
+		parent::__construct($message, 253, $e);
+	}
 
 }

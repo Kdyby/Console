@@ -29,6 +29,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Michal Gebauer <mishak@mishak.net>
  */
 class Application extends Symfony\Component\Console\Application
 {
@@ -61,6 +62,18 @@ class Application extends Symfony\Component\Console\Application
 
 
 
+	public function find($name)
+	{
+		try {
+			return parent::find($name);
+
+		} catch (\InvalidArgumentException $e) {
+			throw new UnknownCommandException('', $e);
+		}
+	}
+
+
+
 	/**
 	 * @param \Symfony\Component\Console\Input\InputInterface $input
 	 * @param \Symfony\Component\Console\Output\OutputInterface $output
@@ -71,6 +84,11 @@ class Application extends Symfony\Component\Console\Application
 	{
 		try {
 			return parent::run($input, $output);
+
+		} catch (UnknownCommandException $e) {
+			$this->handleUnknownCommand($e, $output);
+
+			return $e->getCode();
 
 		} catch (\Exception $e) {
 			/** @var Nette\Application\Application $app */
@@ -83,6 +101,29 @@ class Application extends Symfony\Component\Console\Application
 
 			return max(min((int) $e->getCode(), 254), 254);
 		}
+	}
+
+
+
+	public function handleUnknownCommand(\InvalidArgumentException $e, OutputInterface $output = NULL)
+	{
+		$message = NULL;
+		if (get_class($previous = $e->getPrevious()) === 'InvalidArgumentException'
+			&& preg_match('/^(Command ".*" is (not defined\.\n|ambiguous \(.*\)\.$))/', $previous->getMessage(), $matches) === 1) {
+			$message = rtrim($matches[1]);
+			$e = $previous;
+		}
+
+		$output = $output ?: new ConsoleOutput();
+
+		if ($output instanceof ConsoleOutputInterface) {
+			$this->renderException($e, $output->getErrorOutput());
+
+		} else {
+			$this->renderException($e, $output);
+		}
+
+		Debugger::log($message === NULL ? $e->getMessage() : $message, Debugger::ERROR);
 	}
 
 
