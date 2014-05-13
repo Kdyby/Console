@@ -49,9 +49,4 @@ class InvalidStateException extends \RuntimeException implements Exception
 class UnknownCommandException extends \InvalidArgumentException implements Exception
 {
 
-	public function __construct($message = '', \InvalidArgumentException $e)
-	{
-		parent::__construct($message, 253, $e);
-	}
-
 }

@@ -34,6 +34,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Application extends Symfony\Component\Console\Application
 {
 
+	const INPUT_ERROR_EXIT_CODE = 253;
+
 	/**
 	 * @var Nette\DI\Container
 	 */
@@ -68,7 +70,7 @@ class Application extends Symfony\Component\Console\Application
 			return parent::find($name);
 
 		} catch (\InvalidArgumentException $e) {
-			throw new UnknownCommandException($e->getMessage(), $e);
+			throw new UnknownCommandException($e->getMessage(), $e->getCode(), $e);
 		}
 	}
 
@@ -88,7 +90,7 @@ class Application extends Symfony\Component\Console\Application
 		} catch (UnknownCommandException $e) {
 			$this->handleUnknownCommand($e, $output);
 
-			return $e->getCode();
+			return self::INPUT_ERROR_EXIT_CODE;
 
 		} catch (\Exception $e) {
 			if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {

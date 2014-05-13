@@ -66,7 +66,7 @@ class InputErrorsTest extends Tester\TestCase
 		$app = $container->getByType('Kdyby\Console\Application');
 		$tester = new ApplicationTester($app);
 
-		Assert::same(253, $tester->run(array('tipo')));
+		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run(array('tipo')));
 		Assert::same(array(), $listener->calls);
 	}
 
@@ -103,7 +103,7 @@ class InputErrorsTest extends Tester\TestCase
 		$app = $container->getByType('Kdyby\Console\Application');
 		$tester = new ApplicationTester($app);
 
-		Assert::same(253, $tester->run($arguments));
+		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run($arguments));
 		Assert::same(array(), $listener->calls);
 	}
 
