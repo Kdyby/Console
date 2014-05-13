@@ -12,26 +12,28 @@ namespace Kdyby\Console;
 
 use Kdyby;
 use Nette;
-use Nette\Diagnostics\Debugger;
 use Symfony;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\Console\Event\ConsoleExceptionEvent;
-use Symfony\Component\Console\Event\ConsoleTerminateEvent;
-use Symfony\Component\Console\Input\InputAwareInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tracy\Debugger;
 
 
+
+if (!class_exists('Tracy\Debugger')) {
+	class_alias('Nette\Diagnostics\Debugger', 'Tracy\Debugger');
+}
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Michal Gebauer <mishak@mishak.net>
  */
 class Application extends Symfony\Component\Console\Application
 {
+
+	const INPUT_ERROR_EXIT_CODE = 253;
 
 	/**
 	 * @var Nette\DI\Container
@@ -61,6 +63,18 @@ class Application extends Symfony\Component\Console\Application
 
 
 
+	public function find($name)
+	{
+		try {
+			return parent::find($name);
+
+		} catch (\InvalidArgumentException $e) {
+			throw new UnknownCommandException($e->getMessage(), $e->getCode(), $e);
+		}
+	}
+
+
+
 	/**
 	 * @param \Symfony\Component\Console\Input\InputInterface $input
 	 * @param \Symfony\Component\Console\Output\OutputInterface $output
@@ -69,12 +83,29 @@ class Application extends Symfony\Component\Console\Application
 	 */
 	public function run(InputInterface $input = NULL, OutputInterface $output = NULL)
 	{
+		$output = $output ? : new ConsoleOutput();
+
 		try {
 			return parent::run($input, $output);
 
+		} catch (UnknownCommandException $e) {
+			$this->renderException($e->getPrevious(), $output);
+			list($message) = explode("\n", $e->getMessage());
+			Debugger::log($message, Debugger::ERROR);
+
+			return self::INPUT_ERROR_EXIT_CODE;
+
 		} catch (\Exception $e) {
-			/** @var Nette\Application\Application $app */
-			if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+			if (in_array(get_class($e), array('RuntimeException', 'InvalidArgumentException'), TRUE)
+				&& preg_match('/^(The "-?-?.+" (option|argument) (does not (exist|accept a value)|requires a value)|(Not enough|Too many) arguments)\.$/', $e->getMessage()) === 1
+			) {
+				$this->renderException($e, $output);
+				Debugger::log($e->getMessage(), Debugger::ERROR);
+
+				return self::INPUT_ERROR_EXIT_CODE;
+
+			} elseif ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+				/** @var Nette\Application\Application $app */
 				$app->onError($app, $e);
 
 			} else {
@@ -89,7 +120,7 @@ class Application extends Symfony\Component\Console\Application
 
 	public function handleException(\Exception $e, OutputInterface $output = NULL)
 	{
-		$output = $output ?: new ConsoleOutput();
+		$output = $output ? : new ConsoleOutput();
 		$this->renderException($e, $output);
 
 		if ($file = Debugger::log($e, Debugger::ERROR)) {
@@ -106,8 +137,6 @@ class Application extends Symfony\Component\Console\Application
 
 	public function renderException($e, $output)
 	{
-		$output = $output ?: new ConsoleOutput();
-
 		if ($output instanceof ConsoleOutputInterface) {
 			parent::renderException($e, $output->getErrorOutput());
 

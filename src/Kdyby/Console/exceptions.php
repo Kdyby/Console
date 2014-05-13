@@ -39,3 +39,13 @@ class InvalidStateException extends \RuntimeException implements Exception
 {
 
 }
+
+
+
+/**
+ * @author Michal Gebauer <mishak@mishak.net>
+ */
+class UnknownCommandException extends \InvalidArgumentException implements Exception
+{
+
+}
