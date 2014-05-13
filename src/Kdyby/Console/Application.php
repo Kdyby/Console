@@ -91,8 +91,8 @@ class Application extends Symfony\Component\Console\Application
 			return $e->getCode();
 
 		} catch (\Exception $e) {
-			/** @var Nette\Application\Application $app */
 			if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+				/** @var Nette\Application\Application $app */
 				$app->onError($app, $e);
 
 			} else {
