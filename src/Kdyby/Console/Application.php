@@ -116,13 +116,7 @@ class Application extends Symfony\Component\Console\Application
 	public function handleUnknownCommand(\InvalidArgumentException $e, OutputInterface $output = NULL)
 	{
 		$output = $output ?: new ConsoleOutput();
-
-		if ($output instanceof ConsoleOutputInterface) {
-			$this->renderException($e, $output->getErrorOutput());
-
-		} else {
-			$this->renderException($e, $output);
-		}
+		$this->renderException($e, $output);
 
 		list($message) = explode("\n", $e->getMessage());
 		Debugger::log($message, Debugger::ERROR);
@@ -133,13 +127,7 @@ class Application extends Symfony\Component\Console\Application
 	public function handleWrongArgument(\Exception $e, OutputInterface $output = NULL)
 	{
 		$output = $output ?: new ConsoleOutput();
-
-		if ($output instanceof ConsoleOutputInterface) {
-			$this->renderException($e, $output->getErrorOutput());
-
-		} else {
-			$this->renderException($e, $output);
-		}
+		$this->renderException($e, $output);
 
 		Debugger::log($e->getMessage(), Debugger::ERROR);
 	}
