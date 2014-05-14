@@ -146,10 +146,14 @@ class InputErrorsTest extends Tester\TestCase
 		$tester = new ApplicationTester($app);
 
 		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run($arguments));
+		$calls = $listener->calls;
+		$last = array_pop($calls); // exception record
 		Assert::same(array(
 			 array('command', 'KdybyTests\\Console\\ArgCommand'),
-			 array('terminate', NULL, 0),
-		), $listener->calls);
+			 array('terminate', 'KdybyTests\\Console\\ArgCommand', 0),
+		), $calls);
+		array_pop($last); // thrown exception
+		Assert::same(array('exception', 'KdybyTests\\Console\\ArgCommand'), $last);
 	}
 
 }
