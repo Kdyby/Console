@@ -23,7 +23,7 @@
 	},
 	"require-dev": {
 		"nette/tester": "@dev",
-		"kdyby/events": "@dev",
+		"kdyby/events": "2.1.*@dev",
 		"symfony/event-dispatcher": "~2.4",
 		"jakub-onderka/php-parallel-lint": "~0.6"
 	},
