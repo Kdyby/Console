@@ -17,31 +17,16 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
-		"nette/nette": "@dev",
-		"nette/application": "@dev",
-		"nette/bootstrap": "@dev",
-		"nette/caching": "@dev",
-		"nette/component-model": "@dev",
-		"nette/database": "@dev",
-		"nette/di": "@dev",
-		"nette/finder": "@dev",
-		"nette/forms": "@dev",
-		"nette/http": "@dev",
-		"nette/mail": "@dev",
-		"nette/neon": "@dev",
-		"nette/php-generator": "@dev",
-		"nette/reflection": "@dev",
-		"nette/robot-loader": "@dev",
-		"nette/safe-stream": "@dev",
-		"nette/security": "@dev",
-		"nette/tokenizer": "@dev",
-		"nette/utils": "@dev",
-		"latte/latte": "@dev",
-		"tracy/tracy": "@dev",
+		"nette/application": "2.2.*",
+		"nette/di": "2.2.*",
+		"nette/http": "2.2.*",
 
 		"symfony/console": "~2.4"
 	},
 	"require-dev": {
+		"nette/nette": "2.2.*",
+		"nette/bootstrap": "2.2.*",
+
 		"nette/tester": "@dev",
 		"kdyby/events": "@dev",
 		"symfony/event-dispatcher": "~2.4",
@@ -55,10 +40,5 @@
 			"src/Kdyby/Console/CliPresenter.php",
 			"src/Kdyby/Console/exceptions.php"
 		]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.1-dev"
-		}
 	}
 }

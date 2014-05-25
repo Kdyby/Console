@@ -17,11 +17,16 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
-		"nette/nette": "~2.1@dev",
+		"nette/application": "~2.2@dev",
+		"nette/di": "~2.2@dev",
+		"nette/http": "~2.2@dev",
 
 		"symfony/console": "~2.4"
 	},
 	"require-dev": {
+		"nette/nette": "~2.2@dev",
+		"nette/bootstrap": "~2.2@dev",
+
 		"nette/tester": "@dev",
 		"kdyby/events": "@dev",
 		"symfony/event-dispatcher": "~2.4",
