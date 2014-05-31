@@ -1,5 +1,9 @@
-Kdyby/Console [![Build Status](https://secure.travis-ci.org/Kdyby/Console.png?branch=master)](http://travis-ci.org/Kdyby/Console)
-===========================
+Kdyby/Console
+======
+
+[![Build Status](https://travis-ci.org/Kdyby/Console.svg?branch=nette-2.0)](https://travis-ci.org/Kdyby/Console)
+[![Downloads this Month](https://img.shields.io/packagist/dm/kdyby/console.svg)](https://packagist.org/packages/kdyby/console)
+[![Latest stable](https://img.shields.io/packagist/v/kdyby/console.svg)](https://packagist.org/packages/kdyby/console)
 
 
 Requirements
@@ -7,7 +11,8 @@ Requirements
 
 Kdyby/Console requires PHP 5.3.2 or higher.
 
-- [Nette Framework 2.0.x](https://github.com/nette/nette)
+- [Nette Framework](https://github.com/nette/nette)
+- [Symfony Console](https://github.com/symfony/Console)
 
 
 Installation
@@ -16,8 +21,14 @@ Installation
 The best way to install Kdyby/Console is using  [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require kdyby/console:@dev
+$ composer require kdyby/console:~1.1.5
 ```
+
+
+Documentation
+------------
+
+Lear more in the [documentation](https://github.com/Kdyby/Console/blob/nette-2.0/docs/en/index.md).
 
 
 -----
