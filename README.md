@@ -2,7 +2,7 @@ Kdyby/Console
 ======
 
 [![Build Status](https://travis-ci.org/Kdyby/Console.svg?branch=master)](https://travis-ci.org/Kdyby/Console)
-[![Downloads this Month](https://img.shields.io/packagist/dm/Kdyby/Console.svg)](https://packagist.org/packages/Kdyby/Console)
+[![Downloads this Month](https://img.shields.io/packagist/dm/kdyby/console.svg)](https://packagist.org/packages/kdyby/console)
 [![Latest stable](https://img.shields.io/packagist/v/kdyby/console.svg)](https://packagist.org/packages/kdyby/console)
 
 
