@@ -1,5 +1,9 @@
-Kdyby/Console [![Build Status](https://secure.travis-ci.org/Kdyby/Console.png?branch=master)](http://travis-ci.org/Kdyby/Console)
-===========================
+Kdyby/Console
+======
+
+[![Build Status](https://travis-ci.org/Kdyby/Console.svg?branch=master)](https://travis-ci.org/Kdyby/Console)
+[![Downloads this Month](https://img.shields.io/packagist/dm/Kdyby/Console.svg)](https://packagist.org/packages/Kdyby/Console)
+[![Latest stable](img.shields.io/packagist/v/Kdyby/Console.svg)](https://packagist.org/packages/Kdyby/Console)
 
 
 Requirements
