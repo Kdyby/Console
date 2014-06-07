@@ -29,9 +29,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Michal Gebauer <mishak@mishak.net>
  */
 class Application extends Symfony\Component\Console\Application
 {
+
+	const INPUT_ERROR_EXIT_CODE = 253;
 
 	/**
 	 * @var Nette\DI\Container
@@ -61,6 +64,18 @@ class Application extends Symfony\Component\Console\Application
 
 
 
+	public function find($name)
+	{
+		try {
+			return parent::find($name);
+
+		} catch (\InvalidArgumentException $e) {
+			throw new UnknownCommandException($e->getMessage(), $e->getCode(), $e);
+		}
+	}
+
+
+
 	/**
 	 * @param \Symfony\Component\Console\Input\InputInterface $input
 	 * @param \Symfony\Component\Console\Output\OutputInterface $output
@@ -72,9 +87,20 @@ class Application extends Symfony\Component\Console\Application
 		try {
 			return parent::run($input, $output);
 
+		} catch (UnknownCommandException $e) {
+			$this->handleUnknownCommand($e, $output);
+
+			return self::INPUT_ERROR_EXIT_CODE;
+
 		} catch (\Exception $e) {
-			/** @var Nette\Application\Application $app */
-			if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+			if (in_array(get_class($e), array('RuntimeException', 'InvalidArgumentException'), TRUE)
+				&& preg_match('/^(The "-?-?.+" (option|argument) (does not (exist|accept a value)|requires a value)|(Not enough|Too many) arguments)\.$/', $e->getMessage()) === 1) {
+				$this->handleWrongArgument($e, $output);
+
+				return self::INPUT_ERROR_EXIT_CODE;
+
+			} elseif ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+				/** @var Nette\Application\Application $app */
 				$app->onError($app, $e);
 
 			} else {
@@ -83,6 +109,27 @@ class Application extends Symfony\Component\Console\Application
 
 			return max(min((int) $e->getCode(), 254), 254);
 		}
+	}
+
+
+
+	public function handleUnknownCommand(\InvalidArgumentException $e, OutputInterface $output = NULL)
+	{
+		$output = $output ?: new ConsoleOutput();
+		$this->renderException($e, $output);
+
+		list($message) = explode("\n", $e->getMessage());
+		Debugger::log($message, Debugger::ERROR);
+	}
+
+
+
+	public function handleWrongArgument(\Exception $e, OutputInterface $output = NULL)
+	{
+		$output = $output ?: new ConsoleOutput();
+		$this->renderException($e, $output);
+
+		Debugger::log($e->getMessage(), Debugger::ERROR);
 	}
 
 

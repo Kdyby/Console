@@ -26,6 +26,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Michal Gebauer <mishak@mishak.net>
  */
 class ApplicationTest extends Tester\TestCase
 {

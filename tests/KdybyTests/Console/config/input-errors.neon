@@ -1,0 +1,8 @@
+console:
+	commands:
+		- KdybyTests\Console\TypoCommand
+		- KdybyTests\Console\AmbiguousCommand1
+		- KdybyTests\Console\AmbiguousCommand2
+		- KdybyTests\Console\NamespaceAmbiguousCommand1
+		- KdybyTests\Console\NamespaceAmbiguousCommand2
+		- KdybyTests\Console\ArgCommand
