@@ -28,7 +28,7 @@ $ composer require kdyby/console:~2.2
 Documentation
 ------------
 
-Lear more in the [documentation](https://github.com/Kdyby/Console/blob/master/docs/en/index.md).
+Learn more in the [documentation](https://github.com/Kdyby/Console/blob/master/docs/en/index.md).
 
 
 -----
