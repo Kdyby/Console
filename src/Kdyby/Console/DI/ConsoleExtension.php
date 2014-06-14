@@ -28,8 +28,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	 * @var array
 	 */
 	public $defaults = array(
-		'name' => NULL,
-		'version' => NULL,
+		'name' => 'Nette Framework',
+		'version' => 'dev',
 		'commands' => array(),
 		'url' => NULL,
 		'disabled' => TRUE,
