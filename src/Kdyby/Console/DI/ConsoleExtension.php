@@ -28,8 +28,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	 * @var array
 	 */
 	public $defaults = array(
-		'name' => Nette\Framework::NAME,
-		'version' => Nette\Framework::VERSION,
+		'name' => NULL,
+		'version' => NULL,
 		'commands' => array(),
 		'url' => NULL,
 		'disabled' => TRUE,
@@ -40,6 +40,10 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	public function __construct()
 	{
 		$this->defaults['disabled'] = PHP_SAPI !== 'cli';
+		if (class_exists('Nette\Framework')) {
+			$this->defaults['name'] = Nette\Framework::NAME;
+			$this->defaults['version'] = Nette\Framework::VERSION;
+		}
 	}
 
 
