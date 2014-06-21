@@ -56,8 +56,22 @@ class ExtensionTest extends Tester\TestCase
 
 	public function testShortUrl()
 	{
+		$this->invokeTestOnConfig(__DIR__ . '/config/short-url.neon');
+	}
+
+
+
+	public function testUrlWithoutTld()
+	{
+		$this->invokeTestOnConfig(__DIR__ . '/config/url-without-tld.neon');
+	}
+
+
+
+	private function invokeTestOnConfig($file)
+	{
 		$config = $this->prepareConfigurator();
-		$config->addConfig(__DIR__ . '/config/short-url.neon', $config::NONE);
+		$config->addConfig($file, $config::NONE);
 		Assert::true($config->createContainer() instanceof Nette\DI\Container);
 	}
 
