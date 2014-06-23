@@ -72,7 +72,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			->addSetup('injectServiceLocator')
 			->setInject(FALSE);
 
-		if (PHP_SAPI === 'CLI') {
+		if (PHP_SAPI === 'cli') {
 			$builder->getDefinition('application')
 				->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
 					"\t" . '$app->errorPresenter = ?;' . "\n" .
