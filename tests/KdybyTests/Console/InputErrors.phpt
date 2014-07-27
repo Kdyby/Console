@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Tester;
 use Tester\Assert;
+use Tracy;
 use Tracy\Debugger;
 
 
@@ -201,7 +202,7 @@ class ConsoleListener extends Nette\Object implements Kdyby\Events\Subscriber
 
 
 
-class TestLogger
+class TestLogger extends Tracy\Logger
 {
 
 	public $messages = array();
@@ -215,10 +216,10 @@ class TestLogger
 
 
 
-	public function log($message)
+	public function log($value, $priority = 'info')
 	{
 		$this->messages[] = func_get_args();
-		Assert::match($this->pattern, $message[1]);
+		Assert::match($this->pattern, $value[1]);
 	}
 }
 
