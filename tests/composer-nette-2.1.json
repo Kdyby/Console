@@ -25,7 +25,7 @@
 		"nette/tester": "@dev",
 		"kdyby/events": "2.1.*@dev",
 		"symfony/event-dispatcher": "~2.4",
-		"jakub-onderka/php-parallel-lint": "~0.6"
+		"jakub-onderka/php-parallel-lint": "~0.7"
 	},
 	"autoload": {
 		"psr-0": {
@@ -35,10 +35,5 @@
 			"src/Kdyby/Console/CliPresenter.php",
 			"src/Kdyby/Console/exceptions.php"
 		]
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.1-dev"
-		}
 	}
 }
