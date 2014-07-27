@@ -46,7 +46,7 @@
 		"nette/tester": "@dev",
 		"kdyby/events": "@dev",
 		"symfony/event-dispatcher": "~2.4",
-		"jakub-onderka/php-parallel-lint": "~0.6"
+		"jakub-onderka/php-parallel-lint": "~0.7"
 	},
 	"autoload": {
 		"psr-0": {
