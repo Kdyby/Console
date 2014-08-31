@@ -101,15 +101,7 @@ services:
 		tags: [kdyby.console.command]
 ```
 
-Alternatively you can use shorter syntax for registering command (without tag):
-
-```yml
-console:
-	commands:
-		newsletterCommand: App\Console\SendNewslettersCommand
-```
-
-You can use also anonymous registration. It's useful when you have a lot of commands:
+Alternatively you can use shorter syntax for registering command (without tag). It's useful when you have a lot of commands:
 
 ```yml
 console:
@@ -118,6 +110,8 @@ console:
 		- App\Console\AnotherCommand
 		- App\Console\AnotherCommand2
 ```
+
+This is called anonymous registration (look at hyphens). You can name your command (`newsletterCommand: App\Console\SendNewslettersCommand`) but mostly it's not necessary.
 
 To add a helper, simply register it as a service with tag `kdyby.console.helper`
 
