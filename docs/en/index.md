@@ -39,7 +39,7 @@ console:
 	url: http://www.kdyby.org
 ```
 
-The `url` key specifies reference url that allows you to generate urls using Nette `UI\Presenter` in CLI (which is not possible otherwise).
+The `url` key specifies reference url that allows you to generate urls using Nette `UI\Presenter` in CLI (which is not possible otherwise). Another useful key is `commands` where you can register new commands. Look at the [Extending](https://github.com/Kdyby/Console/blob/master/docs/en/index.md#extending) part.
 
 
 Writing commands
@@ -100,6 +100,18 @@ services:
 		class: App\Console\SendNewslettersCommand
 		tags: [kdyby.console.command]
 ```
+
+Alternatively you can use shorter syntax for registering command (without tag). It's useful when you have a lot of commands:
+
+```yml
+console:
+	commands:
+		- App\Console\SendNewslettersCommand
+		- App\Console\AnotherCommand
+		- App\Console\AnotherCommand2
+```
+
+This is called anonymous registration (look at hyphens). You can name your command (`newsletterCommand: App\Console\SendNewslettersCommand`) but mostly it's not necessary.
 
 To add a helper, simply register it as a service with tag `kdyby.console.helper`
 
