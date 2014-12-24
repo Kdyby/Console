@@ -59,8 +59,8 @@ class ApplicationTest extends Tester\TestCase
 
 		Assert::same(0, $tester->run(array('list')));
 		Assert::same(array(
-			 array('command', 'Symfony\\Component\\Console\\Command\\ListCommand'),
-			 array('terminate', 'Symfony\\Component\\Console\\Command\\ListCommand', 0),
+			array('command', 'Symfony\\Component\\Console\\Command\\ListCommand'),
+			array('terminate', 'Symfony\\Component\\Console\\Command\\ListCommand', 0),
 		), $listener->calls);
 	}
 
