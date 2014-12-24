@@ -219,7 +219,7 @@ class TestLogger extends Tracy\Logger
 	public function log($value, $priority = 'info')
 	{
 		$this->messages[] = func_get_args();
-		Assert::match($this->pattern, implode((array)$value));
+		Assert::match('%A?%' . $this->pattern, implode((array)$value));
 	}
 }
 
