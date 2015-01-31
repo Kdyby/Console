@@ -60,10 +60,6 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
-		if ($config['disabled']) {
-			return;
-		}
-
 		$helperClasses = array(
 			'Symfony\Component\Console\Helper\DialogHelper',
 			'Symfony\Component\Console\Helper\FormatterHelper',
@@ -86,6 +82,14 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			->addSetup('setHelperSet', array($this->prefix('@helperSet')))
 			->addSetup('injectServiceLocator')
 			->setInject(FALSE);
+
+		$builder->addDefinition($this->prefix('dicHelper'))
+			->setClass('Kdyby\Console\ContainerHelper')
+			->addTag(self::HELPER_TAG, 'dic');
+
+		if ($config['disabled']) {
+			return;
+		}
 
 		if (PHP_SAPI === 'cli') {
 			$builder->getDefinition('application')
@@ -118,10 +122,6 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 				->setClass('Kdyby\Console\HttpRequestFactory')
 				->addSetup('setFakeRequestUrl', array($config['url']));
 		}
-
-		$builder->addDefinition($this->prefix('dicHelper'))
-			->setClass('Kdyby\Console\ContainerHelper')
-			->addTag(self::HELPER_TAG, 'dic');
 
 		Nette\Utils\Validators::assert($config, 'array');
 		foreach ($config['commands'] as $command) {
