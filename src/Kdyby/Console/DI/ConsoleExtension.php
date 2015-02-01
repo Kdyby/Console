@@ -118,7 +118,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		}
 
 		if (PHP_SAPI === 'cli') {
-			$builder->getDefinition($builder->getByType('Nette\Application\Application'))
+			$builder->getDefinition($builder->getByType('Nette\Application\Application') ?: 'application')
 				->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
 					"\t" . '$app->errorPresenter = ?;' . "\n" .
 					"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
@@ -126,10 +126,10 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 					'}', array(FALSE, 254, $this->prefix('application')));
 		}
 
-		$builder->getDefinition($builder->getByType('Nette\Application\IRouter'))
+		$builder->getDefinition($builder->getByType('Nette\Application\IRouter') ?: 'router')
 			->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', array($this->prefix('@router')));
 
-		$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory'))
+		$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
 			->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
 				'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', array(
 				'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
@@ -139,7 +139,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			if (!preg_match('~^https?://[^/]+(/.*)?$~', $config['url'])) {
 				throw new Nette\Utils\AssertionException("The url '{$config['url']}' is not valid, please use this format: 'http://domain.tld/path'.");
 			}
-			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory'))
+			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory') ?: 'nette.httpRequestFactory')
 				->setClass('Kdyby\Console\HttpRequestFactory')
 				->addSetup('setFakeRequestUrl', array($config['url']));
 		}
@@ -154,7 +154,10 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			$app->addSetup('add', array('@' . $serviceName));
 		}
 
-		if ($builder->getByType('Symfony\Component\EventDispatcher\EventDispatcherInterface')) {
+		if ($builder->getByType('Symfony\Component\EventDispatcher\EventDispatcherInterface')
+			|| $builder->hasDefinition('events.symfonyProxy')
+			&& $builder->getDefinition('events.symfonyProxy')->class === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
+		) {
 			$app->addSetup('setDispatcher');
 		}
 	}
