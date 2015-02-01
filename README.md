@@ -21,7 +21,7 @@ Installation
 The best way to install Kdyby/Console is using  [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require kdyby/console:~2.2
+$ composer require kdyby/console
 ```
 
 

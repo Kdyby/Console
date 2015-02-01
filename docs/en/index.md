@@ -10,22 +10,14 @@ Installation
 The best way to install Kdyby/Console is using  [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require kdyby/console:@dev
+$ composer require kdyby/console
 ```
 
-With dev Nette, you can enable the extension using your neon config.
+You can enable the extension using your neon config.
 
 ```yml
 extensions:
 	console: Kdyby\Console\DI\ConsoleExtension
-```
-
-If you're using stable Nette, you have to register it in `app/bootstrap.php`
-
-```php
-Kdyby\Console\DI\ConsoleExtension::register($configurator);
-
-return $configurator->createContainer();
 ```
 
 
