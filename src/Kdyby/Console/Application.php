@@ -124,6 +124,10 @@ class Application extends Symfony\Component\Console\Application
 			$output->writeln('');
 
 			if (Debugger::$browser) {
+				if (!file_exists($file)) {
+					$file = Debugger::$logDirectory . '/' . $file;
+				}
+
 				exec(Debugger::$browser . ' ' . escapeshellarg($file));
 			}
 		}
