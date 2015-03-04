@@ -112,7 +112,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 				throw new Nette\Utils\AssertionException("The url '{$config['url']}' is not valid, please use this format: 'http://domain.tld/path'.");
 			}
 			$builder->getDefinition('nette.httpRequestFactory')
-				->setClass('Kdyby\Console\HttpRequestFactory')
+				->setFactory('Kdyby\Console\HttpRequestFactory')
 				->addSetup('setFakeRequestUrl', array($config['url']));
 		}
 
