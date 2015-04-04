@@ -67,7 +67,7 @@ class CliRouterTest extends Tester\TestCase
 		Assert::match("Nette Framework version %a%
 
 Usage:
- [options] command [arguments]
+ command [options] [arguments]
 
 Options:
  --help %a%
