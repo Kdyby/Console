@@ -9,7 +9,7 @@ Kdyby/Console
 Requirements
 ------------
 
-Kdyby/Console requires PHP 5.3.2 or higher.
+Kdyby/Console requires PHP 5.4 or higher.
 
 - [Nette Framework](https://github.com/nette/nette)
 - [Symfony Console](https://github.com/symfony/Console)
