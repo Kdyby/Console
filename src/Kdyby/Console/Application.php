@@ -108,7 +108,7 @@ class Application extends Symfony\Component\Console\Application
 				$this->handleException($e, $output);
 			}
 
-			return max(min((int) $e->getCode(), 254), 254);
+			return max(min((int) $e->getCode(), 254), 1);
 		}
 	}
 
