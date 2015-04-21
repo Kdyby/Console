@@ -20,9 +20,13 @@ use Nette;
  */
 class ConsoleExtension extends Nette\DI\CompilerExtension
 {
+	/** @deprecated */
+	const HELPER_TAG = self::TAG_HELPER;
+	/** @deprecated */
+	const COMMAND_TAG = self::TAG_COMMAND;
 
-	const HELPER_TAG = 'kdyby.console.helper';
-	const COMMAND_TAG = 'kdyby.console.command';
+	const TAG_HELPER = 'kdyby.console.helper';
+	const TAG_COMMAND = 'kdyby.console.command';
 
 	/**
 	 * @var array
@@ -81,7 +85,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 		$builder->addDefinition($this->prefix('dicHelper'))
 			->setClass('Kdyby\Console\ContainerHelper')
-			->addTag(self::HELPER_TAG, 'dic');
+			->addTag(self::TAG_HELPER, 'dic');
 
 		if ($config['disabled']) {
 			return;
@@ -105,7 +109,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 			$def->setAutowired(FALSE);
 			$def->setInject(FALSE);
-			$def->addTag(self::COMMAND_TAG);
+			$def->addTag(self::TAG_COMMAND);
 		}
 	}
 
@@ -148,12 +152,12 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		}
 
 		$helperSet = $builder->getDefinition($this->prefix('helperSet'));
-		foreach ($builder->findByTag(self::HELPER_TAG) as $serviceName => $value) {
+		foreach ($builder->findByTag(self::TAG_HELPER) as $serviceName => $value) {
 			$helperSet->addSetup('set', array('@' . $serviceName, $value));
 		}
 
 		$app = $builder->getDefinition($this->prefix('application'));
-		foreach (array_keys($builder->findByTag(self::COMMAND_TAG)) as $serviceName) {
+		foreach (array_keys($builder->findByTag(self::TAG_COMMAND)) as $serviceName) {
 			$app->addSetup('add', array('@' . $serviceName));
 		}
 
