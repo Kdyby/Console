@@ -42,9 +42,9 @@ class Application extends Symfony\Component\Console\Application
 	 * @param string $name
 	 * @param string $version
 	 */
-	public function __construct($name = Nette\Framework::NAME, $version = Nette\Framework::VERSION)
+	public function __construct($name = 'Nette Framework', $version = NULL)
 	{
-		parent::__construct($name, $version);
+		parent::__construct($name, $version ?: (class_exists('Nette\Framework') ? Nette\Framework::VERSION : 'UNKNOWN'));
 
 		$this->setCatchExceptions(FALSE);
 		$this->setAutoExit(FALSE);
