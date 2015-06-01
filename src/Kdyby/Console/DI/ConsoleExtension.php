@@ -54,17 +54,20 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$config = $this->getConfig($this->defaults);
 
 		$helperClasses = array(
-			'Symfony\Component\Console\Helper\DialogHelper',
 			'Symfony\Component\Console\Helper\FormatterHelper',
 			'Symfony\Component\Console\Helper\QuestionHelper',
 			'Kdyby\Console\Helpers\PresenterHelper',
 		);
 
+		$helperClasses = array_map(function ($class) { return new Nette\DI\Statement($class); }, $helperClasses);
+
 		if (class_exists('Symfony\Component\Console\Helper\ProgressHelper')) {
-			$helperClasses[] = 'Symfony\Component\Console\Helper\ProgressHelper';
+			$helperClasses[] = new Nette\DI\Statement('Symfony\Component\Console\Helper\ProgressHelper', array(false));
 		}
 
-		$helperClasses = array_map(function ($class) { return new Nette\DI\Statement($class); }, $helperClasses);
+		if (class_exists('Symfony\Component\Console\Helper\DialogHelper')) {
+			$helperClasses[] = new Nette\DI\Statement('Symfony\Component\Console\Helper\DialogHelper', array(false));
+		}
 
 		$builder->addDefinition($this->prefix('helperSet'))
 			->setClass('Symfony\Component\Console\Helper\HelperSet', array($helperClasses))
