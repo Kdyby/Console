@@ -67,20 +67,20 @@ class CliRouterTest extends Tester\TestCase
 		Assert::match("Nette Framework version %a%
 
 Usage:
- command [options] [arguments]
+  command [options] [arguments]
 
 Options:
- --help %a%
- --quiet %a%
- --verbose %a%
- --version %a%
- --ansi %a%
- --no-ansi %a%
- --no-interaction %a%
+  -h, --help %a%
+  -q, --quiet %a%
+  -V, --version %a%
+      --ansi %a%
+      --no-ansi %a%
+  -n, --no-interaction %a%
+  -v|vv|vvv, --verbose %a%
 
 Available commands:
- help   Displays help for a command
- list   Lists commands", $output->getOutput());
+  help  Displays help for a command
+  list  Lists commands", $output->getOutput());
 	}
 
 }
