@@ -21,7 +21,7 @@
 		"nette/di": "2.2.*@dev",
 		"nette/http": "2.2.*@dev",
 
-		"symfony/console": "~2.6"
+		"symfony/console": "~2.7"
 	},
 	"require-dev": {
 		"nette/application": "2.2.*@dev",
