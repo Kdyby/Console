@@ -188,7 +188,7 @@ class Application extends Symfony\Component\Console\Application
 	protected function getDefaultInputDefinition()
 	{
 		$definition = parent::getDefaultInputDefinition();
-		$definition->addOption(new InputOption('--debug-mode', NULL, InputOption::VALUE_OPTIONAL, 'Run the application i debug mode'));
+		$definition->addOption(new InputOption('--debug-mode', NULL, InputOption::VALUE_OPTIONAL, 'Run the application in debug mode?'));
 
 		return $definition;
 	}
