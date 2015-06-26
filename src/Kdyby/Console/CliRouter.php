@@ -84,7 +84,7 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 	 */
 	public function match(Nette\Http\IRequest $httpRequest)
 	{
-		if (!in_array(PHP_SAPI, $this->allowedMethods)) {
+		if (!in_array(PHP_SAPI, $this->allowedMethods, TRUE)) {
 			return NULL;
 		}
 
