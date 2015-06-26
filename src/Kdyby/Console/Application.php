@@ -14,7 +14,9 @@ use Kdyby;
 use Nette;
 use Symfony;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,6 +32,7 @@ class Application extends Symfony\Component\Console\Application
 {
 
 	const INPUT_ERROR_EXIT_CODE = 253;
+	const INVALID_APP_MODE_EXIT_CODE = 252;
 
 	/**
 	 * @var Nette\DI\Container
@@ -79,7 +82,31 @@ class Application extends Symfony\Component\Console\Application
 	 */
 	public function run(InputInterface $input = NULL, OutputInterface $output = NULL)
 	{
-		$output = $output ? : new ConsoleOutput();
+		$input = $input ?: new ArgvInput();
+		$output = $output ?: new ConsoleOutput();
+
+		if ($input->hasParameterOption('--debug-mode')) {
+			if ($input->hasParameterOption(array('--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'))) {
+				if ($this->serviceLocator->parameters['debugMode']) {
+					$this->renderException(new InvalidApplicationModeException(
+						"The app is running in debug mode. You have to use Kdyby\\Console\\DI\\BootstrapHelper in app/bootstrap.php, " .
+						"Kdyby\\Console cannot switch already running app to production mode . "
+					), $output);
+
+					return self::INVALID_APP_MODE_EXIT_CODE;
+				}
+
+			} else {
+				if (!$this->serviceLocator->parameters['debugMode']) {
+					$this->renderException(new InvalidApplicationModeException(
+						"The app is running in production mode. You have to use Kdyby\\Console\\DI\\BootstrapHelper in app/bootstrap.php, " .
+						"Kdyby\\Console cannot switch already running app to debug mode."
+					), $output);
+
+					return self::INVALID_APP_MODE_EXIT_CODE;
+				}
+			}
+		}
 
 		try {
 			return parent::run($input, $output);
@@ -154,6 +181,16 @@ class Application extends Symfony\Component\Console\Application
 		}
 
 		return parent::doRunCommand($command, $input, $output);
+	}
+
+
+
+	protected function getDefaultInputDefinition()
+	{
+		$definition = parent::getDefaultInputDefinition();
+		$definition->addOption(new InputOption('--debug-mode', NULL, InputOption::VALUE_OPTIONAL, 'Run the application i debug mode'));
+
+		return $definition;
 	}
 
 }

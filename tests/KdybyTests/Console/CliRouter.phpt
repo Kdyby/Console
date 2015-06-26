@@ -76,6 +76,7 @@ Options:
       --ansi %a%
       --no-ansi %a%
   -n, --no-interaction %a%
+      --debug-mode[=DEBUG-MODE]  Run the application i debug mode
   -v|vv|vvv, --verbose %a%
 
 Available commands:
