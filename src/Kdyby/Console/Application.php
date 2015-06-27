@@ -124,7 +124,6 @@ class Application extends Symfony\Component\Console\Application
 			) {
 				$this->renderException($e, $output);
 				Debugger::log($e->getMessage(), Debugger::ERROR);
-
 				return self::INPUT_ERROR_EXIT_CODE;
 
 			} elseif ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
@@ -141,7 +140,11 @@ class Application extends Symfony\Component\Console\Application
 
 
 
-	public function handleException(\Exception $e, OutputInterface $output = NULL)
+	/**
+	 * @param \Exception|\Throwable $e
+	 * @param OutputInterface|NULL $output
+	 */
+	public function handleException($e, OutputInterface $output = NULL)
 	{
 		$output = $output ? : new ConsoleOutput();
 		$this->renderException($e, $output);
