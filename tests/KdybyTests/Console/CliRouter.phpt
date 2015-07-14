@@ -64,17 +64,7 @@ class CliRouterTest extends Tester\TestCase
 		/** @var Kdyby\Console\CliResponse $appResponse */
 		Assert::true($appResponse instanceof Kdyby\Console\CliResponse);
 		Assert::same(0, $appResponse->getExitCode());
-		Assert::match("Nette Framework version %a%
-
-Usage:
-  %A%
-
-Options:
-  %A%
-
-Available commands:
-  help  %a%
-  list  %a%", $output->getOutput());
+		Assert::match("Nette Framework version %A%", $output->getOutput());
 	}
 
 }
