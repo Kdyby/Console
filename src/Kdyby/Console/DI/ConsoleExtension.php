@@ -12,6 +12,7 @@ namespace Kdyby\Console\DI;
 
 use Kdyby;
 use Nette;
+use Nette\DI\Statement;
 
 
 
@@ -57,35 +58,13 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
 
-		$helperClasses = array(
-			'Symfony\Component\Console\Helper\FormatterHelper',
-			'Symfony\Component\Console\Helper\QuestionHelper',
-			'Kdyby\Console\Helpers\PresenterHelper',
-		);
-
-		$helperClasses = array_map(function ($class) { return new Nette\DI\Statement($class); }, $helperClasses);
-
-		if (class_exists('Symfony\Component\Console\Helper\ProgressHelper')) {
-			$helperClasses[] = new Nette\DI\Statement('Symfony\Component\Console\Helper\ProgressHelper', array(false));
-		}
-
-		if (class_exists('Symfony\Component\Console\Helper\DialogHelper')) {
-			$helperClasses[] = new Nette\DI\Statement('Symfony\Component\Console\Helper\DialogHelper', array(false));
-		}
-
-		$builder->addDefinition($this->prefix('helperSet'))
-			->setClass('Symfony\Component\Console\Helper\HelperSet', array($helperClasses))
-			->setInject(FALSE);
+		$this->loadHelperSet($config);
 
 		$builder->addDefinition($this->prefix('application'))
 			->setClass('Kdyby\Console\Application', array($config['name'], $config['version']))
 			->addSetup('setHelperSet', array($this->prefix('@helperSet')))
 			->addSetup('injectServiceLocator')
 			->setInject(FALSE);
-
-		$builder->addDefinition($this->prefix('dicHelper'))
-			->setClass('Kdyby\Console\ContainerHelper')
-			->addTag(self::TAG_HELPER, 'dic');
 
 		if ($config['disabled']) {
 			return;
@@ -100,7 +79,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		foreach ($config['commands'] as $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . md5(Nette\Utils\Json::encode($command))));
 			list($def->factory) = Nette\DI\Compiler::filterArguments(array(
-				is_string($command) ? new Nette\DI\Statement($command) : $command
+				is_string($command) ? new Statement($command) : $command
 			));
 
 			if (class_exists($def->factory->entity)) {
@@ -111,6 +90,48 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			$def->setInject(FALSE);
 			$def->addTag(self::TAG_COMMAND);
 		}
+	}
+
+
+
+	protected function loadHelperSet()
+	{
+		$builder = $this->getContainerBuilder();
+
+		$helperSet = $builder->addDefinition($this->prefix('helperSet'))
+			->setClass('Symfony\Component\Console\Helper\HelperSet')
+			->setInject(FALSE);
+
+		$helperClasses = array(
+			'Symfony\Component\Console\Helper\ProcessHelper',
+			'Symfony\Component\Console\Helper\DescriptorHelper',
+			'Symfony\Component\Console\Helper\FormatterHelper',
+			'Symfony\Component\Console\Helper\QuestionHelper',
+			'Symfony\Component\Console\Helper\DebugFormatterHelper',
+			'Kdyby\Console\Helpers\PresenterHelper',
+		);
+
+		$helpers = array_map(function ($class) {
+			return new Statement($class);
+		}, $helperClasses);
+
+		// BC
+		$helpers[] = new Statement('Symfony\Component\Console\Helper\ProgressHelper', array(FALSE));
+		$helpers[] = new Statement('Symfony\Component\Console\Helper\DialogHelper', array(FALSE));
+
+		foreach ($helpers as $helper) {
+			if (!class_exists($helper->entity)) {
+				continue;
+			}
+
+			if (!self::hasConstructor($helper->entity)) {
+				$helper->arguments = array();
+			}
+
+			$helperSet->addSetup('set', array($helper));
+		}
+
+		$helperSet->addSetup('set', array(new Statement('Kdyby\Console\ContainerHelper'), 'dic'));
 	}
 
 
@@ -179,6 +200,17 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$configurator->onCompile[] = function ($config, Nette\DI\Compiler $compiler) {
 			$compiler->addExtension('console', new ConsoleExtension());
 		};
+	}
+
+
+
+	/**
+	 * @param string $class
+	 * @return bool
+	 */
+	private static function hasConstructor($class)
+	{
+		return class_exists($class) && method_exists($class, '__construct');
 	}
 
 }
