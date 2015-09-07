@@ -192,8 +192,16 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 					'}', [FALSE, 254, $this->prefix('application')]);
 		}
 
-		$builder->getDefinition($builder->getByType('Nette\Application\IRouter') ?: 'router')
-			->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', [$this->prefix('@router')]);
+		$routerServiceName = $builder->getByType('Nette\Application\IRouter') ?: 'router';
+		$builder->addDefinition($this->prefix('originalRouter'), $builder->getDefinition($routerServiceName))
+			->setAutowired(FALSE);
+
+		$builder->removeDefinition($routerServiceName);
+
+		$builder->addDefinition($routerServiceName)
+			->setClass('Nette\Application\Routers\RouteList')
+			->addSetup('offsetSet', [NULL, $this->prefix('@router')])
+			->addSetup('offsetSet', [NULL, $this->prefix('@originalRouter')]);
 
 		$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
 			->addSetup('if (method_exists($service, ?)) { $service->setMapping([? => ?]); } ' .
