@@ -158,11 +158,13 @@ class InputErrorsTest extends Tester\TestCase
 
 		Assert::count(3, $listener->calls);
 		Assert::same('command', $listener->calls[0][0]);
-		Assert::same('KdybyTests\\Console\\ArgCommand', $listener->calls[0][1]);
-		Assert::same('exception', $listener->calls[1][0]);
-		Assert::same('KdybyTests\\Console\\ArgCommand', $listener->calls[1][1]);
-		Assert::same('terminate', $listener->calls[2][0]);
-		Assert::same('KdybyTests\\Console\\ArgCommand', $listener->calls[2][1]);
+		try {
+			Assert::same('exception', $listener->calls[1][0]);
+			Assert::same('terminate', $listener->calls[2][0]);
+		} catch (Tester\AssertException $e) {
+			Assert::same('terminate', $listener->calls[1][0]);
+			Assert::same('exception', $listener->calls[2][0]);
+		}
 	}
 
 }
