@@ -117,7 +117,7 @@ class InputErrorsTest extends Tester\TestCase
 	public function getNotLoggingUnknownArgumentData()
 	{
 		return array(
-			array(array('arg'), 'Not enough arguments.'),
+			array(array('arg'), 'Not enough arguments%A?%'),
 			array(array('arg', 'first', 'second', 'third'), 'Too many arguments.'),
 			array(array('arg', '--non-existent-option', 'first'), 'The "--%a%" option does not exist.'),
 			array(array('arg', '-aa', 'first'), 'The "-%a%" option does not exist.'),
@@ -156,14 +156,13 @@ class InputErrorsTest extends Tester\TestCase
 			Tester\Environment::skip($e->getMessage());
 		}
 
-		$calls = $listener->calls;
-		$last = array_pop($calls); // exception record
-		Assert::same(array(
-			array('command', 'KdybyTests\\Console\\ArgCommand'),
-			array('terminate', 'KdybyTests\\Console\\ArgCommand', 0),
-		), $calls);
-		array_pop($last); // thrown exception
-		Assert::same(array('exception', 'KdybyTests\\Console\\ArgCommand'), $last);
+		Assert::count(3, $listener->calls);
+		Assert::same('command', $listener->calls[0][0]);
+		Assert::same('KdybyTests\\Console\\ArgCommand', $listener->calls[0][1]);
+		Assert::same('exception', $listener->calls[1][0]);
+		Assert::same('KdybyTests\\Console\\ArgCommand', $listener->calls[1][1]);
+		Assert::same('terminate', $listener->calls[2][0]);
+		Assert::same('KdybyTests\\Console\\ArgCommand', $listener->calls[2][1]);
 	}
 
 }

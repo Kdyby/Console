@@ -120,7 +120,7 @@ class Application extends Symfony\Component\Console\Application
 
 		} catch (\Exception $e) {
 			if (in_array(get_class($e), array('RuntimeException', 'InvalidArgumentException'), TRUE)
-				&& preg_match('/^(The "-?-?.+" (option|argument) (does not (exist|accept a value)|requires a value)|(Not enough|Too many) arguments)\.$/', $e->getMessage()) === 1
+				&& preg_match('/^(The "-?-?.+" (option|argument) (does not (exist|accept a value)|requires a value)|(Not enough|Too many) arguments.*)\.$/', $e->getMessage()) === 1
 			) {
 				$this->renderException($e, $output);
 				Debugger::log($e->getMessage(), Debugger::ERROR);
