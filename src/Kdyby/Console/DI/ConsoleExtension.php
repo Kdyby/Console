@@ -170,7 +170,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 					]);
 		}
 
-		if (!empty($config['url'])) {
+		if ($this->isNetteHttpPresent() && !empty($config['url'])) {
 			if (!preg_match('~^https?://[^/]+(/.*)?$~', $config['url'])) {
 				throw new Nette\Utils\AssertionException("The url '{$config['url']}' is not valid, please use this format: 'http://domain.tld/path'.");
 			}
@@ -228,6 +228,16 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	private function isNetteApplicationPresent()
 	{
 		return class_exists('Nette\Application\Application');
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	private function isNetteHttpPresent()
+	{
+		return interface_exists('Nette\Http\IRequest');
 	}
 
 }
