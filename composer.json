@@ -17,7 +17,6 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
-		"nette/application": "~2.3@dev",
 		"nette/di": "~2.3@dev",
 		"nette/http": "~2.3@dev",
 
