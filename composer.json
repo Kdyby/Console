@@ -18,7 +18,6 @@
 	},
 	"require": {
 		"nette/di": "~2.3@dev",
-		"nette/http": "~2.3@dev",
 
 		"symfony/console": "~2.3"
 	},
