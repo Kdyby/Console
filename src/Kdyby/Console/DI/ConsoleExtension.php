@@ -161,7 +161,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		}
 
 		$app = $builder->getDefinition($this->prefix('application'));
-		foreach (array_keys($builder->findByTag(self::TAG_COMMAND)) as $serviceName) {
+		foreach ($builder->findByTag(self::TAG_COMMAND) as $serviceName => $_) {
 			$app->addSetup('add', array('@' . $serviceName));
 		}
 
