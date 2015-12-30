@@ -38,6 +38,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		'commands' => array(),
 		'url' => NULL,
 		'disabled' => TRUE,
+		'application' => TRUE,
+		'fakeHttp' => TRUE,
 	);
 
 
@@ -70,7 +72,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			return;
 		}
 
-		if ($this->isNetteApplicationPresent()) {
+		if ($config['application'] && $this->isNetteApplicationPresent()) {
 			$builder->addDefinition($this->prefix('router'))
 					->setClass('Kdyby\Console\CliRouter')
 					->setAutowired(FALSE)
@@ -96,7 +98,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 
 
-	protected function loadHelperSet()
+	protected function loadHelperSet(array $config)
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -112,7 +114,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			'Symfony\Component\Console\Helper\DebugFormatterHelper',
 		);
 
-		if ($this->isNetteApplicationPresent()) {
+		if ($config['application'] && $this->isNetteApplicationPresent()) {
 			$helperClasses[] = 'Kdyby\Console\Helpers\PresenterHelper';
 		}
 
@@ -150,34 +152,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			return;
 		}
 
-		if ($this->isNetteApplicationPresent()) {
-			if (PHP_SAPI === 'cli') {
-				$builder->getDefinition($builder->getByType('Nette\Application\Application') ?: 'application')
-						->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
-								"\t" . '$app->errorPresenter = ?;' . "\n" .
-								"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
-								"\t" . '$self->getService(?)->handleException($e); ' . "\n" .
-								'}', [FALSE, 254, $this->prefix('application')]);
-			}
-
-			$builder->getDefinition($builder->getByType('Nette\Application\IRouter') ?: 'router')
-					->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', [$this->prefix('@router')]);
-
-			$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
-					->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
-							'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', [
-							'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
-					]);
-		}
-
-		if ($this->isNetteHttpPresent() && !empty($config['url'])) {
-			if (!preg_match('~^https?://[^/]+(/.*)?$~', $config['url'])) {
-				throw new Nette\Utils\AssertionException("The url '{$config['url']}' is not valid, please use this format: 'http://domain.tld/path'.");
-			}
-			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory') ?: 'nette.httpRequestFactory')
-				->setFactory('Kdyby\Console\HttpRequestFactory')
-				->addSetup('setFakeRequestUrl', array($config['url']));
-		}
+		$this->beforeCompileHookApplication($config);
+		$this->beforeCompileFakeHttp($config);
 
 		$helperSet = $builder->getDefinition($this->prefix('helperSet'));
 		foreach ($builder->findByTag(self::TAG_HELPER) as $serviceName => $value) {
@@ -194,6 +170,55 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			&& $builder->getDefinition($sfDispatcher)->class === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
 		) {
 			$app->addSetup('setDispatcher');
+		}
+	}
+
+
+
+	protected function beforeCompileHookApplication(array $config)
+	{
+		if (!$config['application'] || !$this->isNetteApplicationPresent()) {
+			return; // ignore
+		}
+
+		$builder = $this->getContainerBuilder();
+
+		if (PHP_SAPI === 'cli') {
+			$builder->getDefinition($builder->getByType('Nette\Application\Application') ?: 'application')
+				->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
+					"\t" . '$app->errorPresenter = ?;' . "\n" .
+					"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
+					"\t" . '$self->getService(?)->handleException($e); ' . "\n" .
+					'}', [FALSE, 254, $this->prefix('application')]);
+		}
+
+		$builder->getDefinition($builder->getByType('Nette\Application\IRouter') ?: 'router')
+			->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', [$this->prefix('@router')]);
+
+		$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
+			->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
+				'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', [
+				'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
+			]);
+	}
+
+
+
+	protected function beforeCompileFakeHttp(array $config)
+	{
+		if (!$config['fakeHttp'] || !$this->isNetteHttpPresent()) {
+			return; // ignore
+		}
+
+		$builder = $this->getContainerBuilder();
+
+		if (!empty($config['url'])) {
+			if (!preg_match('~^https?://[^/]+(/.*)?$~', $config['url'])) {
+				throw new Nette\Utils\AssertionException("The url '{$config['url']}' is not valid, please use this format: 'http://domain.tld/path'.");
+			}
+			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory') ?: 'nette.httpRequestFactory')
+				->setFactory('Kdyby\Console\HttpRequestFactory')
+				->addSetup('setFakeRequestUrl', array($config['url']));
 		}
 	}
 
