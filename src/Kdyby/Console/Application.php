@@ -34,6 +34,12 @@ class Application extends Symfony\Component\Console\Application
 	const INPUT_ERROR_EXIT_CODE = 253;
 	const INVALID_APP_MODE_EXIT_CODE = 252;
 
+	private static $invalidArgumentExceptions = array(
+		'RuntimeException',
+		'InvalidArgumentException',
+		'Symfony\Component\Console\Exception\RuntimeException',
+	);
+
 	/**
 	 * @var Nette\DI\Container
 	 */
@@ -119,7 +125,7 @@ class Application extends Symfony\Component\Console\Application
 			return self::INPUT_ERROR_EXIT_CODE;
 
 		} catch (\Exception $e) {
-			if (in_array(get_class($e), array('RuntimeException', 'InvalidArgumentException'), TRUE)
+			if (in_array(get_class($e), self::$invalidArgumentExceptions, TRUE)
 				&& preg_match('/^(The "-?-?.+" (option|argument) (does not (exist|accept a value)|requires a value)|(Not enough|Too many) arguments.*)\.$/', $e->getMessage()) === 1
 			) {
 				$this->renderException($e, $output);
