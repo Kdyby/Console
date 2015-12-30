@@ -48,6 +48,10 @@
 		"kdyby/events": "~2.4@dev",
 		"symfony/event-dispatcher": "~2.3"
 	},
+	"suggest": {
+		"nette/application": "For hooking the extension into the app and enabling running it through www/index.php",
+		"nette/http": "For faking the url of the request in cli"
+	},
 	"autoload": {
 		"psr-0": {
 			"Kdyby\\Console\\": "src/"
