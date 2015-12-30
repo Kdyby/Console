@@ -70,10 +70,12 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			return;
 		}
 
-		$builder->addDefinition($this->prefix('router'))
-			->setClass('Kdyby\Console\CliRouter')
-			->setAutowired(FALSE)
-			->setInject(FALSE);
+		if ($this->isNetteApplicationPresent()) {
+			$builder->addDefinition($this->prefix('router'))
+					->setClass('Kdyby\Console\CliRouter')
+					->setAutowired(FALSE)
+					->setInject(FALSE);
+		}
 
 		Nette\Utils\Validators::assert($config, 'array');
 		foreach ($config['commands'] as $command) {
@@ -108,8 +110,11 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			'Symfony\Component\Console\Helper\FormatterHelper',
 			'Symfony\Component\Console\Helper\QuestionHelper',
 			'Symfony\Component\Console\Helper\DebugFormatterHelper',
-			'Kdyby\Console\Helpers\PresenterHelper',
 		);
+
+		if ($this->isNetteApplicationPresent()) {
+			$helperClasses[] = 'Kdyby\Console\Helpers\PresenterHelper';
+		}
 
 		$helpers = array_map(function ($class) {
 			return new Statement($class);
@@ -145,25 +150,27 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			return;
 		}
 
-		if (PHP_SAPI === 'cli') {
-			$builder->getDefinition($builder->getByType('Nette\Application\Application') ?: 'application')
-				->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
-					"\t" . '$app->errorPresenter = ?;' . "\n" .
-					"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
-					"\t" . '$self->getService(?)->handleException($e); ' . "\n" .
-					'}', array(FALSE, 254, $this->prefix('application')));
+		if ($this->isNetteApplicationPresent()) {
+			if (PHP_SAPI === 'cli') {
+				$builder->getDefinition($builder->getByType('Nette\Application\Application') ?: 'application')
+						->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
+								"\t" . '$app->errorPresenter = ?;' . "\n" .
+								"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
+								"\t" . '$self->getService(?)->handleException($e); ' . "\n" .
+								'}', [FALSE, 254, $this->prefix('application')]);
+			}
+
+			$builder->getDefinition($builder->getByType('Nette\Application\IRouter') ?: 'router')
+					->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', [$this->prefix('@router')]);
+
+			$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
+					->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
+							'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', [
+							'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
+					]);
 		}
 
-		$builder->getDefinition($builder->getByType('Nette\Application\IRouter') ?: 'router')
-			->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', array($this->prefix('@router')));
-
-		$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
-			->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
-				'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', array(
-				'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
-			));
-
-		if (!empty($config['url'])) {
+		if ($this->isNetteHttpPresent() && !empty($config['url'])) {
 			if (!preg_match('~^https?://[^/]+(/.*)?$~', $config['url'])) {
 				throw new Nette\Utils\AssertionException("The url '{$config['url']}' is not valid, please use this format: 'http://domain.tld/path'.");
 			}
@@ -211,6 +218,26 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	private static function hasConstructor($class)
 	{
 		return class_exists($class) && method_exists($class, '__construct');
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	private function isNetteApplicationPresent()
+	{
+		return class_exists('Nette\Application\Application');
+	}
+
+
+
+	/**
+	 * @return bool
+	 */
+	private function isNetteHttpPresent()
+	{
+		return interface_exists('Nette\Http\IRequest');
 	}
 
 }
