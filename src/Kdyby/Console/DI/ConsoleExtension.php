@@ -74,9 +74,9 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 		if ($config['application'] && $this->isNetteApplicationPresent()) {
 			$builder->addDefinition($this->prefix('router'))
-					->setClass('Kdyby\Console\CliRouter')
-					->setAutowired(FALSE)
-					->setInject(FALSE);
+				->setClass('Kdyby\Console\CliRouter')
+				->setAutowired(FALSE)
+				->setInject(FALSE);
 		}
 
 		Nette\Utils\Validators::assert($config, 'array');
