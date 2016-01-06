@@ -40,6 +40,42 @@ class ContainerHelper extends Console\Helper\Helper
 
 
 	/**
+	 * @param string $key
+	 * @return bool
+	 */
+	public function hasParameter($key)
+	{
+		return isset($this->container->parameters[$key]);
+	}
+
+
+
+	/**
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function getParameter($key)
+	{
+		if (!$this->hasParameter($key)) {
+			return NULL;
+		}
+
+		return $this->container->parameters[$key];
+	}
+
+
+
+	/**
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return $this->container->parameters;
+	}
+
+
+
+	/**
 	 * @return \Nette\DI\Container
 	 */
 	public function getContainer()
