@@ -80,8 +80,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		}
 
 		Nette\Utils\Validators::assert($config, 'array');
-		foreach ($config['commands'] as $command) {
-			$def = $builder->addDefinition($this->prefix('command.' . md5(Nette\Utils\Json::encode($command))));
+		foreach ($config['commands'] as $i => $command) {
+			$def = $builder->addDefinition($this->prefix('command.' . $i));
 			list($def->factory) = Nette\DI\Compiler::filterArguments(array(
 				is_string($command) ? new Statement($command) : $command
 			));

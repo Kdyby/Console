@@ -6,3 +6,9 @@ console:
 		- KdybyTests\Console\NamespaceAmbiguousCommand1
 		- KdybyTests\Console\NamespaceAmbiguousCommand2
 		- KdybyTests\Console\ArgCommand
+		- KdybyTests\Console\SameArgsCommandOne(@service1, @service2)
+		- KdybyTests\Console\SameArgsCommandTwo(@service1, @service2)
+
+services:
+	service1: KdybyTests\Console\ArgCommand
+	service2: KdybyTests\Console\TypoCommand
