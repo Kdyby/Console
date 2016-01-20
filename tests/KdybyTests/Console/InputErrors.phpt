@@ -354,4 +354,50 @@ class TypoCommand extends Symfony\Component\Console\Command\Command
 
 }
 
+class SameArgsCommandOne extends Symfony\Component\Console\Command\Command
+{
+
+	public function __construct(ArgCommand $argCommand, TypoCommand $typoCommand)
+	{
+		parent::__construct();
+	}
+
+
+	protected function configure()
+	{
+		$this->setName('sameArgsCommand:one');
+	}
+
+
+
+	protected function execute(InputInterface $input, OutputInterface $output)
+	{
+		Assert::fail("This command shouldn't have been executed.");
+	}
+
+}
+
+
+class SameArgsCommandTwo extends Symfony\Component\Console\Command\Command
+{
+
+	public function __construct(ArgCommand $argCommand, TypoCommand $typoCommand)
+	{
+		parent::__construct();
+	}
+
+	protected function configure()
+	{
+		$this->setName('sameArgsCommand:two');
+	}
+
+
+
+	protected function execute(InputInterface $input, OutputInterface $output)
+	{
+		Assert::fail("This command shouldn't have been executed.");
+	}
+
+}
+
 \run(new InputErrorsTest());
