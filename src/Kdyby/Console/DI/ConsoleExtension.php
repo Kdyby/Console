@@ -85,6 +85,13 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			Nette\DI\Compiler::parseService($def, $command);
 			$def->addTag(self::TAG_COMMAND);
 		}
+
+		isset($config['helpers']) ?: $config['helpers'] = [];
+		foreach ($config['helpers'] as $i => $helper) {
+			$def = $builder->addDefinition($this->prefix('helper.' . $i));
+			Nette\DI\Compiler::parseService($def, $helper);
+			$def->addTag(self::TAG_HELPER);
+		}
 	}
 
 
