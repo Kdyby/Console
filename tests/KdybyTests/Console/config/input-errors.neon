@@ -11,4 +11,4 @@ console:
 
 services:
 	service1: KdybyTests\Console\ArgCommand
-	service2: KdybyTests\Console\TypoCommand
+	service2: KdybyTests\Console\ArgCommand
