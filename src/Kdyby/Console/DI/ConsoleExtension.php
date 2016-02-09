@@ -90,8 +90,6 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 				$def->class = $def->factory->entity;
 			}
 
-			$def->setAutowired(FALSE);
-			$def->setInject(FALSE);
 			$def->addTag(self::TAG_COMMAND);
 		}
 	}
