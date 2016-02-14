@@ -21,6 +21,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tracy\Debugger;
+use Tracy\Dumper;
 
 
 
@@ -112,6 +113,10 @@ class Application extends Symfony\Component\Console\Application
 					return self::INVALID_APP_MODE_EXIT_CODE;
 				}
 			}
+		}
+
+		if (class_exists('Tracy\Dumper') && $input->hasParameterOption('--no-ansi')) {
+			Dumper::$terminalColors = FALSE;
 		}
 
 		try {
