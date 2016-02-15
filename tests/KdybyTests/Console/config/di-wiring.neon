@@ -1,0 +1,28 @@
+console:
+	commands:
+		- KdybyTests\Console\DI\CommandInCommands
+		- KdybyTests\Console\DI\CommandInCommandsNeedsAll
+		-
+			class: KdybyTests\Console\DI\CommandInCommandsNeedsAllWithInject
+			inject: true
+	helpers:
+		- KdybyTests\Console\DI\HelperInSection
+
+extensions:
+	console: Kdyby\Console\DI\ConsoleExtension
+
+services:
+	service1: KdybyTests\Console\DI\TestService
+	-
+		class: KdybyTests\Console\DI\CommandAsService
+		tags: [kdyby.console.command]
+	-
+		class: KdybyTests\Console\DI\HelperAsService
+		tags: [kdyby.console.helper]
+	-
+		class: KdybyTests\Console\DI\CommandAsServiceNeedsAll
+		tags: [kdyby.console.command]
+	-
+		class: KdybyTests\Console\DI\CommandAsServiceNeedsAllWithInject
+		inject: true
+		tags: [kdyby.console.command]

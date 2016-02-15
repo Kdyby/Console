@@ -1,66 +1,83 @@
-Quickstart
-==========
+kdyby/console
+=============
 
-This extension is here to provide integration of [Symfony Console](https://github.com/symfony/console) into Nette Framework.
+This extension provides integration of [Symfony Console](https://github.com/symfony/console) into [Nette Framework](https://www.nette.org).
+
+It allows you to create command-line commands directly within your application. These commands can be used for recurring tasks, as cronjobs, maintenances, imports and/or big things like sending newsletters.
 
 
 Installation
 -----------
 
-The best way to install Kdyby/Console is using  [Composer](http://getcomposer.org/):
+Fastest way is to use [Composer](http://getcomposer.org/) - run following command in your project root:
 
 ```sh
 $ composer require kdyby/console
 ```
 
-You can enable the extension using your neon config.
+Minimal configuration
+---------------------
 
-```yml
+First register new extension in your `config.neon`
+
+```
 extensions:
 	console: Kdyby\Console\DI\ConsoleExtension
 ```
 
-
-Minimal configuration
----------------------
-
-This extension creates new configuration section `console`, the absolute minimal configuration might look like this
+This creates new configuration section `console`, the absolute minimal configuration might look like this:
 
 ```yml
 console:
 	url: http://www.kdyby.org
 ```
 
-The `url` key specifies reference url that allows you to generate urls using Nette `UI\Presenter` in CLI (which is not possible otherwise). Another useful key is `commands` where you can register new commands. Look at the [Extending](#extending) part.
+The `url` key specifies reference url, that allows you to generate urls using Nette `UI\Presenter` in CLI (which is not possible otherwise).
 
+Now, your nette installation is ready to run commands! Try it:
+
+```sh
+$ php www/index.php
+```
 
 Writing commands
 ----------------
 
-Commands are like controllers, but for Symfony Console. Example command might look like this
+Example command might look like this:
 
 ```php
 namespace App\Console;
 
+use App\Models;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SendNewslettersCommand extends Command
 {
-	protected function configure()
+	/** @var Models\NewsletterSender */
+	private $newsletterSender;
+
+	/**
+	 * @param Models\NewsletterSender $sender
+	 */
+	protected function __construct(Models\NewsletterSender $sender)
 	{
-		$this->setName('app:newsletter')
-			->setDescription('Sends the newsletter');
+		parent::__construct('app:newsletter'); // <-- run with `php www/index.php app:newsletter`
+		$this->setDescription('Sends the newsletter');
+		$this->newsletterSender = $sender;
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return int
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$newsletterSender = $this->getHelper('container')->getByType('Models\NewsletterSender');
-
 		try {
-			$newsletterSender->sendNewsletters();
-			$output->writeLn('Newsletter sended');
+			$this->newsletterSender->sendNewsletters();
+			$output->writeLn('Newsletter sent');
 			return 0; // zero return code means everything is ok
 
 		} catch (\Nette\Mail\SmtpException $e) {
@@ -71,29 +88,25 @@ class SendNewslettersCommand extends Command
 }
 ```
 
-The configure method is to name the command and specify arguments and options.
-They have a lot of options and you can read about them in Symfony Documentation.
 
-When the command is executed, the execute method is called with two arguments.
-First one is command input, which contains all the parsed arguments and options.
-The second one is command output which should be used to provide feedback to the developer which ran the command.
+In `__construct`, we setup the name of the command, then set some description and set all dependencies.
+  
+Every command contains an `execute` function, which is called by Symfony console, whenever the command should be executed. The arguments handle either input parameters, and/or allow you to write to output stream.
+ 
+Best practice is to return an exit code, which specifies if the command ran successfully or not. This code can be read by other applications, when they execute your app. This is useful for cronjobs. 
 
-Best practise is to return an exit code which specifies if the command ran successfully and can be read by other applications when executed.
+Every command needs to be registered in commands section of `config.neon`:
 
+```yml
+console:
+	commands:
+		- App\Console\SendNewslettersCommand
+```
 
 Extending
 ---------
 
-To add a command, simply register it as a service with tag `kdyby.console.command`
-
-```yml
-services:
-	newsletterCommand:
-		class: App\Console\SendNewslettersCommand
-		tags: [kdyby.console.command]
-```
-
-Alternatively you can use shorter syntax for registering command (without tag). It's useful when you have a lot of commands:
+To add a command, simply register it inside of the `console.commands` section:
 
 ```yml
 console:
@@ -103,14 +116,10 @@ console:
 		- App\Console\AnotherCommand2
 ```
 
-This is called anonymous registration (look at hyphens). You can name your command (`newsletterCommand: App\Console\SendNewslettersCommand`) but mostly it's not necessary.
-
-To add a helper, simply register it as a service with tag `kdyby.console.helper`
-
+If you want to add a new [console helper](http://symfony.com/doc/current/components/console/helpers/index.html), use following syntax:
 
 ```yml
-services:
-	fooHelper:
-		class: App\Console\FooHelper
-		tags: [kdyby.console.helper]
+console:
+	helpers:
+		- App\Console\FooHelper
 ```

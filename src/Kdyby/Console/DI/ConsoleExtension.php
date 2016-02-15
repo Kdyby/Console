@@ -82,17 +82,15 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		Nette\Utils\Validators::assert($config, 'array');
 		foreach ($config['commands'] as $i => $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . $i));
-			list($def->factory) = Nette\DI\Compiler::filterArguments(array(
-				is_string($command) ? new Statement($command) : $command
-			));
-
-			if (class_exists($def->factory->entity)) {
-				$def->class = $def->factory->entity;
-			}
-
-			$def->setAutowired(FALSE);
-			$def->setInject(FALSE);
+			Nette\DI\Compiler::parseService($def, $command);
 			$def->addTag(self::TAG_COMMAND);
+		}
+
+		isset($config['helpers']) ?: $config['helpers'] = [];
+		foreach ($config['helpers'] as $i => $helper) {
+			$def = $builder->addDefinition($this->prefix('helper.' . $i));
+			Nette\DI\Compiler::parseService($def, $helper);
+			$def->addTag(self::TAG_HELPER);
 		}
 	}
 

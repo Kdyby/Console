@@ -24,6 +24,25 @@ The best way to install Kdyby/Console is using  [Composer](http://getcomposer.or
 $ composer require kdyby/console
 ```
 
+Then enable the extension in your `config.neon`:
+
+```yml
+extensions:
+	console: Kdyby\Console\DI\ConsoleExtension
+```
+
+And append your commands into `console` section:
+```yml
+console:
+	disable: false      # optional, can be used to disable console extension entirely
+	helpers:            # optional, helpers go here
+		- App\Console\FooHelper 
+	commands:           # define your commands in this section. Full Nette DI is supported.
+		- App\Console\SendNewslettersCommand 
+		- App\Console\AnotherCommand 
+		- App\Console\AnotherCommand2
+```
+
 
 Documentation
 ------------
