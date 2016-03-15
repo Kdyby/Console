@@ -82,7 +82,7 @@ class CliAppTester
 	 *
 	 * @return int     The command exit code
 	 */
-	public function run(array $input, $options = array())
+	public function run(array $input, $options = [])
 	{
 		$this->input = new ArgvInput($input);
 		if (isset($options['interactive'])) {

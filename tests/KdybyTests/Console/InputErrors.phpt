@@ -43,7 +43,7 @@ class InputErrorsTest extends Tester\TestCase
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . Nette\Utils\Strings::random())));
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . Nette\Utils\Strings::random()]]);
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		Kdyby\Events\DI\EventsExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/input-errors.neon', $config::NONE);
@@ -71,18 +71,18 @@ class InputErrorsTest extends Tester\TestCase
 		$app = $container->getByType('Kdyby\Console\Application');
 		$tester = new ApplicationTester($app);
 
-		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run(array('tipo')));
-		Assert::same(array(), $listener->calls);
+		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run(['tipo']));
+		Assert::same([], $listener->calls);
 	}
 
 
 
 	public function getAmbiguousCommandData()
 	{
-		return array(
-			array(array('ambiguous'), '%a% ambiguous %a%'),
-			array(array('name:ambi'), '%a% ambiguous %a%'),
-		);
+		return [
+			[['ambiguous'], '%a% ambiguous %a%'],
+			[['name:ambi'], '%a% ambiguous %a%'],
+		];
 	}
 
 
@@ -109,21 +109,21 @@ class InputErrorsTest extends Tester\TestCase
 		$tester = new ApplicationTester($app);
 
 		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run($arguments));
-		Assert::same(array(), $listener->calls);
+		Assert::same([], $listener->calls);
 	}
 
 
 
 	public function getNotLoggingUnknownArgumentData()
 	{
-		return array(
-			array(array('arg'), 'Not enough arguments%A?%'),
-			array(array('arg', 'first', 'second', 'third'), 'Too many arguments.'),
-			array(array('arg', '--non-existent-option', 'first'), 'The "--%a%" option does not exist.'),
-			array(array('arg', '-aa', 'first'), 'The "-%a%" option does not exist.'),
-			array(array('arg', '--no-value=1', 'first'), 'The "--%a%" option does not accept a value.'),
-			array(array('arg', '--existent', '--no-value', 'first'), 'The "--%a%" option requires a value.'),
-		);
+		return [
+			[['arg'], 'Not enough arguments%A?%'],
+			[['arg', 'first', 'second', 'third'], 'Too many arguments.'],
+			[['arg', '--non-existent-option', 'first'], 'The "--%a%" option does not exist.'],
+			[['arg', '-aa', 'first'], 'The "-%a%" option does not exist.'],
+			[['arg', '--no-value=1', 'first'], 'The "--%a%" option does not accept a value.'],
+			[['arg', '--existent', '--no-value', 'first'], 'The "--%a%" option requires a value.'],
+		];
 	}
 
 
@@ -174,37 +174,37 @@ class InputErrorsTest extends Tester\TestCase
 class ConsoleListener extends Nette\Object implements Kdyby\Events\Subscriber
 {
 
-	public $calls = array();
+	public $calls = [];
 
 
 	public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			ConsoleEvents::COMMAND,
 			ConsoleEvents::EXCEPTION,
 			ConsoleEvents::TERMINATE,
-		);
+		];
 	}
 
 
 
 	public function command(ConsoleCommandEvent $event)
 	{
-		$this->calls[] = array(__FUNCTION__, get_class($event->getCommand()));
+		$this->calls[] = [__FUNCTION__, get_class($event->getCommand())];
 	}
 
 
 
 	public function exception(ConsoleExceptionEvent $event)
 	{
-		$this->calls[] = array(__FUNCTION__, get_class($event->getCommand()), $event->getException());
+		$this->calls[] = [__FUNCTION__, get_class($event->getCommand()), $event->getException()];
 	}
 
 
 
 	public function terminate(ConsoleTerminateEvent $event)
 	{
-		$this->calls[] = array(__FUNCTION__, get_class($event->getCommand()), $event->getExitCode());
+		$this->calls[] = [__FUNCTION__, get_class($event->getCommand()), $event->getExitCode()];
 	}
 
 }
@@ -214,7 +214,7 @@ class ConsoleListener extends Nette\Object implements Kdyby\Events\Subscriber
 class TestLogger extends Tracy\Logger
 {
 
-	public $messages = array();
+	public $messages = [];
 
 
 

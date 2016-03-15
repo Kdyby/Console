@@ -57,7 +57,7 @@ class BootstrapHelper extends Nette\Object
 			return FALSE;
 		}
 
-		if ($input->hasParameterOption(array('--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'))) {
+		if ($input->hasParameterOption(['--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'])) {
 			$configurator->setDebugMode(FALSE);
 			return TRUE;
 
