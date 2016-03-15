@@ -56,8 +56,8 @@ class CliRouterTest extends Tester\TestCase
 
 		// create presenter
 		$presenter = new KdybyModule\CliPresenter();
-		$container->callMethod(array($presenter, 'injectPrimary'));
-		$container->callMethod(array($presenter, 'injectConsole'));
+		$container->callMethod([$presenter, 'injectPrimary']);
+		$container->callMethod([$presenter, 'injectConsole']);
 
 		// run presenter
 		$appResponse = $presenter->run($appRequest);

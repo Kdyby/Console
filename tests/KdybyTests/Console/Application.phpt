@@ -34,7 +34,7 @@ class ApplicationTest extends Tester\TestCase
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(array('container' => array('class' => 'SystemContainer_' . Nette\Utils\Strings::random())));
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . Nette\Utils\Strings::random()]]);
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		Kdyby\Events\DI\EventsExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/allow.neon', $config::NONE);
@@ -57,11 +57,11 @@ class ApplicationTest extends Tester\TestCase
 		$app = $container->getByType('Kdyby\Console\Application');
 		$tester = new ApplicationTester($app);
 
-		Assert::same(0, $tester->run(array('list')));
-		Assert::same(array(
-			array('command', 'Symfony\\Component\\Console\\Command\\ListCommand'),
-			array('terminate', 'Symfony\\Component\\Console\\Command\\ListCommand', 0),
-		), $listener->calls);
+		Assert::same(0, $tester->run(['list']));
+		Assert::same([
+			['command', 'Symfony\\Component\\Console\\Command\\ListCommand'],
+			['terminate', 'Symfony\\Component\\Console\\Command\\ListCommand', 0],
+		], $listener->calls);
 	}
 
 }
@@ -71,37 +71,37 @@ class ApplicationTest extends Tester\TestCase
 class ConsoleListener extends Nette\Object implements Kdyby\Events\Subscriber
 {
 
-	public $calls = array();
+	public $calls = [];
 
 
 	public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			ConsoleEvents::COMMAND,
 			ConsoleEvents::EXCEPTION,
 			ConsoleEvents::TERMINATE,
-		);
+		];
 	}
 
 
 
 	public function command(ConsoleCommandEvent $event)
 	{
-		$this->calls[] = array(__FUNCTION__, get_class($event->getCommand()));
+		$this->calls[] = [__FUNCTION__, get_class($event->getCommand())];
 	}
 
 
 
 	public function exception(ConsoleExceptionEvent $event)
 	{
-		$this->calls[] = array(__FUNCTION__, get_class($event->getCommand()), $event->getException());
+		$this->calls[] = [__FUNCTION__, get_class($event->getCommand()), $event->getException()];
 	}
 
 
 
 	public function terminate(ConsoleTerminateEvent $event)
 	{
-		$this->calls[] = array(__FUNCTION__, get_class($event->getCommand()), $event->getExitCode());
+		$this->calls[] = [__FUNCTION__, get_class($event->getCommand()), $event->getExitCode()];
 	}
 
 }
