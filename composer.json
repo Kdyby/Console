@@ -17,6 +17,7 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
+		"php": ">=5.4",
 		"nette/di": "~2.3@dev",
 
 		"symfony/console": "~2.3"

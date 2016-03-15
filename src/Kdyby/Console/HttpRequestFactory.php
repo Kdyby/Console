@@ -47,7 +47,7 @@ class HttpRequestFactory extends Nette\Http\RequestFactory
 			return parent::createHttpRequest();
 		}
 
-		return new Nette\Http\Request($this->fakeUrl, NULL, array(), array(), array(), array(), PHP_SAPI, '127.0.0.1', '127.0.0.1');
+		return new Nette\Http\Request($this->fakeUrl, NULL, [], [], [], [], PHP_SAPI, '127.0.0.1', '127.0.0.1');
 	}
 
 }

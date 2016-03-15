@@ -35,11 +35,11 @@ class Application extends Symfony\Component\Console\Application
 	const INPUT_ERROR_EXIT_CODE = 253;
 	const INVALID_APP_MODE_EXIT_CODE = 252;
 
-	private static $invalidArgumentExceptions = array(
+	private static $invalidArgumentExceptions = [
 		'RuntimeException',
 		'InvalidArgumentException',
 		'Symfony\Component\Console\Exception\RuntimeException',
-	);
+	];
 
 	/**
 	 * @var Nette\DI\Container
@@ -93,7 +93,7 @@ class Application extends Symfony\Component\Console\Application
 		$output = $output ?: new ConsoleOutput();
 
 		if ($input->hasParameterOption('--debug-mode')) {
-			if ($input->hasParameterOption(array('--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'))) {
+			if ($input->hasParameterOption(['--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'])) {
 				if ($this->serviceLocator->parameters['debugMode']) {
 					$this->renderException(new InvalidApplicationModeException(
 						"The app is running in debug mode. You have to use Kdyby\\Console\\DI\\BootstrapHelper in app/bootstrap.php, " .

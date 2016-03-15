@@ -30,7 +30,7 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 	/**
 	 * @var array
 	 */
-	public $allowedMethods = array('cli');
+	public $allowedMethods = ['cli'];
 
 	/**
 	 * @var \Nette\DI\Container
@@ -96,11 +96,11 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 			$output = new ConsoleOutput();
 		}
 
-		return new Request('Kdyby:Cli', 'cli', array(
+		return new Request('Kdyby:Cli', 'cli', [
 			'action' => 'default',
 			'input' => $input,
 			'output' => $output,
-		));
+		]);
 	}
 
 

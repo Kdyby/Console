@@ -32,15 +32,15 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	/**
 	 * @var array
 	 */
-	public $defaults = array(
+	public $defaults = [
 		'name' => 'Nette Framework',
 		'version' => 'unknown',
-		'commands' => array(),
+		'commands' => [],
 		'url' => NULL,
 		'disabled' => TRUE,
 		'application' => TRUE,
 		'fakeHttp' => TRUE,
-	);
+	];
 
 
 
@@ -63,8 +63,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$this->loadHelperSet($config);
 
 		$builder->addDefinition($this->prefix('application'))
-			->setClass('Kdyby\Console\Application', array($config['name'], $config['version']))
-			->addSetup('setHelperSet', array($this->prefix('@helperSet')))
+			->setClass('Kdyby\Console\Application', [$config['name'], $config['version']])
+			->addSetup('setHelperSet', [$this->prefix('@helperSet')])
 			->addSetup('injectServiceLocator')
 			->setInject(FALSE);
 
@@ -82,9 +82,9 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		Nette\Utils\Validators::assert($config, 'array');
 		foreach ($config['commands'] as $i => $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . $i));
-			list($def->factory) = Nette\DI\Compiler::filterArguments(array(
+			list($def->factory) = Nette\DI\Compiler::filterArguments([
 				is_string($command) ? new Statement($command) : $command
-			));
+			]);
 
 			if (class_exists($def->factory->entity)) {
 				$def->class = $def->factory->entity;
@@ -106,13 +106,13 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			->setClass('Symfony\Component\Console\Helper\HelperSet')
 			->setInject(FALSE);
 
-		$helperClasses = array(
+		$helperClasses = [
 			'Symfony\Component\Console\Helper\ProcessHelper',
 			'Symfony\Component\Console\Helper\DescriptorHelper',
 			'Symfony\Component\Console\Helper\FormatterHelper',
 			'Symfony\Component\Console\Helper\QuestionHelper',
 			'Symfony\Component\Console\Helper\DebugFormatterHelper',
-		);
+		];
 
 		if ($config['application'] && $this->isNetteApplicationPresent()) {
 			$helperClasses[] = 'Kdyby\Console\Helpers\PresenterHelper';
@@ -123,8 +123,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		}, $helperClasses);
 
 		// BC
-		$helpers[] = new Statement('Symfony\Component\Console\Helper\ProgressHelper', array(FALSE));
-		$helpers[] = new Statement('Symfony\Component\Console\Helper\DialogHelper', array(FALSE));
+		$helpers[] = new Statement('Symfony\Component\Console\Helper\ProgressHelper', [FALSE]);
+		$helpers[] = new Statement('Symfony\Component\Console\Helper\DialogHelper', [FALSE]);
 
 		foreach ($helpers as $helper) {
 			if (!class_exists($helper->entity)) {
@@ -132,13 +132,13 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			}
 
 			if (!self::hasConstructor($helper->entity)) {
-				$helper->arguments = array();
+				$helper->arguments = [];
 			}
 
-			$helperSet->addSetup('set', array($helper));
+			$helperSet->addSetup('set', [$helper]);
 		}
 
-		$helperSet->addSetup('set', array(new Statement('Kdyby\Console\ContainerHelper'), 'dic'));
+		$helperSet->addSetup('set', [new Statement('Kdyby\Console\ContainerHelper'), 'dic']);
 	}
 
 
@@ -157,12 +157,12 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 		$helperSet = $builder->getDefinition($this->prefix('helperSet'));
 		foreach ($builder->findByTag(self::TAG_HELPER) as $serviceName => $value) {
-			$helperSet->addSetup('set', array('@' . $serviceName, $value));
+			$helperSet->addSetup('set', ['@' . $serviceName, $value]);
 		}
 
 		$app = $builder->getDefinition($this->prefix('application'));
 		foreach ($builder->findByTag(self::TAG_COMMAND) as $serviceName => $_) {
-			$app->addSetup('add', array('@' . $serviceName));
+			$app->addSetup('add', ['@' . $serviceName]);
 		}
 
 		$sfDispatcher = $builder->getByType('Symfony\Component\EventDispatcher\EventDispatcherInterface') ?: 'events.symfonyProxy';
@@ -196,7 +196,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			->addSetup('Kdyby\Console\CliRouter::prependTo($service, ?)', [$this->prefix('@router')]);
 
 		$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
-			->addSetup('if (method_exists($service, ?)) { $service->setMapping(array(? => ?)); } ' .
+			->addSetup('if (method_exists($service, ?)) { $service->setMapping([? => ?]); } ' .
 				'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', [
 				'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
 			]);
@@ -218,7 +218,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			}
 			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory') ?: 'nette.httpRequestFactory')
 				->setFactory('Kdyby\Console\HttpRequestFactory')
-				->addSetup('setFakeRequestUrl', array($config['url']));
+				->addSetup('setFakeRequestUrl', [$config['url']]);
 		}
 	}
 
