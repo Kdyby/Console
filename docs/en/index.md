@@ -60,7 +60,7 @@ class SendNewslettersCommand extends Command
 
 		try {
 			$newsletterSender->sendNewsletters();
-			$output->writeLn('Newsletter sended');
+			$output->writeLn('Newsletter sent');
 			return 0; // zero return code means everything is ok
 
 		} catch (\Nette\Mail\SmtpException $e) {
