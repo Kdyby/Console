@@ -82,12 +82,12 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		Nette\Utils\Validators::assert($config, 'array');
 		foreach ($config['commands'] as $i => $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . $i));
-			list($def->factory) = Nette\DI\Compiler::filterArguments([
+			$def->setFactory(Nette\DI\Compiler::filterArguments([
 				is_string($command) ? new Statement($command) : $command
-			]);
+			])[0]);
 
-			if (class_exists($def->factory->entity)) {
-				$def->class = $def->factory->entity;
+			if (class_exists($def->getEntity())) {
+				$def->setClass($def->getEntity());
 			}
 
 			$def->setAutowired(FALSE);
@@ -127,11 +127,11 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$helpers[] = new Statement('Symfony\Component\Console\Helper\DialogHelper', [FALSE]);
 
 		foreach ($helpers as $helper) {
-			if (!class_exists($helper->entity)) {
+			if (!class_exists($helper->getEntity())) {
 				continue;
 			}
 
-			if (!self::hasConstructor($helper->entity)) {
+			if (!self::hasConstructor($helper->getEntity())) {
 				$helper->arguments = [];
 			}
 
@@ -167,7 +167,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 		$sfDispatcher = $builder->getByType('Symfony\Component\EventDispatcher\EventDispatcherInterface') ?: 'events.symfonyProxy';
 		if ($builder->hasDefinition($sfDispatcher)
-			&& $builder->getDefinition($sfDispatcher)->class === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
+			&& $builder->getDefinition($sfDispatcher)->getClass() === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
 		) {
 			$app->addSetup('setDispatcher');
 		}
