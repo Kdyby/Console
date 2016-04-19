@@ -46,7 +46,7 @@
 		"tracy/tracy": "~2.3@dev",
 
 		"nette/tester": "~1.6@rc",
-		"kdyby/events": "~2.4@dev",
+		"kdyby/events": "~2.4@dev|~3.0@dev",
 		"symfony/event-dispatcher": "~2.3"
 	},
 	"suggest": {
