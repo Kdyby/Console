@@ -46,8 +46,8 @@ class InputErrorsTest extends Tester\TestCase
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . Nette\Utils\Strings::random()]]);
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		Kdyby\Events\DI\EventsExtension::register($config);
-		$config->addConfig(__DIR__ . '/config/input-errors.neon', $config::NONE);
-		$config->addConfig(__DIR__ . '/config/allow.neon', $config::NONE);
+		$config->addConfig(__DIR__ . '/config/input-errors.neon');
+		$config->addConfig(__DIR__ . '/config/allow.neon');
 
 		return $config;
 	}

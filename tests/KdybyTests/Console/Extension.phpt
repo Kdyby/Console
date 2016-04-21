@@ -32,7 +32,7 @@ class ExtensionTest extends Tester\TestCase
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . Nette\Utils\Strings::random()]]);
 		Kdyby\Console\DI\ConsoleExtension::register($config);
-		$config->addConfig(__DIR__ . '/config/allow.neon', $config::NONE);
+		$config->addConfig(__DIR__ . '/config/allow.neon');
 
 		return $config;
 	}
@@ -42,7 +42,7 @@ class ExtensionTest extends Tester\TestCase
 	public function testFunctionality()
 	{
 		$config = $this->prepareConfigurator();
-		$config->addConfig(__DIR__ . '/config/commands.neon', $config::NONE);
+		$config->addConfig(__DIR__ . '/config/commands.neon');
 		$container = $config->createContainer();
 		/** @var \Nette\DI\Container|\SystemContainer $container */
 
@@ -71,7 +71,7 @@ class ExtensionTest extends Tester\TestCase
 	private function invokeTestOnConfig($file)
 	{
 		$config = $this->prepareConfigurator();
-		$config->addConfig($file, $config::NONE);
+		$config->addConfig($file);
 		Assert::true($config->createContainer() instanceof Nette\DI\Container);
 	}
 
