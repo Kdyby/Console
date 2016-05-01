@@ -176,18 +176,6 @@ class Application extends Symfony\Component\Console\Application
 
 
 
-	public function renderException($e, $output)
-	{
-		if ($output instanceof ConsoleOutputInterface) {
-			parent::renderException($e, $output->getErrorOutput());
-
-		} else {
-			parent::renderException($e, $output);
-		}
-	}
-
-
-
 	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
 	{
 		if ($this->serviceLocator) {
