@@ -252,7 +252,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	 */
 	private function isNetteApplicationPresent()
 	{
-		return class_exists('Nette\Application\Application');
+		return (bool) $this->compiler->getExtensions('Nette\Bridges\ApplicationDI\ApplicationExtension');
 	}
 
 
