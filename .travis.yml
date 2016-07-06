@@ -14,7 +14,9 @@ php:
 
 env:
   matrix:
-    - SYMFONY=3.* NETTE=nette-2.3-dev
+    - SYMFONY=3.* NETTE=nette-2.4-dev
+    - SYMFONY=3.* NETTE=nette-2.4
+    - SYMFONY=2.* NETTE=nette-2.4
     - SYMFONY=3.* NETTE=nette-2.3
     - SYMFONY=2.* NETTE=nette-2.3
 
@@ -26,6 +28,13 @@ matrix:
       env: SYMFONY=2.* NETTE=nette-2.3
     - php: 5.5
       env: SYMFONY=2.* NETTE=nette-2.3 COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
+  exclude:
+    - php: 5.5
+      env: SYMFONY=3.* NETTE=nette-2.4-dev
+    - php: 5.5
+      env: SYMFONY=3.* NETTE=nette-2.4
+    - php: 5.5
+      env: SYMFONY=2.* NETTE=nette-2.4
   allow_failures:
     - php: hhvm
 
