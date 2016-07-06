@@ -43,7 +43,7 @@ class InputErrorsTest extends Tester\TestCase
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . Nette\Utils\Strings::random()]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(rand())]]);
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		Kdyby\Events\DI\EventsExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/input-errors.neon');
