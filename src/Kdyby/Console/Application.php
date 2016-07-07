@@ -158,7 +158,12 @@ class Application extends Symfony\Component\Console\Application
 	public function handleException($e, OutputInterface $output = NULL)
 	{
 		$output = $output ? : new ConsoleOutput();
-		$this->renderException($e, $output);
+		if ($e instanceof \Exception) {
+			$this->renderException($e, $output);
+		} else {
+			$output->writeln(sprintf('<error>  %s  </error>', get_class($e)));
+			$output->writeln(sprintf('<error>  %s  </error>', $e->getMessage()));
+		}
 
 		if ($file = Debugger::log($e, Debugger::ERROR)) {
 			$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
