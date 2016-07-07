@@ -154,7 +154,7 @@ class Application extends Symfony\Component\Console\Application
 		$output = $output ?: new ConsoleOutput();
 		if ($e instanceof \Throwable) {
 			$output->writeln(sprintf('<error>  %s  </error>', get_class($e)));
-			$output->writeln(sprintf('<error>  %s  </error>', $e -> getMessage()));
+			$output->writeln(sprintf('<error>  %s  </error>', $e->getMessage()));
 		} else {
 			$this->renderException($e, $output);
 		}
