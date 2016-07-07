@@ -24,7 +24,6 @@ use Tracy\Debugger;
 use Tracy\Dumper;
 
 
-
 /**
  * @author Filip Procházka <filip@prochazka.su>
  * @author Michal Gebauer <mishak@mishak.net>
@@ -47,7 +46,6 @@ class Application extends Symfony\Component\Console\Application
 	private $serviceLocator;
 
 
-
 	/**
 	 * @param string $name
 	 * @param string $version
@@ -61,12 +59,10 @@ class Application extends Symfony\Component\Console\Application
 	}
 
 
-
 	public function injectServiceLocator(Nette\DI\Container $sl)
 	{
 		$this->serviceLocator = $sl;
 	}
-
 
 
 	public function find($name)
@@ -78,7 +74,6 @@ class Application extends Symfony\Component\Console\Application
 			throw new UnknownCommandException($e->getMessage(), $e->getCode(), $e);
 		}
 	}
-
 
 
 	/**
@@ -145,10 +140,9 @@ class Application extends Symfony\Component\Console\Application
 				$this->handleException($e, $output);
 			}
 
-			return max(min((int) $e->getCode(), 254), 1);
+			return max(min((int)$e->getCode(), 254), 1);
 		}
 	}
-
 
 
 	/**
@@ -157,8 +151,13 @@ class Application extends Symfony\Component\Console\Application
 	 */
 	public function handleException($e, OutputInterface $output = NULL)
 	{
-		$output = $output ? : new ConsoleOutput();
-		$this->renderException($e, $output);
+		$output = $output ?: new ConsoleOutput();
+		if ($e instanceof \Throwable) {
+			$output->writeln(sprintf('<error>  %s  </error>', get_class($e)));
+			$output->writeln(sprintf('<error>  %s  </error>', $e -> getMessage()));
+		} else {
+			$this->renderException($e, $output);
+		}
 
 		if ($file = Debugger::log($e, Debugger::ERROR)) {
 			$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
@@ -175,7 +174,6 @@ class Application extends Symfony\Component\Console\Application
 	}
 
 
-
 	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
 	{
 		if ($this->serviceLocator) {
@@ -184,7 +182,6 @@ class Application extends Symfony\Component\Console\Application
 
 		return parent::doRunCommand($command, $input, $output);
 	}
-
 
 
 	protected function getDefaultInputDefinition()
