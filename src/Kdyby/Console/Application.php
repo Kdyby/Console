@@ -158,11 +158,11 @@ class Application extends Symfony\Component\Console\Application
 	public function handleException($e, OutputInterface $output = NULL)
 	{
 		$output = $output ? : new ConsoleOutput();
-		if ($e instanceof \Throwable) {
+		if ($e instanceof \Exception) {
+			$this->renderException($e, $output);
+		} else {
 			$output->writeln(sprintf('<error>  %s  </error>', get_class($e)));
 			$output->writeln(sprintf('<error>  %s  </error>', $e->getMessage()));
-		} else {
-			$this->renderException($e, $output);
 		}
 
 		if ($file = Debugger::log($e, Debugger::ERROR)) {
