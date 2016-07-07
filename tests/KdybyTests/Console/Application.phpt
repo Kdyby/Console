@@ -38,6 +38,7 @@ class ApplicationTest extends Tester\TestCase
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		Kdyby\Events\DI\EventsExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/allow.neon');
+		$config->addConfig(__DIR__ . '/../../nette-reset.neon');
 
 		return $config;
 	}

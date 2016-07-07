@@ -48,6 +48,7 @@ class InputErrorsTest extends Tester\TestCase
 		Kdyby\Events\DI\EventsExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/input-errors.neon');
 		$config->addConfig(__DIR__ . '/config/allow.neon');
+		$config->addConfig(__DIR__ . '/../../nette-reset.neon');
 
 		return $config;
 	}
