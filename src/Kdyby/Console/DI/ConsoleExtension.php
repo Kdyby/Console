@@ -188,8 +188,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 				->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
 					"\t" . '$app->errorPresenter = ?;' . "\n" .
 					"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
-					"\t" . '$self->getService(?)->handleException($e); ' . "\n" .
-					'}', [FALSE, 254, $this->prefix('application')]);
+					'}', [FALSE, 254]);
 		}
 
 		$routerServiceName = $builder->getByType('Nette\Application\IRouter') ?: 'router';
