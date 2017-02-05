@@ -65,8 +65,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$builder->addDefinition($this->prefix('application'))
 			->setClass('Kdyby\Console\Application', [$config['name'], $config['version']])
 			->addSetup('setHelperSet', [$this->prefix('@helperSet')])
-			->addSetup('injectServiceLocator')
-			->setInject(FALSE);
+			->addSetup('injectServiceLocator');
 
 		if ($config['disabled']) {
 			return;
@@ -75,8 +74,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		if ($config['application'] && $this->isNetteApplicationPresent()) {
 			$builder->addDefinition($this->prefix('router'))
 				->setClass('Kdyby\Console\CliRouter')
-				->setAutowired(FALSE)
-				->setInject(FALSE);
+				->setAutowired(FALSE);
 		}
 
 		Nette\Utils\Validators::assert($config, 'array');
@@ -91,7 +89,6 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			}
 
 			$def->setAutowired(FALSE);
-			$def->setInject(FALSE);
 			$def->addTag(self::TAG_COMMAND);
 		}
 	}
@@ -103,8 +100,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$helperSet = $builder->addDefinition($this->prefix('helperSet'))
-			->setClass('Symfony\Component\Console\Helper\HelperSet')
-			->setInject(FALSE);
+			->setClass('Symfony\Component\Console\Helper\HelperSet');
 
 		$helperClasses = [
 			'Symfony\Component\Console\Helper\ProcessHelper',
