@@ -137,17 +137,18 @@ class Application extends Symfony\Component\Console\Application
 				Debugger::log($e->getMessage(), Debugger::ERROR);
 				return self::INPUT_ERROR_EXIT_CODE;
 
-			} else {
-				if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
-					/** @var Nette\Application\Application $app */
-					$app->onError($app, $e);
-				}
-
-				$this->handleException($e, $output);
 			}
+		} catch (\Throwable $e) {
 
-			return max(min((int) $e->getCode(), 254), 1);
 		}
+		if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+			/** @var Nette\Application\Application $app */
+			$app->onError($app, $e);
+		}
+
+		$this->handleException($e, $output);
+
+		return max(min((int) $e->getCode(), 254), 1);
 	}
 
 
