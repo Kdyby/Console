@@ -82,7 +82,7 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 	/**
 	 * Maps HTTP request to a Request object.
 	 */
-	public function match(Nette\Http\IRequest $httpRequest)
+	public function match(Nette\Http\IRequest $httpRequest) : ?Request
 	{
 		if (!in_array(PHP_SAPI, $this->allowedMethods, TRUE)) {
 			return NULL;
@@ -108,7 +108,7 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 	/**
 	 * Constructs absolute URL from Request object.
 	 */
-	public function constructUrl(Request $appRequest, Nette\Http\Url $refUrl)
+	public function constructUrl(Request $appRequest, Nette\Http\Url $refUrl) : ?string
 	{
 		return NULL;
 	}
