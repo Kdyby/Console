@@ -26,6 +26,11 @@ class CliPresenter extends Nette\Application\UI\Presenter
 	 */
 	private $console;
 
+	/**
+	 * @var Nette\Application\Application
+	 */
+	private $application;
+
 
 
 	protected function startup()
@@ -39,9 +44,13 @@ class CliPresenter extends Nette\Application\UI\Presenter
 	/**
 	 * @param Kdyby\Console\Application $console
 	 */
-	public function injectConsole(Kdyby\Console\Application $console)
+	public function injectConsole(
+		Kdyby\Console\Application $console,
+		Nette\Application\Application $application
+	)
 	{
 		$this->console = $console;
+		$this->application = $application;
 	}
 
 
@@ -51,7 +60,9 @@ class CliPresenter extends Nette\Application\UI\Presenter
 		$params = $this->request->getParameters();
 		Nette\Utils\Validators::assertField($params, 'input', 'Symfony\Component\Console\Input\Input');
 		Nette\Utils\Validators::assertField($params, 'output', 'Symfony\Component\Console\Output\OutputInterface');
-		$this->sendResponse(new Kdyby\Console\CliResponse($this->console->run($params['input'], $params['output'])));
+		$response = new Kdyby\Console\CliResponse($this->console->run($params['input'], $params['output']));
+		$response->injectApplication($this->application);
+		$this->sendResponse($response);
 	}
 
 }
