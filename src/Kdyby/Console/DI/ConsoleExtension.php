@@ -216,9 +216,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		if (!empty($config['url'])) {
-			if (!preg_match('~^https?://[^/]+(/.*)?$~', $config['url'])) {
-				throw new Nette\Utils\AssertionException("The url '{$config['url']}' is not valid, please use this format: 'http://domain.tld/path'.");
-			}
+			Nette\Utils\Validators::assert($config['url'], 'url', 'console.url');
 			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory') ?: 'nette.httpRequestFactory')
 				->setFactory('Kdyby\Console\HttpRequestFactory')
 				->addSetup('setFakeRequestUrl', [$config['url']]);
