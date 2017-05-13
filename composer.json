@@ -54,12 +54,12 @@
 		"nette/http": "For faking the url of the request in cli"
 	},
 	"autoload": {
-		"psr-0": {
+		"psr-4": {
 			"Kdyby\\Console\\": "src/"
 		},
 		"classmap": [
-			"src/Kdyby/Console/CliPresenter.php",
-			"src/Kdyby/Console/exceptions.php"
+			"src/CliPresenter.php",
+			"src/exceptions.php"
 		]
 	},
 	"extra": {
