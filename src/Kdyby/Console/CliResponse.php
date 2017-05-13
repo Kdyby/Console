@@ -26,6 +26,11 @@ class CliResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	private $exitCode;
 
+	/**
+	 * @var Nette\Application\Application
+	 */
+	private $application;
+
 
 
 	/**
@@ -34,6 +39,16 @@ class CliResponse extends Nette\Object implements Nette\Application\IResponse
 	public function __construct($exitCode)
 	{
 		$this->exitCode = $exitCode;
+	}
+
+
+
+	/**
+	 * @internal
+	 */
+	public function injectApplication(Nette\Application\Application $application)
+	{
+		$this->application = $application;
 	}
 
 
@@ -57,6 +72,10 @@ class CliResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
+		if ($this->application !== NULL) {
+			$this->application->onShutdown($this->application);
+		}
+
 		exit($this->exitCode);
 	}
 
