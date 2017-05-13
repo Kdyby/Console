@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tracy\Debugger;
 use Tracy\Dumper;
@@ -139,7 +138,7 @@ class Application extends Symfony\Component\Console\Application
 
 			}
 		} catch (\Throwable $e) {
-
+			$e = new FatalThrowableError($e);
 		}
 		if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
 			/** @var Nette\Application\Application $app */
