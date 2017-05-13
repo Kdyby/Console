@@ -37,6 +37,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		'version' => 'unknown',
 		'commands' => [],
 		'url' => NULL,
+		'urlScriptPath' => NULL,
 		'disabled' => TRUE,
 		'application' => TRUE,
 		'fakeHttp' => TRUE,
@@ -219,7 +220,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			Nette\Utils\Validators::assert($config['url'], 'url', 'console.url');
 			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory') ?: 'nette.httpRequestFactory')
 				->setFactory('Kdyby\Console\HttpRequestFactory')
-				->addSetup('setFakeRequestUrl', [$config['url']]);
+				->addSetup('setFakeRequestUrl', [$config['url'], $config['urlScriptPath']]);
 		}
 	}
 

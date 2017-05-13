@@ -30,10 +30,14 @@ class HttpRequestFactory extends Nette\Http\RequestFactory
 
 	/**
 	 * @param string|Nette\Http\UrlScript $url
+	 * @param string|null $scriptPath
 	 */
-	public function setFakeRequestUrl($url)
+	public function setFakeRequestUrl($url, $scriptPath = null)
 	{
 		$this->fakeUrl = $url ? new Nette\Http\UrlScript($url) : NULL;
+		if ($scriptPath !== null) {
+			$this->fakeUrl->setScriptPath($scriptPath);
+		}
 	}
 
 
