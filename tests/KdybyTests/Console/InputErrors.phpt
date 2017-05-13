@@ -401,4 +401,4 @@ class SameArgsCommandTwo extends Symfony\Component\Console\Command\Command
 
 }
 
-\run(new InputErrorsTest());
+(new InputErrorsTest())->run();

@@ -107,4 +107,4 @@ class ConsoleListener extends Nette\Object implements Kdyby\Events\Subscriber
 
 }
 
-\run(new ApplicationTest());
+(new ApplicationTest())->run();

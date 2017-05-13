@@ -93,4 +93,4 @@ class CommandMock extends Command
 
 }
 
-\run(new ExtensionTest());
+(new ExtensionTest())->run();

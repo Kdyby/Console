@@ -70,4 +70,4 @@ class CliRouterTest extends Tester\TestCase
 
 }
 
-\run(new CliRouterTest());
+(new CliRouterTest())->run();

@@ -57,4 +57,4 @@ class ContainerHelperTest extends \Tester\TestCase
 }
 
 
-\run(new ContainerHelperTest);
+(new ContainerHelperTest)->run();
