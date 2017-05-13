@@ -135,11 +135,12 @@ class Application extends Symfony\Component\Console\Application
 				$this->renderException($e, $output);
 				Debugger::log($e->getMessage(), Debugger::ERROR);
 				return self::INPUT_ERROR_EXIT_CODE;
-
 			}
+
 		} catch (\Throwable $e) {
 			$e = new FatalThrowableError($e);
 		}
+
 		if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
 			/** @var Nette\Application\Application $app */
 			$app->onError($app, $e);
