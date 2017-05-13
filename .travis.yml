@@ -18,6 +18,7 @@ env:
     - SYMFONY=2.* NETTE=nette-2.4
 
 matrix:
+  fast_finish: true
   include:
     - php: 7.0
       env: SYMFONY=3.* NETTE=nette-2.4 COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
