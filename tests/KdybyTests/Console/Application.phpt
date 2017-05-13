@@ -12,6 +12,7 @@ namespace KdybyTests\Console;
 
 use Kdyby;
 use Nette;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleExceptionEvent;
@@ -63,6 +64,35 @@ class ApplicationTest extends Tester\TestCase
 			['command', 'Symfony\\Component\\Console\\Command\\ListCommand'],
 			['terminate', 'Symfony\\Component\\Console\\Command\\ListCommand', 0],
 		], $listener->calls);
+	}
+
+
+
+	public function testRenderThrowable()
+	{
+		if (PHP_VERSION_ID < 70000) {
+			Tester\Environment::skip('Testing throwable is only relevant with PHP >= 7.0');
+		}
+
+		/** @var Nette\DI\Container $container */
+		$container = $this->prepareConfigurator()->createContainer();
+
+		/** @var Kdyby\Console\Application $app */
+		$app = $container->getByType('Kdyby\Console\Application');
+
+		$command = new Command('fail');
+		$command->setCode(function () {
+			throw new \ParseError('Fuuuuck', 42);
+		});
+		$app->add($command);
+
+		$tester = new ApplicationTester($app);
+		$exitCode = $tester->run(['fail']);
+		Assert::same(42, $exitCode);
+
+		$output = $tester->getDisplay();
+		Assert::contains('Kdyby\Console\FatalThrowableError', $output);
+		Assert::contains('Fuuuuck', $output);
 	}
 
 }
