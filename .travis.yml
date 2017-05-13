@@ -13,27 +13,28 @@ php:
 
 env:
   matrix:
-    - SYMFONY=3.* NETTE=nette-2.4-dev
-    - SYMFONY=3.* NETTE=nette-2.4
-    - SYMFONY=2.* NETTE=nette-2.4
+    - SYMFONY=3.* # dev
+    - SYMFONY=2.* # dev
+    - SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - SYMFONY=2.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
+    - SYMFONY=2.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
 
 matrix:
   fast_finish: true
   include:
     - php: 7.1
-      env: SYMFONY=3.* NETTE=nette-2.4 COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
+      env: SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable" COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
   exclude:
     - php: 7.1
-      env: SYMFONY=3.* NETTE=nette-2.4
+      env: SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable"
   allow_failures:
-    - env: SYMFONY=3.* NETTE=nette-2.4-dev
+    - env: SYMFONY=3.*
+    - env: SYMFONY=2.*
 
 before_install:
   - if [[ $SYMFONY = '2.*' ]]; then composer require --no-update symfony/console:^2.8; fi
   - if [[ $SYMFONY = '3.*' ]]; then composer require --no-update symfony/console:^3.0; fi
-  - travis_retry composer self-update
-  - wget -O /tmp/composer-nette https://raw.githubusercontent.com/Kdyby/TesterExtras/master/bin/composer-nette.php
-  - php /tmp/composer-nette
 
 install:
   - travis_retry composer update --no-interaction --no-suggest --no-progress --prefer-dist $COMPOSER_EXTRA_ARGS
