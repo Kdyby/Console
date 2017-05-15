@@ -88,6 +88,10 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 			return NULL;
 		}
 
+		if (empty($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
+			return NULL;
+		}
+
 		if (($input = $this->input) === NULL) {
 			$input = new ArgvInput();
 		}
