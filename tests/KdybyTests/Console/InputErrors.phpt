@@ -382,7 +382,7 @@ class SameArgsCommandOne extends Symfony\Component\Console\Command\Command
 class SameArgsCommandTwo extends Symfony\Component\Console\Command\Command
 {
 
-	public function __construct(ArgCommand $argCommand, TypoCommand $typoCommand)
+	public function __construct(ArgCommand $argCommand1, ArgCommand $argCommand2)
 	{
 		parent::__construct();
 	}
