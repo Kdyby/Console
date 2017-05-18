@@ -15,7 +15,6 @@ if (@!include __DIR__ . '/../../vendor/autoload.php') {
 
 // configure environment
 Tester\Environment::setup();
-class_alias('Tester\Assert', 'Assert');
 date_default_timezone_set('Europe/Prague');
 
 // create temporary directory
@@ -29,7 +28,3 @@ $_SERVER = array_intersect_key($_SERVER, array_flip([
 ]));
 $_SERVER['REQUEST_TIME'] = 1234567890;
 $_ENV = $_GET = $_POST = [];
-
-function id($val) {
-	return $val;
-}
