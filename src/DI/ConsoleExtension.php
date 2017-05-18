@@ -119,10 +119,6 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			return new Statement($class);
 		}, $helperClasses);
 
-		// BC
-		$helpers[] = new Statement('Symfony\Component\Console\Helper\ProgressHelper', [FALSE]);
-		$helpers[] = new Statement('Symfony\Component\Console\Helper\DialogHelper', [FALSE]);
-
 		foreach ($helpers as $helper) {
 			if (!class_exists($helper->getEntity())) {
 				continue;
