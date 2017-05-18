@@ -21,7 +21,7 @@
 		"nette/di": "^2.4@dev",
 		"tracy/tracy": "^2.4@dev",
 
-		"symfony/console": "~2.3|^3.0"
+		"symfony/console": "~2.3 || ^3.0"
 	},
 	"require-dev": {
 		"nette/application": "^2.4@dev",
@@ -30,7 +30,7 @@
 
 		"nette/tester": "~1.7",
 		"kdyby/events": "^3.1@dev",
-		"symfony/event-dispatcher": "~2.3|^3.0"
+		"symfony/event-dispatcher": "~2.3 || ^3.0"
 	},
 	"suggest": {
 		"nette/application": "For hooking the extension into the app and enabling running it through www/index.php",
