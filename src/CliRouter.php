@@ -11,6 +11,7 @@
 namespace Kdyby\Console;
 
 use Kdyby;
+use KdybyModule\CliPresenter;
 use Nette;
 use Nette\Application\Request;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -99,7 +100,7 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 			$output = new ConsoleOutput();
 		}
 
-		return new Request('Kdyby:Cli', 'cli', [
+		return new Request(CliPresenter::NAME, 'cli', [
 			'action' => 'default',
 			'input' => $input,
 			'output' => $output,

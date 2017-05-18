@@ -23,6 +23,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CliPresenter extends Nette\Application\UI\Presenter
 {
 
+	const NAME = 'Kdyby:Cli';
+
 	/**
 	 * @var Kdyby\Console\Application
 	 */

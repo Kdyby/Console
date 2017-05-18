@@ -52,7 +52,7 @@ class CliRouterTest extends Tester\TestCase
 
 		$appRequest = $router->match(new Nette\Http\Request(new Nette\Http\UrlScript()));
 		Assert::true($appRequest instanceof Nette\Application\Request);
-		Assert::same($appRequest->getPresenterName(), 'Kdyby:Cli');
+		Assert::same($appRequest->getPresenterName(), KdybyModule\CliPresenter::NAME);
 		Assert::same($appRequest->getMethod(), 'cli');
 
 		// create presenter

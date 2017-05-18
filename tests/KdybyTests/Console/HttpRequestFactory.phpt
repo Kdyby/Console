@@ -11,6 +11,7 @@
 namespace KdybyTests\Console;
 
 use Kdyby;
+use KdybyModule\CliPresenter;
 use Nette\Application\LinkGenerator;
 use Nette\Application\PresenterFactory;
 use Nette\Application\Routers\Route;
@@ -41,7 +42,7 @@ class HttpRequestFactoryTest extends Tester\TestCase
 		$presenterFactory = new PresenterFactory();
 		$presenterFactory->setMapping(['Kdyby' => 'KdybyModule\*\*Presenter']);
 		$linkGenerator = new LinkGenerator(
-			new Route('ABCDEF', ['presenter' => 'Kdyby:Cli', 'action' => 'default']),
+			new Route('ABCDEF', ['presenter' => CliPresenter::NAME, 'action' => 'default']),
 			$httpRequest->getUrl(),
 			$presenterFactory
 		);
