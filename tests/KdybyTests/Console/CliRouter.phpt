@@ -38,7 +38,7 @@ class CliRouterTest extends Tester\TestCase
 		$container = $config->createContainer();
 		/** @var Nette\DI\Container $container */
 
-		$router = $container->getByType('Nette\Application\IRouter');
+		$router = $container->getByType(Nette\Application\IRouter::class);
 		/** @var Nette\Application\Routers\RouteList $router */
 		Assert::true($router instanceof Nette\Application\Routers\RouteList);
 

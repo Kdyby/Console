@@ -13,6 +13,13 @@ namespace Kdyby\Console\DI;
 use Kdyby;
 use Nette;
 use Nette\DI\Statement;
+use Symfony\Component\Console\Helper\DebugFormatterHelper;
+use Symfony\Component\Console\Helper\DescriptorHelper;
+use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\ProcessHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 
 
@@ -48,7 +55,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	public function __construct()
 	{
 		$this->defaults['disabled'] = PHP_SAPI !== 'cli';
-		if (class_exists('Nette\Framework')) {
+		if (class_exists(Nette\Framework::class)) {
 			$this->defaults['name'] = Nette\Framework::NAME;
 			$this->defaults['version'] = Nette\Framework::VERSION;
 		}
@@ -64,7 +71,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$this->loadHelperSet($config);
 
 		$builder->addDefinition($this->prefix('application'))
-			->setClass('Kdyby\Console\Application', [$config['name'], $config['version']])
+			->setClass(Kdyby\Console\Application::class, [$config['name'], $config['version']])
 			->addSetup('setHelperSet', [$this->prefix('@helperSet')])
 			->addSetup('injectServiceLocator');
 
@@ -74,7 +81,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 		if ($config['application'] && $this->isNetteApplicationPresent()) {
 			$builder->addDefinition($this->prefix('router'))
-				->setClass('Kdyby\Console\CliRouter')
+				->setClass(Kdyby\Console\CliRouter::class)
 				->setAutowired(FALSE);
 		}
 
@@ -101,20 +108,21 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$helperSet = $builder->addDefinition($this->prefix('helperSet'))
-			->setClass('Symfony\Component\Console\Helper\HelperSet');
+			->setClass(HelperSet::class);
 
 		$helperClasses = [
-			'Symfony\Component\Console\Helper\ProcessHelper',
-			'Symfony\Component\Console\Helper\DescriptorHelper',
-			'Symfony\Component\Console\Helper\FormatterHelper',
-			'Symfony\Component\Console\Helper\QuestionHelper',
-			'Symfony\Component\Console\Helper\DebugFormatterHelper',
+			ProcessHelper::class,
+			DescriptorHelper::class,
+			FormatterHelper::class,
+			QuestionHelper::class,
+			DebugFormatterHelper::class,
 		];
 
 		if ($config['application'] && $this->isNetteApplicationPresent()) {
-			$helperClasses[] = 'Kdyby\Console\Helpers\PresenterHelper';
+			$helperClasses[] = Kdyby\Console\Helpers\PresenterHelper::class;
 		}
 
+		/** @var \Nette\DI\Statement[] $helpers */
 		$helpers = array_map(function ($class) {
 			return new Statement($class);
 		}, $helperClasses);
@@ -131,7 +139,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			$helperSet->addSetup('set', [$helper]);
 		}
 
-		$helperSet->addSetup('set', [new Statement('Kdyby\Console\ContainerHelper'), 'dic']);
+		$helperSet->addSetup('set', [new Statement(Kdyby\Console\ContainerHelper::class), 'dic']);
 	}
 
 
@@ -158,9 +166,9 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 			$app->addSetup('add', ['@' . $serviceName]);
 		}
 
-		$sfDispatcher = $builder->getByType('Symfony\Component\EventDispatcher\EventDispatcherInterface') ?: 'events.symfonyProxy';
+		$sfDispatcher = $builder->getByType(EventDispatcherInterface::class) ?: 'events.symfonyProxy';
 		if ($builder->hasDefinition($sfDispatcher)
-			&& $builder->getDefinition($sfDispatcher)->getClass() === 'Symfony\Component\EventDispatcher\EventDispatcherInterface'
+			&& $builder->getDefinition($sfDispatcher)->getClass() === EventDispatcherInterface::class
 		) {
 			$app->addSetup('setDispatcher');
 		}
@@ -177,25 +185,25 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		if (PHP_SAPI === 'cli') {
-			$builder->getDefinition($builder->getByType('Nette\Application\Application') ?: 'application')
+			$builder->getDefinition($builder->getByType(Nette\Application\Application::class) ?: 'application')
 				->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
 					"\t" . '$app->errorPresenter = ?;' . "\n" .
 					"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
 					'}', [FALSE, 254]);
 		}
 
-		$routerServiceName = $builder->getByType('Nette\Application\IRouter') ?: 'router';
+		$routerServiceName = $builder->getByType(Nette\Application\IRouter::class) ?: 'router';
 		$builder->addDefinition($this->prefix('originalRouter'), $builder->getDefinition($routerServiceName))
 			->setAutowired(FALSE);
 
 		$builder->removeDefinition($routerServiceName);
 
 		$builder->addDefinition($routerServiceName)
-			->setClass('Nette\Application\Routers\RouteList')
+			->setClass(Nette\Application\Routers\RouteList::class)
 			->addSetup('offsetSet', [NULL, $this->prefix('@router')])
 			->addSetup('offsetSet', [NULL, $this->prefix('@originalRouter')]);
 
-		$builder->getDefinition($builder->getByType('Nette\Application\IPresenterFactory') ?: 'nette.presenterFactory')
+		$builder->getDefinition($builder->getByType(Nette\Application\IPresenterFactory::class) ?: 'nette.presenterFactory')
 			->addSetup('if (method_exists($service, ?)) { $service->setMapping([? => ?]); } ' .
 				'elseif (property_exists($service, ?)) { $service->mapping[?] = ?; }', [
 				'setMapping', 'Kdyby', 'KdybyModule\*\*Presenter', 'mapping', 'Kdyby', 'KdybyModule\*\*Presenter'
@@ -214,8 +222,8 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 
 		if (!empty($config['url'])) {
 			Nette\Utils\Validators::assert($config['url'], 'url', 'console.url');
-			$builder->getDefinition($builder->getByType('Nette\Http\RequestFactory') ?: 'nette.httpRequestFactory')
-				->setFactory('Kdyby\Console\HttpRequestFactory')
+			$builder->getDefinition($builder->getByType(Nette\Http\RequestFactory::class) ?: 'nette.httpRequestFactory')
+				->setFactory(Kdyby\Console\HttpRequestFactory::class)
 				->addSetup('setFakeRequestUrl', [$config['url'], $config['urlScriptPath']]);
 		}
 	}
@@ -250,7 +258,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	 */
 	private function isNetteApplicationPresent()
 	{
-		return (bool) $this->compiler->getExtensions('Nette\Bridges\ApplicationDI\ApplicationExtension');
+		return (bool) $this->compiler->getExtensions(Nette\Bridges\ApplicationDI\ApplicationExtension::class);
 	}
 
 
@@ -260,7 +268,7 @@ class ConsoleExtension extends Nette\DI\CompilerExtension
 	 */
 	private function isNetteHttpPresent()
 	{
-		return interface_exists('Nette\Http\IRequest');
+		return interface_exists(Nette\Http\IRequest::class);
 	}
 
 }

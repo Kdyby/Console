@@ -13,7 +13,6 @@ namespace Kdyby\Console;
 use Kdyby;
 use Nette;
 use Nette\Application\Request;
-use Nette\Application\Routers\RouteList;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;

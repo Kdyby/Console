@@ -13,6 +13,7 @@ namespace KdybyTests\Console;
 use Kdyby;
 use Nette;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Event\ConsoleExceptionEvent;
@@ -52,17 +53,17 @@ class ApplicationTest extends Tester\TestCase
 		$container = $this->prepareConfigurator()->createContainer();
 
 		/** @var Kdyby\Events\EventManager $evm */
-		$evm = $container->getByType('Kdyby\Events\EventManager');
+		$evm = $container->getByType(Kdyby\Events\EventManager::class);
 		$evm->addEventSubscriber($listener = new ConsoleListener());
 
 		/** @var Kdyby\Console\Application $app */
-		$app = $container->getByType('Kdyby\Console\Application');
+		$app = $container->getByType(Kdyby\Console\Application::class);
 		$tester = new ApplicationTester($app);
 
 		Assert::same(0, $tester->run(['list']));
 		Assert::same([
-			['command', 'Symfony\\Component\\Console\\Command\\ListCommand'],
-			['terminate', 'Symfony\\Component\\Console\\Command\\ListCommand', 0],
+			['command', ListCommand::class],
+			['terminate', ListCommand::class, 0],
 		], $listener->calls);
 	}
 
@@ -78,7 +79,7 @@ class ApplicationTest extends Tester\TestCase
 		$container = $this->prepareConfigurator()->createContainer();
 
 		/** @var Kdyby\Console\Application $app */
-		$app = $container->getByType('Kdyby\Console\Application');
+		$app = $container->getByType(Kdyby\Console\Application::class);
 
 		$command = new Command('fail');
 		$command->setCode(function () {
@@ -91,7 +92,7 @@ class ApplicationTest extends Tester\TestCase
 		Assert::same(42, $exitCode);
 
 		$output = $tester->getDisplay();
-		Assert::contains('Kdyby\Console\FatalThrowableError', $output);
+		Assert::contains(Kdyby\Console\FatalThrowableError::class, $output);
 		Assert::contains('Fuuuuck', $output);
 	}
 

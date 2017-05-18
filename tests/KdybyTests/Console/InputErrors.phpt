@@ -65,11 +65,11 @@ class InputErrorsTest extends Tester\TestCase
 		$container = $this->prepareConfigurator()->createContainer();
 
 		/** @var Kdyby\Events\EventManager $evm */
-		$evm = $container->getByType('Kdyby\Events\EventManager');
+		$evm = $container->getByType(Kdyby\Events\EventManager::class);
 		$evm->addEventSubscriber($listener = new ConsoleListener());
 
 		/** @var Kdyby\Console\Application $app */
-		$app = $container->getByType('Kdyby\Console\Application');
+		$app = $container->getByType(Kdyby\Console\Application::class);
 		$tester = new ApplicationTester($app);
 
 		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run(['tipo']));
@@ -102,11 +102,11 @@ class InputErrorsTest extends Tester\TestCase
 		$container = $this->prepareConfigurator()->createContainer();
 
 		/** @var Kdyby\Events\EventManager $evm */
-		$evm = $container->getByType('Kdyby\Events\EventManager');
+		$evm = $container->getByType(Kdyby\Events\EventManager::class);
 		$evm->addEventSubscriber($listener = new ConsoleListener());
 
 		/** @var Kdyby\Console\Application $app */
-		$app = $container->getByType('Kdyby\Console\Application');
+		$app = $container->getByType(Kdyby\Console\Application::class);
 		$tester = new ApplicationTester($app);
 
 		Assert::same(Kdyby\Console\Application::INPUT_ERROR_EXIT_CODE, $tester->run($arguments));
@@ -142,11 +142,11 @@ class InputErrorsTest extends Tester\TestCase
 		$container = $this->prepareConfigurator()->createContainer();
 
 		/** @var Kdyby\Events\EventManager $evm */
-		$evm = $container->getByType('Kdyby\Events\EventManager');
+		$evm = $container->getByType(Kdyby\Events\EventManager::class);
 		$evm->addEventSubscriber($listener = new ConsoleListener());
 
 		/** @var Kdyby\Console\Application $app */
-		$app = $container->getByType('Kdyby\Console\Application');
+		$app = $container->getByType(Kdyby\Console\Application::class);
 		$tester = new CliAppTester($app);
 
 		array_unshift($arguments, 'www/index.php');

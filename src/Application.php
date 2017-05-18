@@ -35,9 +35,9 @@ class Application extends Symfony\Component\Console\Application
 	const INVALID_APP_MODE_EXIT_CODE = 252;
 
 	private static $invalidArgumentExceptions = [
-		'RuntimeException',
-		'InvalidArgumentException',
-		'Symfony\Component\Console\Exception\RuntimeException',
+		\RuntimeException::class,
+		\InvalidArgumentException::class,
+		\Symfony\Component\Console\Exception\RuntimeException::class,
 	];
 
 	/**
@@ -53,7 +53,7 @@ class Application extends Symfony\Component\Console\Application
 	 */
 	public function __construct($name = 'Nette Framework', $version = NULL)
 	{
-		parent::__construct($name, $version ?: (class_exists('Nette\Framework') ? Nette\Framework::VERSION : 'UNKNOWN'));
+		parent::__construct($name, $version ?: (class_exists(Nette\Framework::class) ? Nette\Framework::VERSION : 'UNKNOWN'));
 
 		$this->setCatchExceptions(FALSE);
 		$this->setAutoExit(FALSE);
@@ -114,7 +114,7 @@ class Application extends Symfony\Component\Console\Application
 			}
 		}
 
-		if (class_exists('Tracy\Dumper') && $input->hasParameterOption('--no-ansi')) {
+		if (class_exists(Dumper::class) && $input->hasParameterOption('--no-ansi')) {
 			Dumper::$terminalColors = FALSE;
 		}
 
@@ -141,7 +141,7 @@ class Application extends Symfony\Component\Console\Application
 			$e = new FatalThrowableError($e);
 		}
 
-		if ($app = $this->serviceLocator->getByType('Nette\Application\Application', FALSE)) {
+		if ($app = $this->serviceLocator->getByType(Nette\Application\Application::class, FALSE)) {
 			/** @var Nette\Application\Application $app */
 			$app->onError($app, $e);
 		}

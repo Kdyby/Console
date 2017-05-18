@@ -12,6 +12,8 @@ namespace KdybyModule;
 
 use Kdyby;
 use Nette;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 
 
@@ -58,8 +60,8 @@ class CliPresenter extends Nette\Application\UI\Presenter
 	public function actionDefault()
 	{
 		$params = $this->request->getParameters();
-		Nette\Utils\Validators::assertField($params, 'input', 'Symfony\Component\Console\Input\Input');
-		Nette\Utils\Validators::assertField($params, 'output', 'Symfony\Component\Console\Output\OutputInterface');
+		Nette\Utils\Validators::assertField($params, 'input', InputInterface::class);
+		Nette\Utils\Validators::assertField($params, 'output', OutputInterface::class);
 		$response = new Kdyby\Console\CliResponse($this->console->run($params['input'], $params['output']));
 		$response->injectApplication($this->application);
 		$this->sendResponse($response);
