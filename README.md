@@ -6,17 +6,6 @@ Kdyby/Console
 [![Latest stable](https://img.shields.io/packagist/v/kdyby/console.svg)](https://packagist.org/packages/kdyby/console)
 [![Coverage Status](https://coveralls.io/repos/github/Kdyby/Console/badge.svg?branch=master)](https://coveralls.io/github/Kdyby/Console?branch=master)
 
-
-
-Requirements
-------------
-
-Kdyby/Console requires PHP 5.4 or higher.
-
-- [Nette Framework](https://github.com/nette/nette)
-- [Symfony Console](https://github.com/symfony/Console)
-
-
 Installation
 ------------
 
@@ -26,12 +15,10 @@ The best way to install Kdyby/Console is using  [Composer](http://getcomposer.or
 $ composer require kdyby/console
 ```
 
-
 Documentation
 ------------
 
 Learn more in the [documentation](https://github.com/Kdyby/Console/blob/master/docs/en/index.md).
-
 
 -----
 
