@@ -45,7 +45,8 @@ class PresenterHelper extends Helper
 	 */
 	public function getPresenter()
 	{
-		if (!$presenter = $this->app->getPresenter()) {
+		$presenter = $this->app->getPresenter();
+		if ($presenter === NULL) {
 			throw new Kdyby\Console\InvalidStateException("There is currently no presenter");
 		}
 

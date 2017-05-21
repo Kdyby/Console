@@ -45,6 +45,11 @@
 			"src/exceptions.php"
 		]
 	},
+	"autoload-dev": {
+		"classmap": [
+			"tests/KdybyTests/"
+		]
+	},
 	"extra": {
 		"branch-alias": {
 			"dev-master": "2.7-dev"

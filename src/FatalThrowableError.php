@@ -33,7 +33,7 @@ class FatalThrowableError extends \ErrorException
 			$severity = E_ERROR;
 		}
 
-		\ErrorException::__construct(
+		parent::__construct(
 			$message,
 			$e->getCode(),
 			$severity,
