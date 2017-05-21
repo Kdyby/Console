@@ -32,6 +32,7 @@
 		"kdyby/events": "^3.1@dev",
 		"symfony/event-dispatcher": "~2.3 || ^3.0"
 	},
+	"minimum-stability": "dev",
 	"suggest": {
 		"nette/application": "For hooking the extension into the app and enabling running it through www/index.php",
 		"nette/http": "For faking the url of the request in cli"
