@@ -6,3 +6,5 @@ parameters:
 		- '#Call to an undefined method Nette\\Application\\Application::onShutdown\(\)#'
 		# it does, it just isn't annotated
 		- '#Static property Tracy\\Dumper::\$terminalColors \(mixed\[\]\) does not accept false#'
+		# intentional
+		- '#Constructor of class KdybyTests\\Console\\.*?Command.*? has an unused parameter *.?#'

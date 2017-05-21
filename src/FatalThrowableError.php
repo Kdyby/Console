@@ -10,8 +10,9 @@
 
 namespace Kdyby\Console;
 
+use ReflectionProperty;
+
 /**
- * @author Nicolas Grekas <p@tchwork.com>
  * @see https://github.com/symfony/debug/blob/2a237220d7d24a4ac867f701fe07320f341b2454/Exception/FatalThrowableError.php
  */
 class FatalThrowableError extends \ErrorException
@@ -23,10 +24,10 @@ class FatalThrowableError extends \ErrorException
 	public function __construct(\Throwable $e)
 	{
 		if ($e instanceof \ParseError) {
-			$message = 'Parse error: '.$e->getMessage();
+			$message = 'Parse error: ' . $e->getMessage();
 			$severity = E_PARSE;
 		} elseif ($e instanceof \TypeError) {
-			$message = 'Type error: '.$e->getMessage();
+			$message = 'Type error: ' . $e->getMessage();
 			$severity = E_RECOVERABLE_ERROR;
 		} else {
 			$message = $e->getMessage();
@@ -55,7 +56,7 @@ class FatalThrowableError extends \ErrorException
 
 	private function setTrace($trace)
 	{
-		$traceReflector = new \ReflectionProperty(\Exception::class, 'trace');
+		$traceReflector = new ReflectionProperty(\Exception::class, 'trace');
 		$traceReflector->setAccessible(TRUE);
 		$traceReflector->setValue($this, $trace);
 	}

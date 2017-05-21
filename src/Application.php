@@ -10,9 +10,9 @@
 
 namespace Kdyby\Console;
 
-use Kdyby;
-use Nette;
-use Symfony;
+use Nette\Application\Application as NetteApplication;
+use Nette\DI\Container;
+use Nette\Framework as NetteFramework;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,18 +22,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tracy\Debugger;
 use Tracy\Dumper;
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- * @author Michal Gebauer <mishak@mishak.net>
- */
-class Application extends Symfony\Component\Console\Application
+class Application extends \Symfony\Component\Console\Application
 {
 
+	use \Kdyby\StrictObjects\Scream;
+
+	const CLI_SAPI = 'cli';
 	const INPUT_ERROR_EXIT_CODE = 253;
 	const INVALID_APP_MODE_EXIT_CODE = 252;
 
+	/**
+	 * @var string[]
+	 */
 	private static $invalidArgumentExceptions = [
 		\RuntimeException::class,
 		\InvalidArgumentException::class,
@@ -41,11 +41,9 @@ class Application extends Symfony\Component\Console\Application
 	];
 
 	/**
-	 * @var Nette\DI\Container
+	 * @var \Nette\DI\Container
 	 */
 	private $serviceLocator;
-
-
 
 	/**
 	 * @param string $name
@@ -53,20 +51,16 @@ class Application extends Symfony\Component\Console\Application
 	 */
 	public function __construct($name = 'Nette Framework', $version = NULL)
 	{
-		parent::__construct($name, $version ?: (class_exists(Nette\Framework::class) ? Nette\Framework::VERSION : 'UNKNOWN'));
+		parent::__construct($name, $version ?: (class_exists(NetteFramework::class) ? NetteFramework::VERSION : 'UNKNOWN'));
 
 		$this->setCatchExceptions(FALSE);
 		$this->setAutoExit(FALSE);
 	}
 
-
-
-	public function injectServiceLocator(Nette\DI\Container $sl)
+	public function injectServiceLocator(Container $sl)
 	{
 		$this->serviceLocator = $sl;
 	}
-
-
 
 	public function find($name)
 	{
@@ -74,11 +68,9 @@ class Application extends Symfony\Component\Console\Application
 			return parent::find($name);
 
 		} catch (\InvalidArgumentException $e) {
-			throw new UnknownCommandException($e->getMessage(), $e->getCode(), $e);
+			throw new \Kdyby\Console\UnknownCommandException($e->getMessage(), $e->getCode(), $e);
 		}
 	}
-
-
 
 	/**
 	 * @param \Symfony\Component\Console\Input\InputInterface $input
@@ -94,9 +86,9 @@ class Application extends Symfony\Component\Console\Application
 		if ($input->hasParameterOption('--debug-mode')) {
 			if ($input->hasParameterOption(['--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'])) {
 				if ($this->serviceLocator->parameters['debugMode']) {
-					$this->renderException(new InvalidApplicationModeException(
-						"The app is running in debug mode. You have to use Kdyby\\Console\\DI\\BootstrapHelper in app/bootstrap.php, " .
-						"Kdyby\\Console cannot switch already running app to production mode . "
+					$this->renderException(new \Kdyby\Console\InvalidApplicationModeException(
+						'The app is running in debug mode. You have to use Kdyby\Console\DI\BootstrapHelper in app/bootstrap.php, ' .
+						'Kdyby\Console cannot switch already running app to production mode.'
 					), $output);
 
 					return self::INVALID_APP_MODE_EXIT_CODE;
@@ -104,9 +96,9 @@ class Application extends Symfony\Component\Console\Application
 
 			} else {
 				if (!$this->serviceLocator->parameters['debugMode']) {
-					$this->renderException(new InvalidApplicationModeException(
-						"The app is running in production mode. You have to use Kdyby\\Console\\DI\\BootstrapHelper in app/bootstrap.php, " .
-						"Kdyby\\Console cannot switch already running app to debug mode."
+					$this->renderException(new \Kdyby\Console\InvalidApplicationModeException(
+						'The app is running in production mode. You have to use Kdyby\Console\DI\BootstrapHelper in app/bootstrap.php, ' .
+						'Kdyby\Console cannot switch already running app to debug mode.'
 					), $output);
 
 					return self::INVALID_APP_MODE_EXIT_CODE;
@@ -121,7 +113,7 @@ class Application extends Symfony\Component\Console\Application
 		try {
 			return parent::run($input, $output);
 
-		} catch (UnknownCommandException $e) {
+		} catch (\Kdyby\Console\UnknownCommandException $e) {
 			$this->renderException($e->getPrevious(), $output);
 			list($message) = explode("\n", $e->getMessage());
 			Debugger::log($message, Debugger::ERROR);
@@ -141,8 +133,9 @@ class Application extends Symfony\Component\Console\Application
 			$e = new FatalThrowableError($e);
 		}
 
-		if ($app = $this->serviceLocator->getByType(Nette\Application\Application::class, FALSE)) {
-			/** @var Nette\Application\Application $app */
+		$app = $this->serviceLocator->getByType(NetteApplication::class, FALSE);
+		if ($app !== NULL) {
+			/** @var \Nette\Application\Application $app */
 			$app->onError($app, $e);
 		}
 
@@ -151,15 +144,13 @@ class Application extends Symfony\Component\Console\Application
 		return max(min((int) $e->getCode(), 254), 1);
 	}
 
-
-
 	/**
 	 * @param \Exception|\Throwable $e
-	 * @param OutputInterface|NULL $output
+	 * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
 	 */
 	public function handleException($e, OutputInterface $output = NULL)
 	{
-		$output = $output ? : new ConsoleOutput();
+		$output = $output ?: new ConsoleOutput();
 		if ($e instanceof \Exception) {
 			$this->renderException($e, $output);
 		} else {
@@ -167,7 +158,8 @@ class Application extends Symfony\Component\Console\Application
 			$output->writeln(sprintf('<error>  %s  </error>', $e->getMessage()));
 		}
 
-		if ($file = Debugger::log($e, Debugger::ERROR)) {
+		$file = Debugger::log($e, Debugger::ERROR);
+		if ($file !== NULL) {
 			$output->writeln(sprintf('<error>  (Tracy output was stored in %s)  </error>', basename($file)));
 			$output->writeln('');
 
@@ -181,8 +173,6 @@ class Application extends Symfony\Component\Console\Application
 		}
 	}
 
-
-
 	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
 	{
 		if ($this->serviceLocator) {
@@ -191,8 +181,6 @@ class Application extends Symfony\Component\Console\Application
 
 		return parent::doRunCommand($command, $input, $output);
 	}
-
-
 
 	protected function getDefaultInputDefinition()
 	{

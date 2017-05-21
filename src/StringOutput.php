@@ -10,35 +10,24 @@
 
 namespace Kdyby\Console;
 
-use Kdyby;
-use Nette;
-use Symfony\Component\Console\Output\Output;
-
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class StringOutput extends Output
+class StringOutput extends \Symfony\Component\Console\Output\Output
 {
+
+	use \Kdyby\StrictObjects\Scream;
 
 	/**
 	 * @var string
 	 */
 	private $output = '';
 
-
-
 	/**
 	 * @param string $message A message to write to the output
-	 * @param boolean $newline Whether to add a newline or not
+	 * @param bool $newline Whether to add a newline or not
 	 */
 	protected function doWrite($message, $newline)
 	{
 		$this->output .= $message . ($newline ? "\n" : '');
 	}
-
-
 
 	/**
 	 * @return string

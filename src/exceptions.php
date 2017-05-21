@@ -10,52 +10,27 @@
 
 namespace Kdyby\Console;
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
 interface Exception
 {
 
 }
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class InvalidArgumentException extends \InvalidArgumentException implements Exception
+class InvalidArgumentException extends \InvalidArgumentException implements \Kdyby\Console\Exception
 {
 
 }
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class InvalidApplicationModeException extends \LogicException implements Exception
+class InvalidApplicationModeException extends \LogicException implements \Kdyby\Console\Exception
 {
 
 }
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class InvalidStateException extends \RuntimeException implements Exception
+class InvalidStateException extends \RuntimeException implements \Kdyby\Console\Exception
 {
 
 }
 
-
-
-/**
- * @author Michal Gebauer <mishak@mishak.net>
- */
-class UnknownCommandException extends \InvalidArgumentException implements Exception
+class UnknownCommandException extends \InvalidArgumentException implements \Kdyby\Console\Exception
 {
 
 }

@@ -1,24 +1,10 @@
 <?php
 
-/**
- * This file is part of the Kdyby (http://www.kdyby.org)
- *
- * Copyright (c) 2008 Filip Procházka (filip@prochazka.su)
- *
- * For the full copyright and license information, please view the file license.txt that was distributed with this source code.
- */
-
 namespace KdybyTests\Console;
 
-use Kdyby;
-use Nette;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
-
-
 
 /**
  * Eases the testing of console applications.
@@ -27,12 +13,11 @@ use Symfony\Component\Console\Output\StreamOutput;
  *
  *     $application = new Application();
  *     $application->setAutoExit(false);
- *
- * @author Fabien Potencier <fabien@symfony.com>
- * @author Filip Procházka <filip@prochazka.su>
  */
 class CliAppTester
 {
+
+	use \Kdyby\StrictObjects\Scream;
 
 	/**
 	 * @var \Symfony\Component\Console\Application
@@ -40,12 +25,12 @@ class CliAppTester
 	private $application;
 
 	/**
-	 * @var ArgvInput
+	 * @var \Symfony\Component\Console\Input\ArgvInput
 	 */
 	private $input;
 
 	/**
-	 * @var StreamOutput
+	 * @var \Symfony\Component\Console\Output\StreamOutput
 	 */
 	private $output;
 
@@ -54,19 +39,13 @@ class CliAppTester
 	 */
 	private $statusCode;
 
-
-
 	/**
-	 * Constructor.
-	 *
-	 * @param Application $application An Application instance to test.
+	 * @param \Symfony\Component\Console\Application $application
 	 */
 	public function __construct(Application $application)
 	{
 		$this->application = $application;
 	}
-
-
 
 	/**
 	 * Executes the application.
@@ -80,7 +59,7 @@ class CliAppTester
 	 * @param array $input An array of arguments and options
 	 * @param array $options An array of options
 	 *
-	 * @return int     The command exit code
+	 * @return int The command exit code
 	 */
 	public function run(array $input, $options = [])
 	{
@@ -89,7 +68,7 @@ class CliAppTester
 			$this->input->setInteractive($options['interactive']);
 		}
 
-		$this->output = new StreamOutput(fopen('php://memory', 'w', false));
+		$this->output = new StreamOutput(fopen('php://memory', 'w', FALSE));
 		if (isset($options['decorated'])) {
 			$this->output->setDecorated($options['decorated']);
 		}
@@ -100,8 +79,6 @@ class CliAppTester
 		return $this->statusCode = $this->application->run($this->input, $this->output);
 	}
 
-
-
 	/**
 	 * Gets the display returned by the last execution of the application.
 	 *
@@ -109,7 +86,7 @@ class CliAppTester
 	 *
 	 * @return string The display
 	 */
-	public function getDisplay($normalize = false)
+	public function getDisplay($normalize = FALSE)
 	{
 		rewind($this->output->getStream());
 
@@ -122,36 +99,30 @@ class CliAppTester
 		return $display;
 	}
 
-
-
 	/**
 	 * Gets the input instance used by the last execution of the application.
 	 *
-	 * @return InputInterface The current input instance
+	 * @return \Symfony\Component\Console\Input\InputInterface The current input instance
 	 */
 	public function getInput()
 	{
 		return $this->input;
 	}
 
-
-
 	/**
 	 * Gets the output instance used by the last execution of the application.
 	 *
-	 * @return OutputInterface The current output instance
+	 * @return \Symfony\Component\Console\Output\OutputInterface The current output instance
 	 */
 	public function getOutput()
 	{
 		return $this->output;
 	}
 
-
-
 	/**
 	 * Gets the status code returned by the last execution of the application.
 	 *
-	 * @return int     The status code
+	 * @return int The status code
 	 */
 	public function getStatusCode()
 	{

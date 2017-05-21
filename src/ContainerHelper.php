@@ -10,34 +10,25 @@
 
 namespace Kdyby\Console;
 
-use Kdyby;
-use Nette;
-use Symfony\Component\Console;
+use Nette\DI\Container as DIContainer;
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class ContainerHelper extends Console\Helper\Helper
+class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 {
+
+	use \Kdyby\StrictObjects\Scream;
 
 	/**
 	 * @var \Nette\DI\Container
 	 */
 	private $container;
 
-
-
 	/**
 	 * @param \Nette\DI\Container $dic
 	 */
-	public function __construct(Nette\DI\Container $dic)
+	public function __construct(DIContainer $dic)
 	{
 		$this->container = $dic;
 	}
-
-
 
 	/**
 	 * @param string $key
@@ -47,8 +38,6 @@ class ContainerHelper extends Console\Helper\Helper
 	{
 		return isset($this->container->parameters[$key]);
 	}
-
-
 
 	/**
 	 * @param string $key
@@ -63,8 +52,6 @@ class ContainerHelper extends Console\Helper\Helper
 		return $this->container->parameters[$key];
 	}
 
-
-
 	/**
 	 * @return array
 	 */
@@ -73,8 +60,6 @@ class ContainerHelper extends Console\Helper\Helper
 		return $this->container->parameters;
 	}
 
-
-
 	/**
 	 * @return \Nette\DI\Container
 	 */
@@ -82,8 +67,6 @@ class ContainerHelper extends Console\Helper\Helper
 	{
 		return $this->container;
 	}
-
-
 
 	/**
 	 * @param string $type
@@ -94,14 +77,10 @@ class ContainerHelper extends Console\Helper\Helper
 		return $this->container->getByType($type);
 	}
 
-
-
 	/**
 	 * Returns the canonical name of this helper.
 	 *
 	 * @return string The canonical name
-	 *
-	 * @api
 	 */
 	public function getName()
 	{

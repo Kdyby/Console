@@ -10,16 +10,14 @@
 
 namespace Kdyby\Console;
 
-use Kdyby;
-use Nette;
+use Nette\Application\Application as NetteApplication;
+use Nette\Http\IRequest;
+use Nette\Http\IResponse;
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class CliResponse extends Nette\Object implements Nette\Application\IResponse
+class CliResponse implements \Nette\Application\IResponse
 {
+
+	use \Kdyby\StrictObjects\Scream;
 
 	/**
 	 * @var int
@@ -27,11 +25,9 @@ class CliResponse extends Nette\Object implements Nette\Application\IResponse
 	private $exitCode;
 
 	/**
-	 * @var Nette\Application\Application
+	 * @var \Nette\Application\Application|NULL
 	 */
 	private $application;
-
-
 
 	/**
 	 * @param int $exitCode
@@ -41,17 +37,13 @@ class CliResponse extends Nette\Object implements Nette\Application\IResponse
 		$this->exitCode = $exitCode;
 	}
 
-
-
 	/**
 	 * @internal
 	 */
-	public function injectApplication(Nette\Application\Application $application)
+	public function injectApplication(NetteApplication $application)
 	{
 		$this->application = $application;
 	}
-
-
 
 	/**
 	 * @return int
@@ -61,8 +53,6 @@ class CliResponse extends Nette\Object implements Nette\Application\IResponse
 		return $this->exitCode;
 	}
 
-
-
 	/**
 	 * Sends response to output.
 	 *
@@ -70,7 +60,7 @@ class CliResponse extends Nette\Object implements Nette\Application\IResponse
 	 * @param \Nette\Http\IResponse $httpResponse
 	 * @return void
 	 */
-	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
+	public function send(IRequest $httpRequest, IResponse $httpResponse)
 	{
 		if ($this->application !== NULL) {
 			$this->application->onShutdown($this->application);

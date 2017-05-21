@@ -10,32 +10,30 @@
 
 namespace KdybyModule;
 
-use Kdyby;
-use Nette;
+use Kdyby\Console\Application as ConsoleApplication;
+use Kdyby\Console\CliResponse;
+use Nette\Application\Application as NetteApplication;
+use Nette\Utils\Validators;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
-
 /**
- * @author Filip Procházka <filip@prochazka.su>
+ * @phpcsSuppress KdybyCodingStandard.Files.TypeNameMatchesFileName
  */
-class CliPresenter extends Nette\Application\UI\Presenter
+class CliPresenter extends \Nette\Application\UI\Presenter
 {
 
 	const NAME = 'Kdyby:Cli';
 
 	/**
-	 * @var Kdyby\Console\Application
+	 * @var \Kdyby\Console\Application|NULL
 	 */
 	private $console;
 
 	/**
-	 * @var Nette\Application\Application
+	 * @var \Nette\Application\Application|NULL
 	 */
 	private $application;
-
-
 
 	protected function startup()
 	{
@@ -43,28 +41,34 @@ class CliPresenter extends Nette\Application\UI\Presenter
 		$this->autoCanonicalize = FALSE;
 	}
 
-
-
 	/**
-	 * @param Kdyby\Console\Application $console
+	 * @param \Kdyby\Console\Application $console
+	 * @param \Nette\Application\Application $application
 	 */
 	public function injectConsole(
-		Kdyby\Console\Application $console,
-		Nette\Application\Application $application
+		ConsoleApplication $console,
+		NetteApplication $application
 	)
 	{
 		$this->console = $console;
 		$this->application = $application;
 	}
 
-
-
 	public function actionDefault()
 	{
-		$params = $this->request->getParameters();
-		Nette\Utils\Validators::assertField($params, 'input', InputInterface::class);
-		Nette\Utils\Validators::assertField($params, 'output', OutputInterface::class);
-		$response = new Kdyby\Console\CliResponse($this->console->run($params['input'], $params['output']));
+		if ($this->console === NULL || $this->application === NULL) {
+			throw new \Kdyby\Console\InvalidStateException('Before running the presenter, call injectConsole() with required dependencies.');
+		}
+
+		$request = $this->getRequest();
+		if ($request === NULL) {
+			throw new \Kdyby\Console\InvalidStateException(sprintf('Do not call %s directly, use %s::run()', __FUNCTION__, __CLASS__));
+		}
+
+		$params = $request->getParameters();
+		Validators::assertField($params, 'input', InputInterface::class);
+		Validators::assertField($params, 'output', OutputInterface::class);
+		$response = new CliResponse($this->console->run($params['input'], $params['output']));
 		$response->injectApplication($this->application);
 		$this->sendResponse($response);
 	}

@@ -10,11 +10,9 @@
 
 namespace Kdyby\Console\DI;
 
-use Kdyby;
-use Nette;
+use Kdyby\Console\Application;
+use Nette\Configurator;
 use Symfony\Component\Console\Input\ArgvInput;
-
-
 
 /**
  * Example app/bootstrap.php file:
@@ -35,19 +33,19 @@ use Symfony\Component\Console\Input\ArgvInput;
  *
  * $configurator->enableDebugger(__DIR__ . '/../log');
  * </code>
- *
- * @author Filip Procházka <filip@prochazka.su>
  */
-class BootstrapHelper extends Nette\Object
+class BootstrapHelper
 {
 
+	use \Kdyby\StrictObjects\Scream;
+
 	/**
-	 * @param Nette\Configurator $configurator
+	 * @param \Nette\Configurator $configurator
 	 * @return bool has the debug mode been modified?
 	 */
-	public static function setupMode(Nette\Configurator $configurator)
+	public static function setupMode(Configurator $configurator)
 	{
-		if (PHP_SAPI !== 'cli') {
+		if (PHP_SAPI !== Application::CLI_SAPI) {
 			return FALSE;
 		}
 

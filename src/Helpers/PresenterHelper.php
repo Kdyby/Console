@@ -10,34 +10,25 @@
 
 namespace Kdyby\Console\Helpers;
 
-use Kdyby;
-use Nette;
-use Symfony\Component\Console\Helper\Helper;
+use Nette\Application\Application;
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class PresenterHelper extends Helper
+class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 {
+
+	use \Kdyby\StrictObjects\Scream;
 
 	/**
 	 * @var \Nette\Application\Application
 	 */
 	private $app;
 
-
-
 	/**
 	 * @param \Nette\Application\Application $application
 	 */
-	public function __construct(Nette\Application\Application $application)
+	public function __construct(Application $application)
 	{
 		$this->app = $application;
 	}
-
-
 
 	/**
 	 * @return \Nette\Application\IPresenter|\Nette\Application\UI\Presenter
@@ -47,13 +38,11 @@ class PresenterHelper extends Helper
 	{
 		$presenter = $this->app->getPresenter();
 		if ($presenter === NULL) {
-			throw new Kdyby\Console\InvalidStateException("There is currently no presenter");
+			throw new \Kdyby\Console\InvalidStateException('There is currently no presenter');
 		}
 
 		return $presenter;
 	}
-
-
 
 	/**
 	 * Returns the canonical name of this helper.

@@ -10,79 +10,55 @@
 
 namespace Kdyby\Console;
 
-use Kdyby;
 use KdybyModule\CliPresenter;
-use Nette;
-use Nette\Application\Request;
+use Nette\Application\Request as AppRequest;
+use Nette\Http\IRequest;
+use Nette\Http\Url;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class CliRouter extends Nette\Object implements Nette\Application\IRouter
+class CliRouter implements \Nette\Application\IRouter
 {
 
-	/**
-	 * @var array
-	 */
-	public $allowedMethods = ['cli'];
+	use \Kdyby\StrictObjects\Scream;
 
 	/**
-	 * @var \Nette\DI\Container
+	 * @var string[]
 	 */
-	private $container;
+	public $allowedMethods = [Application::CLI_SAPI];
 
 	/**
-	 * @var InputInterface
+	 * @var \Symfony\Component\Console\Input\InputInterface|NULL
 	 */
 	private $input;
 
 	/**
-	 * @var OutputInterface
+	 * @var \Symfony\Component\Console\Output\OutputInterface|NULL
 	 */
 	private $output;
 
-
-
 	/**
-	 * @param \Nette\DI\Container $container
-	 */
-	public function __construct(Nette\DI\Container $container)
-	{
-		$this->container = $container;
-	}
-
-
-
-	/**
-	 * @param OutputInterface $output
+	 * @param \Symfony\Component\Console\Output\OutputInterface $output
 	 */
 	public function setOutput(OutputInterface $output)
 	{
 		$this->output = $output;
 	}
 
-
-
 	/**
-	 * @param InputInterface $input
+	 * @param \Symfony\Component\Console\Input\InputInterface $input
 	 */
 	public function setInput(InputInterface $input)
 	{
 		$this->input = $input;
 	}
 
-
-
 	/**
 	 * Maps HTTP request to a Request object.
 	 */
-	public function match(Nette\Http\IRequest $httpRequest)
+	public function match(IRequest $httpRequest)
 	{
 		if (!in_array(PHP_SAPI, $this->allowedMethods, TRUE)) {
 			return NULL;
@@ -92,27 +68,27 @@ class CliRouter extends Nette\Object implements Nette\Application\IRouter
 			return NULL;
 		}
 
-		if (($input = $this->input) === NULL) {
+		$input = $this->input;
+		if ($input === NULL) {
 			$input = new ArgvInput();
 		}
 
-		if (($output = $this->output) === NULL) {
+		$output = $this->output;
+		if ($output === NULL) {
 			$output = new ConsoleOutput();
 		}
 
-		return new Request(CliPresenter::NAME, 'cli', [
+		return new AppRequest(CliPresenter::NAME, Application::CLI_SAPI, [
 			'action' => 'default',
 			'input' => $input,
 			'output' => $output,
 		]);
 	}
 
-
-
 	/**
 	 * Constructs absolute URL from Request object.
 	 */
-	public function constructUrl(Request $appRequest, Nette\Http\Url $refUrl)
+	public function constructUrl(AppRequest $appRequest, Url $refUrl)
 	{
 		return NULL;
 	}

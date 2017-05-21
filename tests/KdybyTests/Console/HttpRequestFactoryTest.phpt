@@ -3,41 +3,34 @@
 /**
  * Test: Kdyby\Console\HttpRequestFactory.
  *
- * @testCase Kdyby\Console\HttpRequestFactoryTest
- * @author Filip Procházka <filip@prochazka.su>
- * @package Kdyby\Console
+ * @testCase
  */
 
 namespace KdybyTests\Console;
 
-use Kdyby;
+use Kdyby\Console\Application;
+use Kdyby\Console\HttpRequestFactory;
 use KdybyModule\CliPresenter;
 use Nette\Application\LinkGenerator;
 use Nette\Application\PresenterFactory;
 use Nette\Application\Routers\Route;
-use Tester;
 use Tester\Assert;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-
-
-/**
- * @author Filip Procházka <filip@prochazka.su>
- */
-class HttpRequestFactoryTest extends Tester\TestCase
+class HttpRequestFactoryTest extends \Tester\TestCase
 {
 
 	public function testScriptPath()
 	{
-		$requestFactory = new Kdyby\Console\HttpRequestFactory();
+		$requestFactory = new HttpRequestFactory();
 		$requestFactory->setFakeRequestUrl(
 			'http://domain.tld/path/',
 			'/path/'
 		);
 
 		$httpRequest = $requestFactory->createHttpRequest();
-		Assert::same('cli', $httpRequest->getMethod());
+		Assert::same(Application::CLI_SAPI, $httpRequest->getMethod());
 
 		$presenterFactory = new PresenterFactory();
 		$presenterFactory->setMapping(['Kdyby' => 'KdybyModule\*\*Presenter']);

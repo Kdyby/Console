@@ -3,9 +3,7 @@
 /**
  * Test: Kdyby\Console\ContainerHelper.
  *
- * @testCase KdybyTests\Console\ContainerHelperTest
- * @author Martin Procházka <juniwalk@outlook.cz>
- * @package Kdyby\Console
+ * @testCase
  */
 
 namespace KdybyTests\Console;
@@ -14,26 +12,20 @@ use Kdyby\Console\ContainerHelper;
 use Nette\DI\Container;
 use Tester\Assert;
 
-
 require_once __DIR__ . '/../bootstrap.php';
 
-/**
- * @author Martin Procházka <juniwalk@outlook.cz>
- */
 class ContainerHelperTest extends \Tester\TestCase
 {
+
 	/**
-	 * @return Container
+	 * @return \Nette\DI\Container
 	 */
 	private function createContainer()
 	{
-		$container = new Container([
+		return new Container([
 			'foo' => 'bar',
 		]);
-
-		return $container;
 	}
-
 
 	public function testContainer()
 	{
@@ -44,7 +36,6 @@ class ContainerHelperTest extends \Tester\TestCase
 		Assert::same('container', $helper->getName());
 	}
 
-
 	public function testParameters()
 	{
 		$container = $this->createContainer();
@@ -54,7 +45,7 @@ class ContainerHelperTest extends \Tester\TestCase
 		Assert::same('bar', $helper->getParameter('foo'));
 		Assert::false($helper->hasParameter('bar'));
 	}
-}
 
+}
 
 (new ContainerHelperTest)->run();
