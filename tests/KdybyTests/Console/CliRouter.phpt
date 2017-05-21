@@ -34,7 +34,7 @@ class CliRouterTest extends Tester\TestCase
 		Kdyby\Console\DI\ConsoleExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/short-url.neon');
 		$config->addConfig(__DIR__ . '/config/allow.neon');
-		$config->addConfig(__DIR__ . '/../../nette-reset.neon');
+		$config->addConfig(__DIR__ . '/../nette-reset.neon');
 		$container = $config->createContainer();
 		/** @var Nette\DI\Container $container */
 
