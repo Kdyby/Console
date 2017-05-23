@@ -1,11 +1,9 @@
-Quickstart
-==========
+# Quickstart
 
 This extension is here to provide integration of [Symfony Console](https://github.com/symfony/console) into Nette Framework.
 
 
-Installation
------------
+## Installation
 
 The best way to install Kdyby/Console is using  [Composer](http://getcomposer.org/):
 
@@ -17,25 +15,38 @@ You can enable the extension using your neon config.
 
 ```yml
 extensions:
-	console: Kdyby\Console\DI\ConsoleExtension
+    console: Kdyby\Console\DI\ConsoleExtension
 ```
 
-
-Minimal configuration
----------------------
+## Minimal configuration
 
 This extension creates new configuration section `console`, the absolute minimal configuration might look like this
 
 ```yml
 console:
-	url: http://www.kdyby.org
+    url: http://www.kdyby.org
 ```
 
-The `url` key specifies reference url that allows you to generate urls using Nette `UI\Presenter` in CLI (which is not possible otherwise). Another useful key is `commands` where you can register new commands. Look at the [Extending](#extending) part.
+The `url` key specifies reference url that allows you to generate urls using `LinkGenerator` in CLI (which is not possible otherwise).
 
 
-Writing commands
-----------------
+## Running the console
+
+It is suggested, that you create a `bin/console` file, with the following contents
+
+```php
+#!/usr/bin/env php
+<?php
+/** @var \Nette\DI\Container $container */
+$container = require __DIR__ . '/../app/bootstrap.php';
+$container->getByType(\Symfony\Component\Console\Application::class)->run();
+```
+
+Make sure the console script is executable by running `chmod +x bin/console`.
+
+And test it by running `php bin/console` (but just `bin/console` should work too), it should list all available commands.
+
+## Writing commands
 
 Commands are like controllers, but for Symfony Console. Example command might look like this
 
@@ -48,26 +59,33 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SendNewslettersCommand extends Command
 {
-	protected function configure()
-	{
-		$this->setName('app:newsletter')
-			->setDescription('Sends the newsletter');
-	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$newsletterSender = $this->getHelper('container')->getByType('Models\NewsletterSender');
+    /** @var \Models\NewsletterSender */
+    private $newsletterSender;
 
-		try {
-			$newsletterSender->sendNewsletters();
-			$output->writeLn('Newsletter sent');
-			return 0; // zero return code means everything is ok
+    public function __construct(NewsletterSender $newsletterSender)
+    {
+        $this->newsletterSender = $newsletterSender;
+    }
 
-		} catch (\Nette\Mail\SmtpException $e) {
-			$output->writeLn('<error>' . $e->getMessage() . '</error>');
-			return 1; // non-zero return code means error
-		}
-	}
+    protected function configure(): void
+    {
+        $this->setName('app:newsletter')
+            ->setDescription('Sends the newsletter');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        try {
+            $this->newsletterSender->sendNewsletters();
+            $output->writeLn('Newsletter sent');
+            return 0; // zero return code means everything is ok
+
+        } catch (\Nette\Mail\SmtpException $e) {
+            $output->writeLn('<error>' . $e->getMessage() . '</error>');
+            return 1; // non-zero return code means error
+        }
+    }
 }
 ```
 
@@ -81,36 +99,38 @@ The second one is command output which should be used to provide feedback to the
 Best practise is to return an exit code which specifies if the command ran successfully and can be read by other applications when executed.
 
 
-Extending
----------
+## Registering commands
 
-To add a command, simply register it as a service with tag `kdyby.console.command`
+To add a command, register it as a service with tag `kdyby.console.command`
 
 ```yml
 services:
-	newsletterCommand:
-		class: App\Console\SendNewslettersCommand
-		tags: [kdyby.console.command]
+    newsletterCommand:
+        class: App\Console\SendNewslettersCommand
+        tags: [kdyby.console.command]
 ```
 
-Alternatively you can use shorter syntax for registering command (without tag). It's useful when you have a lot of commands:
-
-```yml
-console:
-	commands:
-		- App\Console\SendNewslettersCommand
-		- App\Console\AnotherCommand
-		- App\Console\AnotherCommand2
-```
-
-This is called anonymous registration (look at hyphens). You can name your command (`newsletterCommand: App\Console\SendNewslettersCommand`) but mostly it's not necessary.
-
-To add a helper, simply register it as a service with tag `kdyby.console.helper`
+To add a helper, register it as a service with tag `kdyby.console.helper`
 
 
 ```yml
 services:
-	fooHelper:
-		class: App\Console\FooHelper
-		tags: [kdyby.console.helper]
+    fooHelper:
+        class: App\Console\FooHelper
+        tags: [kdyby.console.helper]
 ```
+
+### Shorter configuration
+
+If you want to register all your commands and don't want to write tags to all of them, you can use the Nette Decorator extension
+
+```yml
+decorator:
+    Symfony\Component\Console\Command\Command:
+        tags: [kdyby.console.command]
+
+services:
+    - App\Console\SendNewslettersCommand
+```
+
+Nette will add the tag to all the command services automatically and they will get picked by Kdyby/Console and registered as commands.
