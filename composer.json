@@ -33,7 +33,6 @@
 	},
 	"minimum-stability": "dev",
 	"suggest": {
-		"nette/application": "For hooking the extension into the app and enabling running it through www/index.php",
 		"nette/http": "For faking the url of the request in cli"
 	},
 	"autoload": {
