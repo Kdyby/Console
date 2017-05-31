@@ -39,7 +39,8 @@ It is suggested, that you create a `bin/console` file, with the following conten
 <?php
 /** @var \Nette\DI\Container $container */
 $container = require __DIR__ . '/../app/bootstrap.php';
-$container->getByType(\Symfony\Component\Console\Application::class)->run();
+$console = $container->getByType(\Symfony\Component\Console\Application::class);
+exit($console->run());
 ```
 
 Make sure the console script is executable by running `chmod +x bin/console`.
