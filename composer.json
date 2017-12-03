@@ -32,6 +32,9 @@
 		"symfony/event-dispatcher": "~2.3 || ^3.0"
 	},
 	"minimum-stability": "dev",
+	"conflict": {
+		"nette/reflection": "<2.4.2"
+	},
 	"suggest": {
 		"nette/http": "For faking the url of the request in cli"
 	},
