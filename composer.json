@@ -21,7 +21,7 @@
 		"nette/di": "^2.4@dev",
 		"tracy/tracy": "^2.4@dev",
 		"kdyby/strict-objects": "^1.0",
-		"symfony/console": "~2.3 || ^3.0"
+		"symfony/console": "~2.3 || ^3.0 || ^4.0"
 	},
 	"require-dev": {
 		"nette/application": "^2.4@dev",
@@ -29,7 +29,7 @@
 		"nette/http": "^2.4@dev",
 		"nette/tester": "~1.7",
 		"kdyby/events": "^3.1@dev",
-		"symfony/event-dispatcher": "~2.3 || ^3.0"
+		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0"
 	},
 	"minimum-stability": "dev",
 	"conflict": {
