@@ -10,7 +10,6 @@ namespace KdybyTests\Console;
 
 use Kdyby\Console\Application;
 use Kdyby\Console\DI\ConsoleExtension;
-use Kdyby\Console\FatalThrowableError;
 use Kdyby\Events\DI\EventsExtension;
 use Kdyby\Events\EventManager;
 use Nette\Configurator;
@@ -81,7 +80,6 @@ class ApplicationTest extends \Tester\TestCase
 		Assert::same(42, $exitCode);
 
 		$output = $tester->getDisplay();
-		Assert::contains(FatalThrowableError::class, $output);
 		Assert::contains('Fuuuuck', $output);
 	}
 

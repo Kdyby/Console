@@ -10,35 +10,53 @@ php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
 
 env:
   matrix:
+    - SYMFONY=4.* # dev
     - SYMFONY=3.* # dev
     - SYMFONY=2.* # dev
+    - SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
     - SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable"
     - SYMFONY=2.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
     - SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
     - SYMFONY=2.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
 
 matrix:
   fast_finish: true
   include:
-    - php: 7.1
-      env: SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable" COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
-    - php: 7.1
-      env: SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable" PHPSTAN=1
-    - php: 7.1
-      env: SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable" CODING_STANDARD=1
+    - php: 7.2
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
+    - php: 7.2
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" PHPSTAN=1
+    - php: 7.2
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" CODING_STANDARD=1
   exclude:
-    - php: 7.1
-      env: SYMFONY=3.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - php: 7.2
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - php: 7.0
+      env: SYMFONY=4.*
+    - php: 7.0
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - php: 7.0
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
+    - php: 5.6
+      env: SYMFONY=4.*
+    - php: 5.6
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
+    - php: 5.6
+      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
   allow_failures:
+    - env: SYMFONY=4.*
     - env: SYMFONY=3.*
     - env: SYMFONY=2.*
 
 before_install:
   - if [[ $SYMFONY = '2.*' ]]; then composer require --no-update symfony/console:^2.8; fi
   - if [[ $SYMFONY = '3.*' ]]; then composer require --no-update symfony/console:^3.0; fi
+  - if [[ $SYMFONY = '4.*' ]]; then composer require --no-update symfony/console:^4.0; fi
 
 install:
   - if [ "$CODING_STANDARD" = "1" ]; then composer require --dev --no-update kdyby/coding-standard:^1.0@dev; fi
