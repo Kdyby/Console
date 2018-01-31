@@ -66,6 +66,7 @@ class SendNewslettersCommand extends Command
 
     public function __construct(NewsletterSender $newsletterSender)
     {
+        parent::__construct();
         $this->newsletterSender = $newsletterSender;
     }
 
