@@ -74,7 +74,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
+		$config = $this->validateConfig($this->defaults);
 
 		$this->loadHelperSet($config);
 
