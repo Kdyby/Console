@@ -17,9 +17,9 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
-		"php": "^7.1",
+		"php": ">=7.1",
 		"nette/di": "^2.4.10@dev || ^3.0.0@dev",
-		"tracy/tracy": "^2.6 || ^3.0.0@dev",
+		"tracy/tracy": "^2.4@dev || ^3.0.0@dev",
 		"kdyby/strict-objects": "^1.0",
 		"symfony/console": "~2.3 || ^3.0 || ^4.0"
 	},
