@@ -40,7 +40,6 @@ class InputErrorsTest extends \Tester\TestCase
 
 	public function testNotLoggingUnknownCommand()
 	{
-		Debugger::setLogger(new TestLogger('Command "%S%" is not defined.'));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
 
@@ -78,7 +77,6 @@ class InputErrorsTest extends \Tester\TestCase
 	 */
 	public function testNotLoggingAmbiguousCommand(array $arguments, $message)
 	{
-		Debugger::setLogger(new TestLogger($message));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
 
@@ -120,7 +118,6 @@ class InputErrorsTest extends \Tester\TestCase
 	 */
 	public function testNotLoggingUnknownArgument(array $arguments, $message)
 	{
-		Debugger::setLogger(new TestLogger($message));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
 

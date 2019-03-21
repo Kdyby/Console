@@ -14,6 +14,7 @@ use KdybyModule\CliPresenter;
 use Nette\Application\LinkGenerator;
 use Nette\Application\PresenterFactory;
 use Nette\Application\Routers\Route;
+use Nette\Http\Url;
 use Tester\Assert;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -36,7 +37,7 @@ class HttpRequestFactoryTest extends \Tester\TestCase
 		$presenterFactory->setMapping(['Kdyby' => 'KdybyModule\*\*Presenter']);
 		$linkGenerator = new LinkGenerator(
 			new Route('ABCDEF', ['presenter' => CliPresenter::NAME, 'action' => 'default']),
-			$httpRequest->getUrl(),
+			new Url('http://domain.tld/path/'),
 			$presenterFactory
 		);
 

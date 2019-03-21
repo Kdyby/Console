@@ -17,18 +17,18 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
-		"php": "^5.6 || ^7.0",
-		"nette/di": "^2.4.8@dev",
-		"tracy/tracy": "^2.4@dev",
+		"php": "^7.1",
+		"nette/di": "^2.4.10@dev || ^3.0.0@dev",
+		"tracy/tracy": "^2.6 || ^3.0.0@dev",
 		"kdyby/strict-objects": "^1.0",
 		"symfony/console": "~2.3 || ^3.0 || ^4.0"
 	},
 	"require-dev": {
-		"nette/application": "^2.4.9@dev",
-		"nette/bootstrap": "^2.4.5@dev",
-		"nette/caching": "^2.5@dev",
-		"nette/http": "^2.4.7@dev",
-		"nette/tester": "^2.0",
+		"nette/application": "^2.4.10@dev || ^3.0.0@dev",
+		"nette/bootstrap": "^2.4.5@dev || ^3.0.0@dev",
+		"nette/caching": "^2.5@dev || ^3.0.0@dev",
+		"nette/http": "^2.4.10@dev || ^3.0.0@dev",
+		"nette/tester": "^2.2",
 		"kdyby/events": "^3.1.1@dev",
 		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0"
 	},

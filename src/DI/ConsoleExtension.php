@@ -79,7 +79,8 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$this->loadHelperSet($config);
 
 		$builder->addDefinition($this->prefix('application'))
-			->setClass(ConsoleApplication::class, [$config['name'], $config['version']])
+			->setType(ConsoleApplication::class)
+			->setArguments([$config['name'], $config['version']])
 			->addSetup('setHelperSet', [$this->prefix('@helperSet')])
 			->addSetup('injectServiceLocator');
 
@@ -89,7 +90,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 
 		if ($config['application'] && $this->isNetteApplicationPresent()) {
 			$builder->addDefinition($this->prefix('router'))
-				->setClass(CliRouter::class)
+				->setType(CliRouter::class)
 				->setAutowired(FALSE);
 		}
 
@@ -101,7 +102,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 			])[0]);
 
 			if (class_exists($def->getEntity())) {
-				$def->setClass($def->getEntity());
+				$def->setType($def->getEntity());
 			}
 
 			$def->setAutowired(FALSE);
@@ -114,7 +115,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$helperSet = $builder->addDefinition($this->prefix('helperSet'))
-			->setClass(HelperSet::class);
+			->setType(HelperSet::class);
 
 		$helperClasses = [
 			ProcessHelper::class,
@@ -201,7 +202,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$builder->removeDefinition($routerServiceName);
 
 		$builder->addDefinition($routerServiceName)
-			->setClass(RouteList::class)
+			->setType(RouteList::class)
 			->addSetup('offsetSet', [NULL, $this->prefix('@router')])
 			->addSetup('offsetSet', [NULL, $this->prefix('@originalRouter')]);
 
