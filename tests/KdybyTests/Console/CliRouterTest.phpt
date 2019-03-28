@@ -14,12 +14,13 @@ use Kdyby\Console\CliRouter;
 use Kdyby\Console\DI\ConsoleExtension;
 use Kdyby\Console\StringOutput;
 use KdybyModule\CliPresenter;
-use Nette\Application\IRouter;
-use Nette\Application\Request as AppRequest;
+use Nette\Application\Request;
 use Nette\Application\Routers\RouteList;
+use Nette\Application\UI\Presenter;
 use Nette\Configurator;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\UrlScript;
+use Nette\Routing\Router;
 use Symfony\Component\Console\Input\StringInput;
 use Tester\Assert;
 
@@ -39,7 +40,7 @@ class CliRouterTest extends \Tester\TestCase
 		$container = $config->createContainer();
 		/** @var \Nette\DI\Container $container */
 
-		$router = $container->getByType(IRouter::class);
+		$router = $container->getByType(Router::class);
 		/** @var \Nette\Application\Routers\RouteList $router */
 		Assert::true($router instanceof RouteList);
 
@@ -52,14 +53,23 @@ class CliRouterTest extends \Tester\TestCase
 		$cliRouter->allowedMethods[] = 'cgi-fcgi'; // nette tester
 
 		$appRequest = $router->match(new HttpRequest(new UrlScript()));
-		Assert::true($appRequest instanceof AppRequest);
-		Assert::same($appRequest->getPresenterName(), CliPresenter::NAME);
-		Assert::same($appRequest->getMethod(), Application::CLI_SAPI);
+		Assert::type('array', $appRequest);
+		Assert::same($appRequest['presenter'], CliPresenter::NAME);
+		Assert::same($appRequest['method'], Application::CLI_SAPI);
 
 		// create presenter
 		$presenter = new CliPresenter();
 		$container->callMethod([$presenter, 'injectPrimary']);
 		$container->callMethod([$presenter, 'injectConsole']);
+
+		$appRequest = new Request(
+			$appRequest[Presenter::PRESENTER_KEY] ?? null,
+			$appRequest['method'],
+			$appRequest,
+			[],
+			[],
+			[Request::SECURED => true]
+		);
 
 		// run presenter
 		$appResponse = $presenter->run($appRequest);

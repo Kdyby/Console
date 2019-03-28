@@ -9,8 +9,6 @@ use Tester\Assert;
 class NamespaceAmbiguousCommand2 extends \Symfony\Component\Console\Command\Command
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	protected function configure()
 	{
 		$this->setName('namespace2:ambiguous');

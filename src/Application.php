@@ -25,8 +25,6 @@ use Tracy\Dumper;
 class Application extends \Symfony\Component\Console\Application
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	const CLI_SAPI = 'cli';
 	const INPUT_ERROR_EXIT_CODE = 253;
 	const INVALID_APP_MODE_EXIT_CODE = 252;

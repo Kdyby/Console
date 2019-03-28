@@ -9,8 +9,6 @@ use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 class ConsoleListener implements \Kdyby\Events\Subscriber
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @var string[][]
 	 */

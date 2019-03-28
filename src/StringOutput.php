@@ -13,8 +13,6 @@ namespace Kdyby\Console;
 class StringOutput extends \Symfony\Component\Console\Output\Output
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @var string
 	 */

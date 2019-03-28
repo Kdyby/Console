@@ -17,8 +17,6 @@ use Nette\Http\IResponse;
 class CliResponse implements \Nette\Application\IResponse
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @var int
 	 */
@@ -60,7 +58,7 @@ class CliResponse implements \Nette\Application\IResponse
 	 * @param \Nette\Http\IResponse $httpResponse
 	 * @return void
 	 */
-	public function send(IRequest $httpRequest, IResponse $httpResponse)
+	public function send(IRequest $httpRequest, IResponse $httpResponse): void
 	{
 		if ($this->application !== NULL) {
 			$this->application->onShutdown($this->application);

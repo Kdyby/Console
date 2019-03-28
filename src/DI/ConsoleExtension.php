@@ -22,10 +22,12 @@ use Nette\Application\Routers\RouteList;
 use Nette\Bridges\ApplicationDI\ApplicationExtension;
 use Nette\Configurator;
 use Nette\DI\Compiler;
-use Nette\DI\Statement;
+use Nette\DI\Config\Processor;
+use Nette\DI\Definitions\Statement;
 use Nette\Framework as NetteFramework;
 use Nette\Http\IRequest;
 use Nette\Http\RequestFactory as NetteRequestFactory;
+use Nette\Routing\Router;
 use Nette\Utils\Validators;
 use Symfony\Component\Console\Helper\DebugFormatterHelper;
 use Symfony\Component\Console\Helper\DescriptorHelper;
@@ -37,8 +39,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ConsoleExtension extends \Nette\DI\CompilerExtension
 {
-
-	use \Kdyby\StrictObjects\Scream;
 
 	/** @deprecated */
 	const HELPER_TAG = self::TAG_HELPER;
@@ -79,7 +79,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$this->loadHelperSet($config);
 
 		$builder->addDefinition($this->prefix('application'))
-			->setClass(ConsoleApplication::class, [$config['name'], $config['version']])
+			->setFactory(ConsoleApplication::class, [$config['name'], $config['version']])
 			->addSetup('setHelperSet', [$this->prefix('@helperSet')])
 			->addSetup('injectServiceLocator');
 
@@ -96,7 +96,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		Validators::assert($config, 'array');
 		foreach ($config['commands'] as $i => $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . $i));
-			$def->setFactory(Compiler::filterArguments([
+			$def->setFactory(Processor::processArguments([
 				is_string($command) ? new Statement($command) : $command,
 			])[0]);
 
@@ -194,14 +194,19 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 					'}', [FALSE, 254]);
 		}
 
-		$routerServiceName = $builder->getByType(IRouter::class) ?: 'router';
-		$builder->addDefinition($this->prefix('originalRouter'), $builder->getDefinition($routerServiceName))
-			->setAutowired(FALSE);
+		$routerServiceName = $builder->getByType(Router::class) ?: 'router';
+//		$builder->addDefinition($this->prefix('originalRouter'), $builder->getDefinition($routerServiceName))
+//			->setAutowired(FALSE);
+//		$builder->addAlias($this->prefix('originalRouter'), $routerServiceName);
+//		$builder->getDefinition($routerServiceName)->setName($this->prefix('originalRouter'))->setAutowired(false);
+		$builder->addDefinition($this->prefix('originalRouter'), clone $builder->getDefinition($routerServiceName))
+			->setAutowired(false);
 
 		$builder->removeDefinition($routerServiceName);
 
 		$builder->addDefinition($routerServiceName)
 			->setClass(RouteList::class)
+//			->setAutowired(false)
 			->addSetup('offsetSet', [NULL, $this->prefix('@router')])
 			->addSetup('offsetSet', [NULL, $this->prefix('@originalRouter')]);
 

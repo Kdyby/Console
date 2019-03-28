@@ -11,8 +11,6 @@ use Tester\Assert;
 class ArgCommand extends \Symfony\Component\Console\Command\Command
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	protected function configure()
 	{
 		$this->setName('arg')

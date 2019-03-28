@@ -7,8 +7,6 @@ use Tester\Assert;
 class TestLogger extends \Tracy\Logger
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @var mixed[]
 	 */

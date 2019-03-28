@@ -9,8 +9,6 @@ use Tester\Assert;
 class SameArgsCommandTwo extends \Symfony\Component\Console\Command\Command
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	public function __construct(ArgCommand $argCommand, TypoCommand $typoCommand)
 	{
 		parent::__construct();

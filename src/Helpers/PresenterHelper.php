@@ -15,8 +15,6 @@ use Nette\Application\Application;
 class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @var \Nette\Application\Application
 	 */

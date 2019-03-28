@@ -37,8 +37,6 @@ use Symfony\Component\Console\Input\ArgvInput;
 class BootstrapHelper
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @param \Nette\Configurator $configurator
 	 * @return bool has the debug mode been modified?
