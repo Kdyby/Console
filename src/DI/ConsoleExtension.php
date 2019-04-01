@@ -38,8 +38,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ConsoleExtension extends \Nette\DI\CompilerExtension
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/** @deprecated */
 	const HELPER_TAG = self::TAG_HELPER;
 	/** @deprecated */

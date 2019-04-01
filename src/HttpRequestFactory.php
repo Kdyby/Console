@@ -16,8 +16,6 @@ use Nette\Http\UrlScript;
 class HttpRequestFactory extends \Nette\Http\RequestFactory
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @var \Nette\Http\UrlScript|NULL
 	 */
