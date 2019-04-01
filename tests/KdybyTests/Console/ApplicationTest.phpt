@@ -29,8 +29,12 @@ class ApplicationTest extends \Tester\TestCase
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(mt_rand())]]);
-		ConsoleExtension::register($config);
-		EventsExtension::register($config);
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
+		};
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+			$compiler->addExtension('events', new \Kdyby\Events\DI\EventsExtension());
+		};
 		$config->addConfig(__DIR__ . '/config/allow.neon');
 		$config->addConfig(__DIR__ . '/../nette-reset.neon');
 

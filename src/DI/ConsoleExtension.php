@@ -234,16 +234,6 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 	}
 
 	/**
-	 * @param \Nette\Configurator $configurator
-	 */
-	public static function register(Configurator $configurator)
-	{
-		$configurator->onCompile[] = function ($config, Compiler $compiler) {
-			$compiler->addExtension('console', new ConsoleExtension());
-		};
-	}
-
-	/**
 	 * @param string $class
 	 * @return bool
 	 */

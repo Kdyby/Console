@@ -32,7 +32,9 @@ class CliRouterTest extends \Tester\TestCase
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		ConsoleExtension::register($config);
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
+		};
 		$config->addConfig(__DIR__ . '/config/short-url.neon');
 		$config->addConfig(__DIR__ . '/config/allow.neon');
 		$config->addConfig(__DIR__ . '/../nette-reset.neon');
