@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -41,12 +43,12 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 	use \Kdyby\StrictObjects\Scream;
 
 	/** @deprecated */
-	const HELPER_TAG = self::TAG_HELPER;
+	public const HELPER_TAG = self::TAG_HELPER;
 	/** @deprecated */
-	const COMMAND_TAG = self::TAG_COMMAND;
+	public const COMMAND_TAG = self::TAG_COMMAND;
 
-	const TAG_HELPER = 'kdyby.console.helper';
-	const TAG_COMMAND = 'kdyby.console.command';
+	protected const TAG_HELPER = 'kdyby.console.helper';
+	protected const TAG_COMMAND = 'kdyby.console.command';
 
 	/**
 	 * @var mixed[]
@@ -71,7 +73,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults);
@@ -109,7 +111,10 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	protected function loadHelperSet(array $config)
+	/**
+	 * @param mixed[] $config
+	 */
+	protected function loadHelperSet(array $config): void
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -148,7 +153,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$helperSet->addSetup('set', [new Statement(ContainerHelper::class), 'dic']);
 	}
 
-	public function beforeCompile()
+	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->getConfig($this->defaults);
@@ -178,7 +183,10 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	protected function beforeCompileHookApplication(array $config)
+	/**
+	 * @param mixed[] $config
+	 */
+	protected function beforeCompileHookApplication(array $config): void
 	{
 		if (!$config['application'] || !$this->isNetteApplicationPresent()) {
 			return; // ignore
@@ -216,7 +224,10 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 			);
 	}
 
-	protected function beforeCompileFakeHttp(array $config)
+	/**
+	 * @param mixed[] $config
+	 */
+	protected function beforeCompileFakeHttp(array $config): void
 	{
 		if (!$config['fakeHttp'] || !$this->isNetteHttpPresent()) {
 			return; // ignore
@@ -232,37 +243,24 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	/**
-	 * @param \Nette\Configurator $configurator
-	 */
-	public static function register(Configurator $configurator)
+	public static function register(Configurator $configurator): void
 	{
-		$configurator->onCompile[] = function ($config, Compiler $compiler) {
+		$configurator->onCompile[] = function ($config, Compiler $compiler): void {
 			$compiler->addExtension('console', new ConsoleExtension());
 		};
 	}
 
-	/**
-	 * @param string $class
-	 * @return bool
-	 */
-	private static function hasConstructor($class)
+	private static function hasConstructor(string $class): bool
 	{
 		return class_exists($class) && method_exists($class, '__construct');
 	}
 
-	/**
-	 * @return bool
-	 */
-	private function isNetteApplicationPresent()
+	private function isNetteApplicationPresent(): bool
 	{
 		return (bool) $this->compiler->getExtensions(ApplicationExtension::class);
 	}
 
-	/**
-	 * @return bool
-	 */
-	private function isNetteHttpPresent()
+	private function isNetteHttpPresent(): bool
 	{
 		return interface_exists(IRequest::class);
 	}

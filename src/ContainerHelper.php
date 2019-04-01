@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -22,19 +24,12 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 	 */
 	private $container;
 
-	/**
-	 * @param \Nette\DI\Container $dic
-	 */
 	public function __construct(DIContainer $dic)
 	{
 		$this->container = $dic;
 	}
 
-	/**
-	 * @param string $key
-	 * @return bool
-	 */
-	public function hasParameter($key)
+	public function hasParameter(string $key): bool
 	{
 		return isset($this->container->parameters[$key]);
 	}
@@ -43,7 +38,7 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function getParameter($key)
+	public function getParameter(string $key)
 	{
 		if (!$this->hasParameter($key)) {
 			return NULL;
@@ -53,17 +48,14 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 	}
 
 	/**
-	 * @return array
+	 * @return mixed[]
 	 */
-	public function getParameters()
+	public function getParameters(): array
 	{
 		return $this->container->parameters;
 	}
 
-	/**
-	 * @return \Nette\DI\Container
-	 */
-	public function getContainer()
+	public function getContainer(): DIContainer
 	{
 		return $this->container;
 	}
@@ -72,7 +64,7 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 	 * @param string $type
 	 * @return object
 	 */
-	public function getByType($type)
+	public function getByType(string $type)
 	{
 		return $this->container->getByType($type);
 	}
@@ -82,7 +74,7 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 	 *
 	 * @return string The canonical name
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return 'container';
 	}

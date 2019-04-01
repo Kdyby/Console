@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace KdybyTests\Console;
 
 use Symfony\Component\Console\Input\InputArgument;
@@ -13,7 +15,7 @@ class ArgCommand extends \Symfony\Component\Console\Command\Command
 
 	use \Kdyby\StrictObjects\Scream;
 
-	protected function configure()
+	protected function configure(): void
 	{
 		$this->setName('arg')
 			->addArgument('first', InputArgument::REQUIRED)
@@ -22,7 +24,7 @@ class ArgCommand extends \Symfony\Component\Console\Command\Command
 			->addOption('no-value', 'x', InputOption::VALUE_NONE);
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): void
 	{
 		Assert::fail("This command shouldn't have been executed.");
 	}

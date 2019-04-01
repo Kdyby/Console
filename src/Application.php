@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -15,6 +17,7 @@ use Nette\DI\Container;
 use Nette\Framework as NetteFramework;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -27,9 +30,9 @@ class Application extends \Symfony\Component\Console\Application
 
 	use \Kdyby\StrictObjects\Scream;
 
-	const CLI_SAPI = 'cli';
-	const INPUT_ERROR_EXIT_CODE = 253;
-	const INVALID_APP_MODE_EXIT_CODE = 252;
+	public const CLI_SAPI = 'cli';
+	public const INPUT_ERROR_EXIT_CODE = 253;
+	public const INVALID_APP_MODE_EXIT_CODE = 252;
 
 	/**
 	 * @var string[]
@@ -45,11 +48,7 @@ class Application extends \Symfony\Component\Console\Application
 	 */
 	private $serviceLocator;
 
-	/**
-	 * @param string $name
-	 * @param string $version
-	 */
-	public function __construct($name = 'Nette Framework', $version = NULL)
+	public function __construct(string $name = 'Nette Framework', ?string $version = NULL)
 	{
 		parent::__construct($name, $version ?: (class_exists(NetteFramework::class) ? NetteFramework::VERSION : 'UNKNOWN'));
 
@@ -57,7 +56,7 @@ class Application extends \Symfony\Component\Console\Application
 		$this->setAutoExit(FALSE);
 	}
 
-	public function injectServiceLocator(Container $sl)
+	public function injectServiceLocator(Container $sl): void
 	{
 		$this->serviceLocator = $sl;
 	}
@@ -72,13 +71,7 @@ class Application extends \Symfony\Component\Console\Application
 		}
 	}
 
-	/**
-	 * @param \Symfony\Component\Console\Input\InputInterface $input
-	 * @param \Symfony\Component\Console\Output\OutputInterface $output
-	 * @return int
-	 * @throws \Exception
-	 */
-	public function run(InputInterface $input = NULL, OutputInterface $output = NULL)
+	public function run(?InputInterface $input = NULL, ?OutputInterface $output = NULL): int
 	{
 		$input = $input ?: new ArgvInput();
 		$output = $output ?: new ConsoleOutput();
@@ -148,7 +141,7 @@ class Application extends \Symfony\Component\Console\Application
 	 * @param \Exception|\Throwable $e
 	 * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
 	 */
-	public function handleException($e, OutputInterface $output = NULL)
+	public function handleException($e, ?OutputInterface $output = NULL): void
 	{
 		$output = $output ?: new ConsoleOutput();
 		if ($e instanceof \Exception) {
@@ -173,7 +166,7 @@ class Application extends \Symfony\Component\Console\Application
 		}
 	}
 
-	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
+	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output): int
 	{
 		if ($this->serviceLocator) {
 			$this->serviceLocator->callInjects($command);
@@ -182,7 +175,7 @@ class Application extends \Symfony\Component\Console\Application
 		return parent::doRunCommand($command, $input, $output);
 	}
 
-	protected function getDefaultInputDefinition()
+	protected function getDefaultInputDefinition(): InputDefinition
 	{
 		$definition = parent::getDefaultInputDefinition();
 		$definition->addOption(new InputOption('--debug-mode', NULL, InputOption::VALUE_OPTIONAL, 'Run the application in debug mode?'));

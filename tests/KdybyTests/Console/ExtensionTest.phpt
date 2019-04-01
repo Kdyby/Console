@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Console\Extension.
  *
@@ -19,11 +21,11 @@ require_once __DIR__ . '/../bootstrap.php';
 class ExtensionTest extends \Tester\TestCase
 {
 
-	private function prepareConfigurator()
+	private function prepareConfigurator(): Configurator
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(mt_rand())]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string) mt_rand())]]);
 		ConsoleExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/allow.neon');
 		$config->addConfig(__DIR__ . '/../nette-reset.neon');
@@ -31,7 +33,7 @@ class ExtensionTest extends \Tester\TestCase
 		return $config;
 	}
 
-	public function testFunctionality()
+	public function testFunctionality(): void
 	{
 		$config = $this->prepareConfigurator();
 		$config->addConfig(__DIR__ . '/config/commands.neon');
@@ -44,20 +46,17 @@ class ExtensionTest extends \Tester\TestCase
 		Assert::equal(1, count($app->all('test')));
 	}
 
-	public function testShortUrl()
+	public function testShortUrl(): void
 	{
 		$this->invokeTestOnConfig(__DIR__ . '/config/short-url.neon');
 	}
 
-	public function testUrlWithoutTld()
+	public function testUrlWithoutTld(): void
 	{
 		$this->invokeTestOnConfig(__DIR__ . '/config/url-without-tld.neon');
 	}
 
-	/**
-	 * @param string $file
-	 */
-	private function invokeTestOnConfig($file)
+	private function invokeTestOnConfig(string $file): void
 	{
 		$config = $this->prepareConfigurator();
 		$config->addConfig($file);

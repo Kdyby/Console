@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -24,15 +26,12 @@ class StringOutput extends \Symfony\Component\Console\Output\Output
 	 * @param string $message A message to write to the output
 	 * @param bool $newline Whether to add a newline or not
 	 */
-	protected function doWrite($message, $newline)
+	protected function doWrite($message, $newline): void
 	{
 		$this->output .= $message . ($newline ? "\n" : '');
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getOutput()
+	public function getOutput(): string
 	{
 		return $this->output;
 	}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Console\Application.
  *
@@ -24,11 +26,11 @@ require_once __DIR__ . '/../bootstrap.php';
 class InputErrorsTest extends \Tester\TestCase
 {
 
-	private function prepareConfigurator()
+	private function prepareConfigurator(): Configurator
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(mt_rand())]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string) mt_rand())]]);
 		ConsoleExtension::register($config);
 		EventsExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/input-errors.neon');
@@ -38,7 +40,7 @@ class InputErrorsTest extends \Tester\TestCase
 		return $config;
 	}
 
-	public function testNotLoggingUnknownCommand()
+	public function testNotLoggingUnknownCommand(): void
 	{
 		Debugger::setLogger(new TestLogger('Command "%S%" is not defined.'));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
@@ -62,7 +64,7 @@ class InputErrorsTest extends \Tester\TestCase
 	/**
 	 * @return mixed[]
 	 */
-	public function getAmbiguousCommandData()
+	public function getAmbiguousCommandData(): array
 	{
 		return [
 			[['ambiguous'], '%a%ambiguous%a%'],
@@ -76,7 +78,7 @@ class InputErrorsTest extends \Tester\TestCase
 	 * @param string[] $arguments
 	 * @param string $message
 	 */
-	public function testNotLoggingAmbiguousCommand(array $arguments, $message)
+	public function testNotLoggingAmbiguousCommand(array $arguments, string $message): void
 	{
 		Debugger::setLogger(new TestLogger($message));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
@@ -100,7 +102,7 @@ class InputErrorsTest extends \Tester\TestCase
 	/**
 	 * @return mixed[]
 	 */
-	public function getNotLoggingUnknownArgumentData()
+	public function getNotLoggingUnknownArgumentData(): array
 	{
 		return [
 			[['arg'], 'Not enough arguments%A?%'],
@@ -118,7 +120,7 @@ class InputErrorsTest extends \Tester\TestCase
 	 * @param string[] $arguments
 	 * @param string $message
 	 */
-	public function testNotLoggingUnknownArgument(array $arguments, $message)
+	public function testNotLoggingUnknownArgument(array $arguments, string $message): void
 	{
 		Debugger::setLogger(new TestLogger($message));
 		Debugger::$logDirectory = TEMP_DIR . '/log';

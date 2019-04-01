@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -23,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CliPresenter extends \Nette\Application\UI\Presenter
 {
 
-	const NAME = 'Kdyby:Cli';
+	public const NAME = 'Kdyby:Cli';
 
 	/**
 	 * @var \Kdyby\Console\Application|NULL
@@ -35,26 +37,22 @@ class CliPresenter extends \Nette\Application\UI\Presenter
 	 */
 	private $application;
 
-	protected function startup()
+	protected function startup(): void
 	{
 		parent::startup();
 		$this->autoCanonicalize = FALSE;
 	}
 
-	/**
-	 * @param \Kdyby\Console\Application $console
-	 * @param \Nette\Application\Application $application
-	 */
 	public function injectConsole(
 		ConsoleApplication $console,
 		NetteApplication $application
-	)
+	): void
 	{
 		$this->console = $console;
 		$this->application = $application;
 	}
 
-	public function actionDefault()
+	public function actionDefault(): void
 	{
 		if ($this->console === NULL || $this->application === NULL) {
 			throw new \Kdyby\Console\InvalidStateException('Before running the presenter, call injectConsole() with required dependencies.');

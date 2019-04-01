@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Console\HttpRequestFactory.
  *
@@ -21,7 +23,7 @@ require_once __DIR__ . '/../bootstrap.php';
 class HttpRequestFactoryTest extends \Tester\TestCase
 {
 
-	public function testScriptPath()
+	public function testScriptPath(): void
 	{
 		$requestFactory = new HttpRequestFactory();
 		$requestFactory->setFakeRequestUrl(

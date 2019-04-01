@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace KdybyTests\Console;
 
 use Symfony\Component\Console\ConsoleEvents;
@@ -19,7 +21,7 @@ class ConsoleListener implements \Kdyby\Events\Subscriber
 	/**
 	 * @return string[]
 	 */
-	public function getSubscribedEvents()
+	public function getSubscribedEvents(): array
 	{
 		return [
 			ConsoleEvents::COMMAND,
@@ -27,12 +29,12 @@ class ConsoleListener implements \Kdyby\Events\Subscriber
 		];
 	}
 
-	public function command(ConsoleCommandEvent $event)
+	public function command(ConsoleCommandEvent $event): void
 	{
 		$this->calls[] = [__FUNCTION__, get_class($event->getCommand())];
 	}
 
-	public function terminate(ConsoleTerminateEvent $event)
+	public function terminate(ConsoleTerminateEvent $event): void
 	{
 		$this->calls[] = [__FUNCTION__, get_class($event->getCommand()), $event->getExitCode()];
 	}

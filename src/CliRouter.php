@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -39,18 +41,12 @@ class CliRouter implements \Nette\Application\IRouter
 	 */
 	private $output;
 
-	/**
-	 * @param \Symfony\Component\Console\Output\OutputInterface $output
-	 */
-	public function setOutput(OutputInterface $output)
+	public function setOutput(OutputInterface $output): void
 	{
 		$this->output = $output;
 	}
 
-	/**
-	 * @param \Symfony\Component\Console\Input\InputInterface $input
-	 */
-	public function setInput(InputInterface $input)
+	public function setInput(InputInterface $input): void
 	{
 		$this->input = $input;
 	}
@@ -58,7 +54,7 @@ class CliRouter implements \Nette\Application\IRouter
 	/**
 	 * Maps HTTP request to a Request object.
 	 */
-	public function match(IRequest $httpRequest)
+	public function match(IRequest $httpRequest): ?AppRequest
 	{
 		if (!in_array(PHP_SAPI, $this->allowedMethods, TRUE)) {
 			return NULL;
@@ -88,7 +84,7 @@ class CliRouter implements \Nette\Application\IRouter
 	/**
 	 * Constructs absolute URL from Request object.
 	 */
-	public function constructUrl(AppRequest $appRequest, Url $refUrl)
+	public function constructUrl(AppRequest $appRequest, Url $refUrl): ?int
 	{
 		return NULL;
 	}

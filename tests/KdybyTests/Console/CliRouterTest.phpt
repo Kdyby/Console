@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Console\CliRouter.
  *
@@ -28,7 +30,7 @@ require_once __DIR__ . '/../bootstrap.php';
 class CliRouterTest extends \Tester\TestCase
 {
 
-	public function testFunctionality()
+	public function testFunctionality(): void
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);

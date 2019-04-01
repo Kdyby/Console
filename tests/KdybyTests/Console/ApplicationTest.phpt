@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Console\Application.
  *
@@ -24,11 +26,11 @@ require_once __DIR__ . '/../bootstrap.php';
 class ApplicationTest extends \Tester\TestCase
 {
 
-	private function prepareConfigurator()
+	private function prepareConfigurator(): Configurator
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(mt_rand())]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string) mt_rand())]]);
 		ConsoleExtension::register($config);
 		EventsExtension::register($config);
 		$config->addConfig(__DIR__ . '/config/allow.neon');
@@ -37,7 +39,7 @@ class ApplicationTest extends \Tester\TestCase
 		return $config;
 	}
 
-	public function testDelegateEventsToSymfonyDispatcher()
+	public function testDelegateEventsToSymfonyDispatcher(): void
 	{
 		/** @var \Nette\DI\Container $container */
 		$container = $this->prepareConfigurator()->createContainer();
@@ -57,7 +59,7 @@ class ApplicationTest extends \Tester\TestCase
 		], $listener->calls);
 	}
 
-	public function testRenderThrowable()
+	public function testRenderThrowable(): void
 	{
 		if (PHP_VERSION_ID < 70000) {
 			TesterEnvironment::skip('Testing throwable is only relevant with PHP >= 7.0');
@@ -70,7 +72,7 @@ class ApplicationTest extends \Tester\TestCase
 		$app = $container->getByType(Application::class);
 
 		$command = new Command('fail');
-		$command->setCode(function () {
+		$command->setCode(function (): void {
 			throw new \ParseError('Fuuuuck', 42);
 		});
 		$app->add($command);

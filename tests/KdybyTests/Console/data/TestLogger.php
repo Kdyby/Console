@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace KdybyTests\Console;
 
 use Tester\Assert;
@@ -19,16 +21,18 @@ class TestLogger extends \Tracy\Logger
 	 */
 	private $pattern;
 
-	/**
-	 * @param string $pattern
-	 */
-	public function __construct($pattern)
+	public function __construct(string $pattern)
 	{
 		parent::__construct(NULL, NULL);
 		$this->pattern = $pattern;
 	}
 
-	public function log($value, $priority = 'info')
+	/**
+	 * @param mixed $value
+	 * @param string $priority
+	 * @throws \Exception
+	 */
+	public function log($value, $priority = 'info'): void
 	{
 		if ($value instanceof \Exception) {
 			throw $value;

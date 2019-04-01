@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace KdybyTests\Console;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,12 +13,12 @@ class NamespaceAmbiguousCommand1 extends \Symfony\Component\Console\Command\Comm
 
 	use \Kdyby\StrictObjects\Scream;
 
-	protected function configure()
+	protected function configure(): void
 	{
 		$this->setName('namespace1:ambiguous');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): void
 	{
 		Assert::fail("This command shouldn't have been executed.");
 	}

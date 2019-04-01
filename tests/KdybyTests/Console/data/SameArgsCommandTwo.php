@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace KdybyTests\Console;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,12 +18,12 @@ class SameArgsCommandTwo extends \Symfony\Component\Console\Command\Command
 		parent::__construct();
 	}
 
-	protected function configure()
+	protected function configure(): void
 	{
 		$this->setName('sameArgsCommand:two');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output)
+	protected function execute(InputInterface $input, OutputInterface $output): void
 	{
 		Assert::fail("This command shouldn't have been executed.");
 	}

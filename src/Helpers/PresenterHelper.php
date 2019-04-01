@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -22,9 +24,6 @@ class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 	 */
 	private $app;
 
-	/**
-	 * @param \Nette\Application\Application $application
-	 */
 	public function __construct(Application $application)
 	{
 		$this->app = $application;
@@ -49,7 +48,7 @@ class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 	 *
 	 * @return string The canonical name
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return 'presenter';
 	}

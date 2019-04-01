@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -46,15 +48,15 @@ class FatalThrowableError extends \ErrorException
 		$this->setTrace($e->getTrace());
 	}
 
-	/**
-	 * @return \Throwable
-	 */
-	public function getCause()
+	public function getCause(): \Throwable
 	{
 		return $this->cause;
 	}
 
-	private function setTrace($trace)
+	/**
+	 * @param mixed[] $trace
+	 */
+	private function setTrace(array $trace): void
 	{
 		$traceReflector = new ReflectionProperty(\Exception::class, 'trace');
 		$traceReflector->setAccessible(TRUE);

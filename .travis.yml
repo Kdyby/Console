@@ -7,10 +7,9 @@ cache:
         - $HOME/.composer/cache
 
 php:
-  - 5.6
-  - 7.0
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   matrix:
@@ -27,27 +26,15 @@ env:
 matrix:
   fast_finish: true
   include:
-    - php: 7.2
+    - php: 7.3
       env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" COVERAGE="--coverage ./coverage.xml --coverage-src ./src" TESTER_RUNTIME="phpdbg"
-    - php: 7.2
+    - php: 7.3
       env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" PHPSTAN=1
-    - php: 7.2
+    - php: 7.3
       env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable" CODING_STANDARD=1
   exclude:
-    - php: 7.2
+    - php: 7.3
       env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
-    - php: 7.0
-      env: SYMFONY=4.*
-    - php: 7.0
-      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
-    - php: 7.0
-      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
-    - php: 5.6
-      env: SYMFONY=4.*
-    - php: 5.6
-      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
-    - php: 5.6
-      env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-lowest --prefer-stable"
   allow_failures:
     - env: SYMFONY=4.*
     - env: SYMFONY=3.*

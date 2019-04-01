@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace KdybyTests\Console;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 
 /**
@@ -39,9 +43,6 @@ class CliAppTester
 	 */
 	private $statusCode;
 
-	/**
-	 * @param \Symfony\Component\Console\Application $application
-	 */
 	public function __construct(Application $application)
 	{
 		$this->application = $application;
@@ -56,12 +57,12 @@ class CliAppTester
 	 *  * decorated:   Sets the output decorated flag
 	 *  * verbosity:   Sets the output verbosity flag
 	 *
-	 * @param array $input An array of arguments and options
-	 * @param array $options An array of options
+	 * @param mixed[] $input An array of arguments and options
+	 * @param mixed[] $options An array of options
 	 *
 	 * @return int The command exit code
 	 */
-	public function run(array $input, $options = [])
+	public function run(array $input, array $options = []): int
 	{
 		$this->input = new ArgvInput($input);
 		if (isset($options['interactive'])) {
@@ -86,7 +87,7 @@ class CliAppTester
 	 *
 	 * @return string The display
 	 */
-	public function getDisplay($normalize = FALSE)
+	public function getDisplay(bool $normalize = FALSE): string
 	{
 		rewind($this->output->getStream());
 
@@ -104,7 +105,7 @@ class CliAppTester
 	 *
 	 * @return \Symfony\Component\Console\Input\InputInterface The current input instance
 	 */
-	public function getInput()
+	public function getInput(): InputInterface
 	{
 		return $this->input;
 	}
@@ -114,7 +115,7 @@ class CliAppTester
 	 *
 	 * @return \Symfony\Component\Console\Output\OutputInterface The current output instance
 	 */
-	public function getOutput()
+	public function getOutput(): OutputInterface
 	{
 		return $this->output;
 	}
@@ -124,7 +125,7 @@ class CliAppTester
 	 *
 	 * @return int The status code
 	 */
-	public function getStatusCode()
+	public function getStatusCode(): int
 	{
 		return $this->statusCode;
 	}
