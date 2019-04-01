@@ -12,7 +12,6 @@ namespace Kdyby\Console;
 
 use Nette\Application\Application as NetteApplication;
 use Nette\DI\Container;
-use Nette\Framework as NetteFramework;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,9 +48,16 @@ class Application extends \Symfony\Component\Console\Application
 	 * @param string $name
 	 * @param string $version
 	 */
-	public function __construct($name = 'Nette Framework', $version = NULL)
+	public function __construct($name = 'Nette Framework', $version = 'UNKNOWN')
 	{
-		parent::__construct($name, $version ?: (class_exists(NetteFramework::class) ? NetteFramework::VERSION : 'UNKNOWN'));
+		if ( ! $version && \class_exists(\Nette\DI\Definitions\ServiceDefinition::class)) {
+			$version = \Kdyby\Console\DI\ConsoleExtension::NETTE_VERSION_30;
+
+		} elseif ( ! $version && \class_exists(\Nette\DI\ServiceDefinition::class)) {
+			$version = \Kdyby\Console\DI\ConsoleExtension::NETTE_VERSION_24;
+		}
+
+		parent::__construct($name, $version);
 
 		$this->setCatchExceptions(FALSE);
 		$this->setAutoExit(FALSE);

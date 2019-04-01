@@ -45,14 +45,17 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 	/** @deprecated */
 	const COMMAND_TAG = self::TAG_COMMAND;
 
-	const TAG_HELPER = 'kdyby.console.helper';
-	const TAG_COMMAND = 'kdyby.console.command';
+	public const TAG_HELPER         = 'kdyby.console.helper';
+	public const TAG_COMMAND        = 'kdyby.console.command';
+	public const NETTE_FRAMEWORK    = 'Nette Framework';
+	public const NETTE_VERSION_30   = '3.0';
+	public const NETTE_VERSION_24   = '2.4';
 
 	/**
 	 * @var mixed[]
 	 */
 	public $defaults = [
-		'name' => 'Nette Framework',
+		'name' => self::NETTE_FRAMEWORK,
 		'version' => 'unknown',
 		'commands' => [],
 		'url' => NULL,
@@ -65,9 +68,13 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 	public function __construct()
 	{
 		$this->defaults['disabled'] = PHP_SAPI !== ConsoleApplication::CLI_SAPI;
-		if (class_exists(NetteFramework::class)) {
-			$this->defaults['name'] = NetteFramework::NAME;
-			$this->defaults['version'] = NetteFramework::VERSION;
+		if (\class_exists(\Nette\DI\Definitions\ServiceDefinition::class)) {
+			$this->defaults['name'] = self::NETTE_FRAMEWORK;
+			$this->defaults['version'] = self::NETTE_VERSION_30;
+
+		} elseif (\class_exists(\Nette\DI\ServiceDefinition::class)) {
+			$this->defaults['name'] = self::NETTE_FRAMEWORK;
+			$this->defaults['version'] = self::NETTE_VERSION_24;
 		}
 	}
 
