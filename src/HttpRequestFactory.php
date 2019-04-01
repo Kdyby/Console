@@ -32,7 +32,7 @@ class HttpRequestFactory extends \Nette\Http\RequestFactory
 		$this->fakeUrl = $url ? new UrlScript($url, $scriptPath ?? '') : NULL;
 		if ($scriptPath !== NULL) {
 			if ($this->fakeUrl === NULL) {
-				throw new \Kdyby\Console\InvalidArgumentException('When the $scriptPath is specified, the $url must be also specified.');
+				throw new Exception\InvalidArgumentException('When the $scriptPath is specified, the $url must be also specified.');
 			}
 		}
 	}

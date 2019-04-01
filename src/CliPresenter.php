@@ -57,12 +57,12 @@ class CliPresenter extends \Nette\Application\UI\Presenter
 	public function actionDefault()
 	{
 		if ($this->console === NULL || $this->application === NULL) {
-			throw new \Kdyby\Console\InvalidStateException('Before running the presenter, call injectConsole() with required dependencies.');
+			throw new \Kdyby\Console\Exception\InvalidStateException('Before running the presenter, call injectConsole() with required dependencies.');
 		}
 
 		$request = $this->getRequest();
 		if ($request === NULL) {
-			throw new \Kdyby\Console\InvalidStateException(sprintf('Do not call %s directly, use %s::run()', __FUNCTION__, __CLASS__));
+			throw new \Kdyby\Console\Exception\InvalidStateException(sprintf('Do not call %s directly, use %s::run()', __FUNCTION__, __CLASS__));
 		}
 
 		$params = $request->getParameters();

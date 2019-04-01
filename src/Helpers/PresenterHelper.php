@@ -32,13 +32,13 @@ class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 
 	/**
 	 * @return \Nette\Application\IPresenter|\Nette\Application\UI\Presenter
-	 * @throws \Kdyby\Console\InvalidStateException
+	 * @throws \Kdyby\Console\Exception\InvalidStateException
 	 */
 	public function getPresenter()
 	{
 		$presenter = $this->app->getPresenter();
 		if ($presenter === NULL) {
-			throw new \Kdyby\Console\InvalidStateException('There is currently no presenter');
+			throw new \Kdyby\Console\Exception\InvalidStateException('There is currently no presenter');
 		}
 
 		return $presenter;
