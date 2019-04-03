@@ -26,6 +26,11 @@ class CliPresenter extends \Nette\Application\UI\Presenter
 	const NAME = 'Kdyby:Cli';
 
 	/**
+	 * @var string
+	 */
+	public $name = \KdybyModule\CliPresenter::NAME;
+
+	/**
 	 * @var \Kdyby\Console\Application|NULL
 	 */
 	private $console;

@@ -14,18 +14,13 @@ use Kdyby\Console\Application as ConsoleApplication;
 use Kdyby\Console\CliRouter;
 use Kdyby\Console\ContainerHelper;
 use Kdyby\Console\Helpers\PresenterHelper;
-use Kdyby\Console\HttpRequestFactory as FakeHttpRequestFactory;
 use Nette\Application\Application as NetteApplication;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
 use Nette\Application\Routers\RouteList;
 use Nette\Bridges\ApplicationDI\ApplicationExtension;
-use Nette\Configurator;
-use Nette\DI\Compiler;
 use Nette\DI\Statement;
-use Nette\Framework as NetteFramework;
 use Nette\Http\IRequest;
-use Nette\Http\RequestFactory as NetteRequestFactory;
 use Nette\Utils\Validators;
 use Symfony\Component\Console\Helper\DebugFormatterHelper;
 use Symfony\Component\Console\Helper\DescriptorHelper;
@@ -39,9 +34,9 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 {
 
 	/** @deprecated */
-	const HELPER_TAG = self::TAG_HELPER;
+	public const HELPER_TAG = self::TAG_HELPER;
 	/** @deprecated */
-	const COMMAND_TAG = self::TAG_COMMAND;
+	public const COMMAND_TAG = self::TAG_COMMAND;
 
 	public const TAG_HELPER         = 'kdyby.console.helper';
 	public const TAG_COMMAND        = 'kdyby.console.command';
@@ -102,7 +97,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		Validators::assert($config, 'array');
 		foreach ($config['commands'] as $i => $command) {
 			$def = $builder->addDefinition($this->prefix('command.' . $i));
-			$def->setFactory(Compiler::filterArguments([
+			$def->setFactory(\Nette\DI\Helpers::filterArguments([
 				is_string($command) ? new Statement($command) : $command,
 			])[0]);
 
@@ -157,7 +152,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 	public function beforeCompile()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
+		$config = \Nette\DI\Config\Helpers::merge($this->getConfig(), $this->defaults);
 
 		if ($config['disabled']) {
 			return;
@@ -166,11 +161,13 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$this->beforeCompileHookApplication($config);
 		$this->beforeCompileFakeHttp($config);
 
+		/** @var \Nette\DI\Definitions\ServiceDefinition $helperSet */
 		$helperSet = $builder->getDefinition($this->prefix('helperSet'));
 		foreach ($builder->findByTag(self::TAG_HELPER) as $serviceName => $value) {
 			$helperSet->addSetup('set', ['@' . $serviceName, $value]);
 		}
 
+		/** @var \Nette\DI\Definitions\ServiceDefinition $app */
 		$app = $builder->getDefinition($this->prefix('application'));
 		foreach ($builder->findByTag(self::TAG_COMMAND) as $serviceName => $ignore) {
 			$app->addSetup('add', ['@' . $serviceName]);
@@ -193,26 +190,28 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		if (PHP_SAPI === ConsoleApplication::CLI_SAPI) {
-			$builder->getDefinition($builder->getByType(NetteApplication::class) ?: 'application')
-				->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
+			/** @var \Nette\DI\Definitions\ServiceDefinition $app */
+			$app = $builder->getDefinition($builder->getByType(NetteApplication::class) ?: 'application');
+			$app->addSetup('$self = $this; $service->onError[] = function ($app, $e) use ($self) {' . "\n" .
 					"\t" . '$app->errorPresenter = ?;' . "\n" .
 					"\t" . '$app->onShutdown[] = function () { exit(?); };' . "\n" .
 					'}', [FALSE, 254]);
 		}
 
 		$routerServiceName = $builder->getByType(IRouter::class) ?: 'router';
-		$builder->addDefinition($this->prefix('originalRouter'), $builder->getDefinition($routerServiceName))
-			->setAutowired(FALSE);
+		$routerDefinition = $builder->getDefinition($routerServiceName);
+		$routerDefinition->setAutowired(FALSE);
 
 		$builder->removeDefinition($routerServiceName);
 
 		$builder->addDefinition($routerServiceName)
 			->setType(RouteList::class)
 			->addSetup('offsetSet', [NULL, $this->prefix('@router')])
-			->addSetup('offsetSet', [NULL, $this->prefix('@originalRouter')]);
+			->addSetup('offsetSet', [NULL, '@' . $routerDefinition->getName()]);
 
-		$builder->getDefinition($builder->getByType(IPresenterFactory::class) ?: 'nette.presenterFactory')
-			->addSetup(
+		/** @var \Nette\DI\Definitions\ServiceDefinition $presenterFactory */
+		$presenterFactory = $builder->getDefinition($builder->getByType(IPresenterFactory::class) ?: 'nette.presenterFactory');
+		$presenterFactory->addSetup(
 				'if (method_exists($service, ?)) { $service->setMapping([? => ?]); }',
 				[
 					'setMapping',
@@ -232,9 +231,12 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 
 		if (!empty($config['url'])) {
 			Validators::assert($config['url'], 'url', 'console.url');
-			$builder->getDefinition($builder->getByType(NetteRequestFactory::class) ?: 'nette.httpRequestFactory')
-				->setFactory(FakeHttpRequestFactory::class)
-				->addSetup('setFakeRequestUrl', [$config['url'], $config['urlScriptPath']]);
+			/** @var \Nette\DI\Definitions\ServiceDefinition $httpRequestFactory */
+			$httpRequestFactory = $builder->getDefinition($builder->getByType(\Nette\Http\RequestFactory::class) ?: 'nette.httpRequestFactory');
+			$httpRequestFactory
+				->setFactory(\Kdyby\Console\HttpRequestFactory::class)
+				->addSetup('setFakeRequestUrl', [$config['url'], $config['urlScriptPath']])
+			;
 		}
 	}
 
