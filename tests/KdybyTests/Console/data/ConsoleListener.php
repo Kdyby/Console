@@ -27,12 +27,18 @@ class ConsoleListener implements \Kdyby\Events\Subscriber
 
 	public function command(ConsoleCommandEvent $event)
 	{
-		$this->calls[] = [__FUNCTION__, get_class($event->getCommand())];
+		/** @var \Symfony\Component\Console\Command\Command $command */
+		$command = $event->getCommand();
+
+		$this->calls[] = [__FUNCTION__, get_class($command)];
 	}
 
 	public function terminate(ConsoleTerminateEvent $event)
 	{
-		$this->calls[] = [__FUNCTION__, get_class($event->getCommand()), $event->getExitCode()];
+		/** @var \Symfony\Component\Console\Command\Command $command */
+		$command = $event->getCommand();
+
+		$this->calls[] = [__FUNCTION__, get_class($command), $event->getExitCode()];
 	}
 
 }

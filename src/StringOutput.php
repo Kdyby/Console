@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -27,10 +27,7 @@ class StringOutput extends \Symfony\Component\Console\Output\Output
 		$this->output .= $message . ($newline ? "\n" : '');
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getOutput()
+	public function getOutput(): string
 	{
 		return $this->output;
 	}

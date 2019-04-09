@@ -63,12 +63,12 @@ class CliRouterTest extends \Tester\TestCase
 		$container->callMethod([$presenter, 'injectConsole']);
 
 		$appRequest = new Request(
-			$appRequest[Presenter::PRESENTER_KEY] ?? null,
+			$appRequest[Presenter::PRESENTER_KEY] ?? NULL,
 			$appRequest['method'],
 			$appRequest,
 			[],
 			[],
-			[Request::SECURED => true]
+			[Request::SECURED => TRUE]
 		);
 
 		// run presenter

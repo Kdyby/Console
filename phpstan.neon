@@ -1,10 +1,16 @@
 parameters:
 	ignoreErrors:
-		- '#Constant TEMP_DIR not found#'
 		- '#Class Nette\\Framework not found#'
+		- '#Access to constant NAME on an unknown class Nette\\Framework#'
+		- '#Access to constant VERSION on an unknown class Nette\\Framework#'
+		- '#Parameter \#1 $e of method Symfony\\Component\\Console\\Application::renderException\(\) expects Exception, Throwable|null given#'
+		- '#Array \(array<array<string>>\) does not accept array<int, int|string>#'
 		# Nette events are not annotated
 		- '#Call to an undefined method Nette\\Application\\Application::onShutdown\(\)#'
-		# it does, it just isn't annotated
-		- '#Static property Tracy\\Dumper::\$terminalColors \(mixed\[\]\) does not accept false#'
+		- '#Call to an undefined method Nette\\Application\\Application::onError\(\)#'
 		# intentional
 		- '#Constructor of class KdybyTests\\Console\\.*?Command.*? has an unused parameter *.?#'
+		# hack apostrophes in error message
+		- '''
+             #Call to function method_exists\(\) with string and '__construct' will always evaluate to false#
+        '''

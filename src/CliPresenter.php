@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -54,7 +54,7 @@ class CliPresenter extends \Nette\Application\UI\Presenter
 		$this->application = $application;
 	}
 
-	public function actionDefault()
+	public function actionDefault(): void
 	{
 		if ($this->console === NULL || $this->application === NULL) {
 			throw new \Kdyby\Console\InvalidStateException('Before running the presenter, call injectConsole() with required dependencies.');

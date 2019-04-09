@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -20,9 +20,6 @@ class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 	 */
 	private $app;
 
-	/**
-	 * @param \Nette\Application\Application $application
-	 */
 	public function __construct(Application $application)
 	{
 		$this->app = $application;

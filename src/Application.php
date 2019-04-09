@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -43,11 +43,7 @@ class Application extends \Symfony\Component\Console\Application
 	 */
 	private $serviceLocator;
 
-	/**
-	 * @param string $name
-	 * @param string $version
-	 */
-	public function __construct($name = 'Nette Framework', $version = NULL)
+	public function __construct(string $name = 'Nette Framework', $version = NULL)
 	{
 		parent::__construct($name, $version ?: (class_exists(NetteFramework::class) ? NetteFramework::VERSION : 'UNKNOWN'));
 
@@ -105,7 +101,7 @@ class Application extends \Symfony\Component\Console\Application
 		}
 
 		if (class_exists(Dumper::class) && $input->hasParameterOption('--no-ansi')) {
-			Dumper::$terminalColors = FALSE;
+			Dumper::$terminalColors = [];
 		}
 
 		try {
@@ -131,9 +127,9 @@ class Application extends \Symfony\Component\Console\Application
 			$e = new FatalThrowableError($e);
 		}
 
+		/** @var \Nette\Application\Application|NULL $app */
 		$app = $this->serviceLocator->getByType(NetteApplication::class, FALSE);
 		if ($app !== NULL) {
-			/** @var \Nette\Application\Application $app */
 			$app->onError($app, $e);
 		}
 
@@ -173,9 +169,7 @@ class Application extends \Symfony\Component\Console\Application
 
 	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
 	{
-		if ($this->serviceLocator) {
-			$this->serviceLocator->callInjects($command);
-		}
+		$this->serviceLocator->callInjects($command);
 
 		return parent::doRunCommand($command, $input, $output);
 	}

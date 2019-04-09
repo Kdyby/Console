@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -11,6 +11,7 @@
 namespace Kdyby\Console;
 
 use Nette\DI\Container as DIContainer;
+use Nette\DI\Container;
 
 class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 {
@@ -28,20 +29,15 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 		$this->container = $dic;
 	}
 
-	/**
-	 * @param string $key
-	 * @return bool
-	 */
-	public function hasParameter($key)
+	public function hasParameter(string $key): bool
 	{
 		return isset($this->container->parameters[$key]);
 	}
 
 	/**
-	 * @param string $key
 	 * @return mixed
 	 */
-	public function getParameter($key)
+	public function getParameter(string $key)
 	{
 		if (!$this->hasParameter($key)) {
 			return NULL;
@@ -50,27 +46,20 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 		return $this->container->parameters[$key];
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getParameters()
+	public function getParameters(): array
 	{
 		return $this->container->parameters;
 	}
 
-	/**
-	 * @return \Nette\DI\Container
-	 */
-	public function getContainer()
+	public function getContainer(): Container
 	{
 		return $this->container;
 	}
 
 	/**
-	 * @param string $type
-	 * @return object
+	 * @return object|NULL
 	 */
-	public function getByType($type)
+	public function getByType(string $type)
 	{
 		return $this->container->getByType($type);
 	}

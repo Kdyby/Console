@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -24,9 +24,8 @@ class HttpRequestFactory extends \Nette\Http\RequestFactory
 
 	/**
 	 * @param string|\Nette\Http\UrlScript $url
-	 * @param string|null $scriptPath
 	 */
-	public function setFakeRequestUrl($url, $scriptPath = NULL)
+	public function setFakeRequestUrl($url, ?string $scriptPath = NULL): void
 	{
 		$this->fakeUrl = $url ? new UrlScript($url) : NULL;
 		if ($scriptPath !== NULL) {

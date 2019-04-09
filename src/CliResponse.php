@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -38,26 +38,16 @@ class CliResponse implements \Nette\Application\IResponse
 	/**
 	 * @internal
 	 */
-	public function injectApplication(NetteApplication $application)
+	public function injectApplication(NetteApplication $application): void
 	{
 		$this->application = $application;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getExitCode()
+	public function getExitCode(): int
 	{
 		return $this->exitCode;
 	}
 
-	/**
-	 * Sends response to output.
-	 *
-	 * @param \Nette\Http\IRequest $httpRequest
-	 * @param \Nette\Http\IResponse $httpResponse
-	 * @return void
-	 */
 	public function send(IRequest $httpRequest, IResponse $httpResponse): void
 	{
 		if ($this->application !== NULL) {

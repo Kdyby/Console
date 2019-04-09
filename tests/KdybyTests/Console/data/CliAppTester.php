@@ -66,7 +66,13 @@ class CliAppTester
 			$this->input->setInteractive($options['interactive']);
 		}
 
-		$this->output = new StreamOutput(fopen('php://memory', 'w', FALSE));
+		$stream = fopen('php://memory', 'w', FALSE);
+
+		if ($stream === FALSE) {
+			throw new \RuntimeException('File php://memory couldn\'t be open.');
+		}
+
+		$this->output = new StreamOutput($stream);
 		if (isset($options['decorated'])) {
 			$this->output->setDecorated($options['decorated']);
 		}
@@ -89,6 +95,10 @@ class CliAppTester
 		rewind($this->output->getStream());
 
 		$display = stream_get_contents($this->output->getStream());
+
+		if ($display === FALSE) {
+			return '';
+		}
 
 		if ($normalize) {
 			$display = str_replace(PHP_EOL, "\n", $display);

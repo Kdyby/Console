@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
@@ -38,10 +38,9 @@ class BootstrapHelper
 {
 
 	/**
-	 * @param \Nette\Configurator $configurator
 	 * @return bool has the debug mode been modified?
 	 */
-	public static function setupMode(Configurator $configurator)
+	public static function setupMode(Configurator $configurator): bool
 	{
 		if (PHP_SAPI !== Application::CLI_SAPI) {
 			return FALSE;
@@ -57,10 +56,10 @@ class BootstrapHelper
 			$configurator->setDebugMode(FALSE);
 			return TRUE;
 
-		} else {
-			$configurator->setDebugMode(TRUE);
-			return TRUE;
 		}
+
+		$configurator->setDebugMode(TRUE);
+		return TRUE;
 	}
 
 }
