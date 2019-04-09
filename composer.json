@@ -35,9 +35,7 @@
 		"nette/http": "^3.0",
 		"nette/tester": "^2.2",
 		"kdyby/events": "^4.0",
-		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0",
-		"kdyby/coding-standard": "^1.0@dev",
-		"phpstan/phpstan-shim": "^0.11"
+		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0"
 	},
 	"suggest": {
 		"nette/http": "For faking the url of the request in cli"
