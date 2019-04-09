@@ -34,7 +34,7 @@
 
 		"nette/tester": "^2.2",
 		"phpstan/phpstan-shim": "^0.11.5",
-		"kdyby/coding-standard": "^1.0",
+		"kdyby/coding-standard": "dev-master",
 		"php-coveralls/php-coveralls": "^2.1",
 		"jakub-onderka/php-parallel-lint": "^1.0",
 		"typo3/class-alias-loader": "^1.0"
