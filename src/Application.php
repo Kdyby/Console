@@ -12,7 +12,6 @@ namespace Kdyby\Console;
 
 use Nette\Application\Application as NetteApplication;
 use Nette\DI\Container;
-use Nette\Framework as NetteFramework;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,9 +48,16 @@ class Application extends \Symfony\Component\Console\Application
 	 * @param string $name
 	 * @param string $version
 	 */
-	public function __construct($name = 'Nette Framework', $version = NULL)
+	public function __construct($name = 'Nette Framework', $version = 'UNKNOWN')
 	{
-		parent::__construct($name, $version ?: (class_exists(NetteFramework::class) ? NetteFramework::VERSION : 'UNKNOWN'));
+		if ( ! $version && \class_exists(\Nette\DI\Definitions\ServiceDefinition::class)) {
+			$version = \Kdyby\Console\DI\ConsoleExtension::NETTE_VERSION_30;
+
+		} elseif ( ! $version && \class_exists(\Nette\DI\ServiceDefinition::class)) {
+			$version = \Kdyby\Console\DI\ConsoleExtension::NETTE_VERSION_24;
+		}
+
+		parent::__construct($name, $version);
 
 		$this->setCatchExceptions(FALSE);
 		$this->setAutoExit(FALSE);
@@ -68,7 +74,7 @@ class Application extends \Symfony\Component\Console\Application
 			return parent::find($name);
 
 		} catch (\InvalidArgumentException $e) {
-			throw new \Kdyby\Console\UnknownCommandException($e->getMessage(), $e->getCode(), $e);
+			throw new Exception\UnknownCommandException($e->getMessage(), $e->getCode(), $e);
 		}
 	}
 
@@ -86,7 +92,7 @@ class Application extends \Symfony\Component\Console\Application
 		if ($input->hasParameterOption('--debug-mode')) {
 			if ($input->hasParameterOption(['--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'])) {
 				if ($this->serviceLocator->parameters['debugMode']) {
-					$this->renderException(new \Kdyby\Console\InvalidApplicationModeException(
+					$this->renderException(new Exception\InvalidApplicationModeException(
 						'The app is running in debug mode. You have to use Kdyby\Console\DI\BootstrapHelper in app/bootstrap.php, ' .
 						'Kdyby\Console cannot switch already running app to production mode.'
 					), $output);
@@ -96,7 +102,7 @@ class Application extends \Symfony\Component\Console\Application
 
 			} else {
 				if (!$this->serviceLocator->parameters['debugMode']) {
-					$this->renderException(new \Kdyby\Console\InvalidApplicationModeException(
+					$this->renderException(new Exception\InvalidApplicationModeException(
 						'The app is running in production mode. You have to use Kdyby\Console\DI\BootstrapHelper in app/bootstrap.php, ' .
 						'Kdyby\Console cannot switch already running app to debug mode.'
 					), $output);
@@ -113,7 +119,7 @@ class Application extends \Symfony\Component\Console\Application
 		try {
 			return parent::run($input, $output);
 
-		} catch (\Kdyby\Console\UnknownCommandException $e) {
+		} catch (Exception\UnknownCommandException $e) {
 			$this->renderException($e->getPrevious(), $output);
 			list($message) = explode("\n", $e->getMessage());
 			Debugger::log($message, Debugger::ERROR);

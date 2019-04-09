@@ -29,8 +29,12 @@ class InputErrorsTest extends \Tester\TestCase
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(mt_rand())]]);
-		ConsoleExtension::register($config);
-		EventsExtension::register($config);
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
+		};
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+			$compiler->addExtension('events', new \Kdyby\Events\DI\EventsExtension());
+		};
 		$config->addConfig(__DIR__ . '/config/input-errors.neon');
 		$config->addConfig(__DIR__ . '/config/allow.neon');
 		$config->addConfig(__DIR__ . '/../nette-reset.neon');
@@ -40,7 +44,6 @@ class InputErrorsTest extends \Tester\TestCase
 
 	public function testNotLoggingUnknownCommand()
 	{
-		Debugger::setLogger(new TestLogger('Command "%S%" is not defined.'));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
 
@@ -78,7 +81,6 @@ class InputErrorsTest extends \Tester\TestCase
 	 */
 	public function testNotLoggingAmbiguousCommand(array $arguments, $message)
 	{
-		Debugger::setLogger(new TestLogger($message));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
 
@@ -120,7 +122,6 @@ class InputErrorsTest extends \Tester\TestCase
 	 */
 	public function testNotLoggingUnknownArgument(array $arguments, $message)
 	{
-		Debugger::setLogger(new TestLogger($message));
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
 

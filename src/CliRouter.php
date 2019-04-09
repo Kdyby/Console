@@ -10,16 +10,12 @@
 
 namespace Kdyby\Console;
 
-use KdybyModule\CliPresenter;
-use Nette\Application\Request as AppRequest;
-use Nette\Http\IRequest;
-use Nette\Http\Url;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CliRouter implements \Nette\Application\IRouter
+class CliRouter implements \Nette\Routing\Router
 {
 
 	use \Kdyby\StrictObjects\Scream;
@@ -58,7 +54,7 @@ class CliRouter implements \Nette\Application\IRouter
 	/**
 	 * Maps HTTP request to a Request object.
 	 */
-	public function match(IRequest $httpRequest)
+	public function match(\Nette\Http\IRequest $httpRequest): ?array
 	{
 		if (!in_array(PHP_SAPI, $this->allowedMethods, TRUE)) {
 			return NULL;
@@ -78,17 +74,19 @@ class CliRouter implements \Nette\Application\IRouter
 			$output = new ConsoleOutput();
 		}
 
-		return new AppRequest(CliPresenter::NAME, Application::CLI_SAPI, [
-			'action' => 'default',
-			'input' => $input,
-			'output' => $output,
-		]);
+		return [
+			'action'    => 'default',
+			'method'    => \Kdyby\Console\Application::CLI_SAPI,
+			'presenter' => \KdybyModule\CliPresenter::NAME,
+			'input'     => $input,
+			'output'    => $output,
+		];
 	}
 
 	/**
 	 * Constructs absolute URL from Request object.
 	 */
-	public function constructUrl(AppRequest $appRequest, Url $refUrl)
+	public function constructUrl(array $params, \Nette\Http\UrlScript $refUrl) : ?string
 	{
 		return NULL;
 	}

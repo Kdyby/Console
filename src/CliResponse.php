@@ -60,10 +60,12 @@ class CliResponse implements \Nette\Application\IResponse
 	 * @param \Nette\Http\IResponse $httpResponse
 	 * @return void
 	 */
-	public function send(IRequest $httpRequest, IResponse $httpResponse)
+	public function send(IRequest $httpRequest, IResponse $httpResponse): void
 	{
 		if ($this->application !== NULL) {
-			$this->application->onShutdown($this->application);
+			foreach ($this->application->onShutdown as $handler) {
+				$handler($this->application);
+			}
 		}
 
 		exit($this->exitCode);

@@ -16,8 +16,6 @@ use Nette\Http\UrlScript;
 class HttpRequestFactory extends \Nette\Http\RequestFactory
 {
 
-	use \Kdyby\StrictObjects\Scream;
-
 	/**
 	 * @var \Nette\Http\UrlScript|NULL
 	 */
@@ -29,25 +27,24 @@ class HttpRequestFactory extends \Nette\Http\RequestFactory
 	 */
 	public function setFakeRequestUrl($url, $scriptPath = NULL)
 	{
-		$this->fakeUrl = $url ? new UrlScript($url) : NULL;
+		$this->fakeUrl = $url ? new UrlScript($url, $scriptPath ?? '') : NULL;
 		if ($scriptPath !== NULL) {
 			if ($this->fakeUrl === NULL) {
-				throw new \Kdyby\Console\InvalidArgumentException('When the $scriptPath is specified, the $url must be also specified.');
+				throw new Exception\InvalidArgumentException('When the $scriptPath is specified, the $url must be also specified.');
 			}
-			$this->fakeUrl->setScriptPath($scriptPath);
 		}
 	}
 
 	/**
 	 * @return \Nette\Http\Request
 	 */
-	public function createHttpRequest()
+	public function createHttpRequest(): \Nette\Http\Request
 	{
 		if ($this->fakeUrl === NULL || PHP_SAPI !== Application::CLI_SAPI || !empty($_SERVER['REMOTE_HOST'])) {
 			return parent::createHttpRequest();
 		}
 
-		return new HttpRequest($this->fakeUrl, NULL, [], [], [], [], PHP_SAPI, '127.0.0.1', '127.0.0.1');
+		return new HttpRequest($this->fakeUrl, NULL, [], [], [], PHP_SAPI, PHP_SAPI, '127.0.0.1', NULL);
 	}
 
 }

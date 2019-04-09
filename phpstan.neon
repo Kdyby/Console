@@ -1,10 +1,5 @@
 parameters:
 	ignoreErrors:
-		- '#Constant TEMP_DIR not found#'
-		- '#Class Nette\\Framework not found#'
-		# Nette events are not annotated
-		- '#Call to an undefined method Nette\\Application\\Application::onShutdown\(\)#'
-		# it does, it just isn't annotated
-		- '#Static property Tracy\\Dumper::\$terminalColors \(mixed\[\]\) does not accept false#'
-		# intentional
-		- '#Constructor of class KdybyTests\\Console\\.*?Command.*? has an unused parameter *.?#'
+
+	excludes_analyse:
+		- *src/DI/ClassAliasMap.php

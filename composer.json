@@ -17,22 +17,28 @@
 		"issues": "https://github.com/kdyby/console/issues"
 	},
 	"require": {
-		"php": "^5.6 || ^7.0",
-		"nette/di": "^2.4.8@dev",
-		"tracy/tracy": "^2.4@dev",
+		"php": ">=7.1",
+		"nette/di": "^2.4.10 || ^3.0",
+		"nette/routing": "^3.0.0",
+		"tracy/tracy": "^2.5 || ^3.0",
 		"kdyby/strict-objects": "^1.0",
 		"symfony/console": "~2.3 || ^3.0 || ^4.0"
 	},
 	"require-dev": {
-		"nette/application": "^2.4.9@dev",
-		"nette/bootstrap": "^2.4.5@dev",
-		"nette/caching": "^2.5@dev",
-		"nette/http": "^2.4.7@dev",
-		"nette/tester": "^2.0",
-		"kdyby/events": "^3.1.1@dev",
-		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0"
+		"nette/application": "^3.0",
+		"nette/bootstrap": "^2.4.5 || ^3.0",
+		"nette/caching": "^2.5 || ^3.0",
+		"nette/http": "^3.0",
+		"kdyby/events": "^3.2@dev",
+		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0",
+
+		"nette/tester": "^2.2",
+		"phpstan/phpstan-shim": "^0.11.5",
+		"kdyby/coding-standard": "dev-master",
+		"php-coveralls/php-coveralls": "^2.1",
+		"jakub-onderka/php-parallel-lint": "^1.0",
+		"typo3/class-alias-loader": "^1.0"
 	},
-	"minimum-stability": "dev",
 	"suggest": {
 		"nette/http": "For faking the url of the request in cli"
 	},
@@ -41,8 +47,7 @@
 			"Kdyby\\Console\\": "src/"
 		},
 		"classmap": [
-			"src/CliPresenter.php",
-			"src/exceptions.php"
+			"src/CliPresenter.php"
 		]
 	},
 	"autoload-dev": {
@@ -53,9 +58,10 @@
 			"tests/KdybyTests/"
 		]
 	},
+	"minimum-stability": "dev",
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.7-dev"
+			"dev-master": "2.8-dev"
 		}
 	}
 }

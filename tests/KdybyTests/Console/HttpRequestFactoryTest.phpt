@@ -34,9 +34,16 @@ class HttpRequestFactoryTest extends \Tester\TestCase
 
 		$presenterFactory = new PresenterFactory();
 		$presenterFactory->setMapping(['Kdyby' => 'KdybyModule\*\*Presenter']);
+		if (\class_exists(\Nette\DI\Definitions\ServiceDefinition::class)) {
+			$refUrl = new \Nette\Http\UrlScript('http://domain.tld/path/');
+
+		} else {
+			$refUrl = new \Nette\Http\Url('http://domain.tld/path/');
+		}
+
 		$linkGenerator = new LinkGenerator(
 			new Route('ABCDEF', ['presenter' => CliPresenter::NAME, 'action' => 'default']),
-			$httpRequest->getUrl(),
+			$refUrl,
 			$presenterFactory
 		);
 
