@@ -37,9 +37,9 @@ matrix:
     - php: 7.3
       env: SYMFONY=4.* COMPOSER_EXTRA_ARGS="--prefer-stable"
   allow_failures:
-    - env: SYMFONY=4.*
-    - env: SYMFONY=3.*
-    - env: SYMFONY=2.*
+    - env: RUN_TESTS=1 SYMFONY=4.*
+    - env: RUN_TESTS=1 SYMFONY=3.*
+    - env: RUN_TESTS=1 SYMFONY=2.*
 
 before_install:
   - if [[ $SYMFONY = '2.*' ]]; then composer require --no-update symfony/console:^2.8; fi
