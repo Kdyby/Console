@@ -11,8 +11,6 @@ declare(strict_types = 1);
 namespace KdybyTests\Console;
 
 use Kdyby\Console\Application;
-use Kdyby\Console\DI\ConsoleExtension;
-use Kdyby\Events\DI\EventsExtension;
 use Kdyby\Events\EventManager;
 use Nette\Configurator;
 use Symfony\Component\Console\Command\Command;
@@ -26,15 +24,15 @@ require_once __DIR__ . '/../bootstrap.php';
 class ApplicationTest extends \Tester\TestCase
 {
 
-	private function prepareConfigurator()
+	private function prepareConfigurator(): Configurator
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string) mt_rand())]]);
-		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler): void {
 			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
 		};
-		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler): void {
 			$compiler->addExtension('events', new \Kdyby\Events\DI\EventsExtension());
 		};
 		$config->addConfig(__DIR__ . '/config/allow.neon');
@@ -43,7 +41,7 @@ class ApplicationTest extends \Tester\TestCase
 		return $config;
 	}
 
-	public function testDelegateEventsToSymfonyDispatcher()
+	public function testDelegateEventsToSymfonyDispatcher(): void
 	{
 		/** @var \Nette\DI\Container $container */
 		$container = $this->prepareConfigurator()->createContainer();
@@ -63,7 +61,7 @@ class ApplicationTest extends \Tester\TestCase
 		], $listener->calls);
 	}
 
-	public function testRenderThrowable()
+	public function testRenderThrowable(): void
 	{
 		if (PHP_VERSION_ID < 70000) {
 			TesterEnvironment::skip('Testing throwable is only relevant with PHP >= 7.0');
@@ -76,7 +74,7 @@ class ApplicationTest extends \Tester\TestCase
 		$app = $container->getByType(Application::class);
 
 		$command = new Command('fail');
-		$command->setCode(function () {
+		$command->setCode(function (): void {
 			throw new \ParseError('Fuuuuck', 42);
 		});
 		$app->add($command);

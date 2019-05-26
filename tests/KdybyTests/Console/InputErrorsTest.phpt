@@ -11,8 +11,6 @@ declare(strict_types = 1);
 namespace KdybyTests\Console;
 
 use Kdyby\Console\Application;
-use Kdyby\Console\DI\ConsoleExtension;
-use Kdyby\Events\DI\EventsExtension;
 use Kdyby\Events\EventManager;
 use Nette\Configurator;
 use Symfony\Component\Console\Tester\ApplicationTester;
@@ -26,15 +24,15 @@ require_once __DIR__ . '/../bootstrap.php';
 class InputErrorsTest extends \Tester\TestCase
 {
 
-	private function prepareConfigurator()
+	private function prepareConfigurator(): Configurator
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string) mt_rand())]]);
-		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler): void {
 			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
 		};
-		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler): void {
 			$compiler->addExtension('events', new \Kdyby\Events\DI\EventsExtension());
 		};
 		$config->addConfig(__DIR__ . '/config/input-errors.neon');
@@ -44,7 +42,7 @@ class InputErrorsTest extends \Tester\TestCase
 		return $config;
 	}
 
-	public function testNotLoggingUnknownCommand()
+	public function testNotLoggingUnknownCommand(): void
 	{
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
@@ -67,7 +65,7 @@ class InputErrorsTest extends \Tester\TestCase
 	/**
 	 * @return mixed[]
 	 */
-	public function getAmbiguousCommandData()
+	public function getAmbiguousCommandData(): array
 	{
 		return [
 			[['ambiguous'], '%a%ambiguous%a%'],
@@ -77,11 +75,10 @@ class InputErrorsTest extends \Tester\TestCase
 
 	/**
 	 * @dataProvider getAmbiguousCommandData
-	 *
 	 * @param string[] $arguments
 	 * @param string $message
 	 */
-	public function testNotLoggingAmbiguousCommand(array $arguments, $message)
+	public function testNotLoggingAmbiguousCommand(array $arguments, string $message): void
 	{
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);
@@ -104,7 +101,7 @@ class InputErrorsTest extends \Tester\TestCase
 	/**
 	 * @return mixed[]
 	 */
-	public function getNotLoggingUnknownArgumentData()
+	public function getNotLoggingUnknownArgumentData(): array
 	{
 		return [
 			[['arg'], 'Not enough arguments%A?%'],
@@ -118,11 +115,10 @@ class InputErrorsTest extends \Tester\TestCase
 
 	/**
 	 * @dataProvider getNotLoggingUnknownArgumentData
-	 *
 	 * @param string[] $arguments
 	 * @param string $message
 	 */
-	public function testNotLoggingUnknownArgument(array $arguments, $message)
+	public function testNotLoggingUnknownArgument(array $arguments, string $message): void
 	{
 		Debugger::$logDirectory = TEMP_DIR . '/log';
 		TesterHelpers::purge(Debugger::$logDirectory);

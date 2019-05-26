@@ -23,7 +23,7 @@ require_once __DIR__ . '/../bootstrap.php';
 class HttpRequestFactoryTest extends \Tester\TestCase
 {
 
-	public function testScriptPath()
+	public function testScriptPath(): void
 	{
 		$requestFactory = new HttpRequestFactory();
 		$requestFactory->setFakeRequestUrl(

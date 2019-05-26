@@ -27,19 +27,16 @@ class HttpRequestFactory extends \Nette\Http\RequestFactory
 	 * @param string|\Nette\Http\UrlScript $url
 	 * @param string|null $scriptPath
 	 */
-	public function setFakeRequestUrl($url, $scriptPath = NULL)
+	public function setFakeRequestUrl($url, ?string $scriptPath = NULL): void
 	{
 		$this->fakeUrl = $url ? new UrlScript($url, $scriptPath ?? '') : NULL;
 		if ($scriptPath !== NULL) {
 			if ($this->fakeUrl === NULL) {
-				throw new Exception\InvalidArgumentException('When the $scriptPath is specified, the $url must be also specified.');
+				throw new \Kdyby\Console\Exception\InvalidArgumentException('When the $scriptPath is specified, the $url must be also specified.');
 			}
 		}
 	}
 
-	/**
-	 * @return \Nette\Http\Request
-	 */
 	public function createHttpRequest(): \Nette\Http\Request
 	{
 		if ($this->fakeUrl === NULL || PHP_SAPI !== Application::CLI_SAPI || !empty($_SERVER['REMOTE_HOST'])) {

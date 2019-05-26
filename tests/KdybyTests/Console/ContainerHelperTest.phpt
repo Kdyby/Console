@@ -19,17 +19,14 @@ require_once __DIR__ . '/../bootstrap.php';
 class ContainerHelperTest extends \Tester\TestCase
 {
 
-	/**
-	 * @return \Nette\DI\Container
-	 */
-	private function createContainer()
+	private function createContainer(): Container
 	{
 		return new Container([
 			'foo' => 'bar',
 		]);
 	}
 
-	public function testContainer()
+	public function testContainer(): void
 	{
 		$container = $this->createContainer();
 		$helper = new ContainerHelper($container);
@@ -38,7 +35,7 @@ class ContainerHelperTest extends \Tester\TestCase
 		Assert::same('container', $helper->getName());
 	}
 
-	public function testParameters()
+	public function testParameters(): void
 	{
 		$container = $this->createContainer();
 		$helper = new ContainerHelper($container);
@@ -50,4 +47,4 @@ class ContainerHelperTest extends \Tester\TestCase
 
 }
 
-(new ContainerHelperTest)->run();
+(new ContainerHelperTest())->run();

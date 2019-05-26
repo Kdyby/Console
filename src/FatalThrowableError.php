@@ -48,15 +48,16 @@ class FatalThrowableError extends \ErrorException
 		$this->setTrace($e->getTrace());
 	}
 
-	/**
-	 * @return \Throwable
-	 */
-	public function getCause()
+	public function getCause(): \Throwable
 	{
 		return $this->cause;
 	}
 
-	private function setTrace($trace)
+	/**
+	 * @param mixed $trace
+	 * @throws \ReflectionException
+	 */
+	private function setTrace($trace): void
 	{
 		$traceReflector = new ReflectionProperty(\Exception::class, 'trace');
 		$traceReflector->setAccessible(TRUE);

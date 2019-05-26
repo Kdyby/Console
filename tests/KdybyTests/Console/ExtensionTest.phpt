@@ -20,7 +20,7 @@ require_once __DIR__ . '/../bootstrap.php';
 class ExtensionTest extends \Tester\TestCase
 {
 
-	public function createConfigurator()
+	public function createConfigurator(): Configurator
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
@@ -28,8 +28,8 @@ class ExtensionTest extends \Tester\TestCase
 			'container' => [
 				'class' => 'SystemContainer_' . \md5((string) \mt_rand()),
 			],
-        ]);
-		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+		]);
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler): void {
 			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
 		};
 		$config->addConfig(__DIR__ . '/config/allow.neon');
@@ -38,7 +38,7 @@ class ExtensionTest extends \Tester\TestCase
 		return $config;
 	}
 
-	public function testFunctionality()
+	public function testFunctionality(): void
 	{
 		$config = $this->createConfigurator();
 		$config->addConfig(__DIR__ . '/config/commands.neon');
@@ -51,20 +51,17 @@ class ExtensionTest extends \Tester\TestCase
 		Assert::equal(1, count($app->all('test')));
 	}
 
-	public function testShortUrl()
+	public function testShortUrl(): void
 	{
 		$this->invokeTestOnConfig(__DIR__ . '/config/short-url.neon');
 	}
 
-	public function testUrlWithoutTld()
+	public function testUrlWithoutTld(): void
 	{
 		$this->invokeTestOnConfig(__DIR__ . '/config/url-without-tld.neon');
 	}
 
-	/**
-	 * @param string $file
-	 */
-	private function invokeTestOnConfig($file)
+	private function invokeTestOnConfig(string $file): void
 	{
 		$config = $this->createConfigurator();
 		$config->addConfig($file);

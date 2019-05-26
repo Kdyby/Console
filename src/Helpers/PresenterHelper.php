@@ -24,9 +24,6 @@ class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 	 */
 	private $app;
 
-	/**
-	 * @param \Nette\Application\Application $application
-	 */
 	public function __construct(Application $application)
 	{
 		$this->app = $application;
@@ -36,7 +33,7 @@ class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 	 * @return \Nette\Application\IPresenter|\Nette\Application\UI\Presenter
 	 * @throws \Kdyby\Console\Exception\InvalidStateException
 	 */
-	public function getPresenter()
+	public function getPresenter(): \Nette\Application\IPresenter
 	{
 		$presenter = $this->app->getPresenter();
 		if ($presenter === NULL) {
@@ -48,10 +45,8 @@ class PresenterHelper extends \Symfony\Component\Console\Helper\Helper
 
 	/**
 	 * Returns the canonical name of this helper.
-	 *
-	 * @return string The canonical name
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return 'presenter';
 	}

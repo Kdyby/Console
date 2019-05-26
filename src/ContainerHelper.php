@@ -24,28 +24,20 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 	 */
 	private $container;
 
-	/**
-	 * @param \Nette\DI\Container $dic
-	 */
 	public function __construct(DIContainer $dic)
 	{
 		$this->container = $dic;
 	}
 
-	/**
-	 * @param string $key
-	 * @return bool
-	 */
-	public function hasParameter($key)
+	public function hasParameter(string $key): bool
 	{
 		return isset($this->container->parameters[$key]);
 	}
 
 	/**
-	 * @param string $key
 	 * @return mixed
 	 */
-	public function getParameter($key)
+	public function getParameter(string $key)
 	{
 		if (!$this->hasParameter($key)) {
 			return NULL;
@@ -55,36 +47,30 @@ class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 	}
 
 	/**
-	 * @return array
+	 * @return mixed[]
 	 */
-	public function getParameters()
+	public function getParameters(): array
 	{
 		return $this->container->parameters;
 	}
 
-	/**
-	 * @return \Nette\DI\Container
-	 */
-	public function getContainer()
+	public function getContainer(): DIContainer
 	{
 		return $this->container;
 	}
 
 	/**
-	 * @param string $type
 	 * @return object
 	 */
-	public function getByType($type)
+	public function getByType(string $type)
 	{
 		return $this->container->getByType($type);
 	}
 
 	/**
 	 * Returns the canonical name of this helper.
-	 *
-	 * @return string The canonical name
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return 'container';
 	}
