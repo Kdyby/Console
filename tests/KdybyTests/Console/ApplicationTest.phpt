@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Console\Application.
  *
@@ -28,7 +30,7 @@ class ApplicationTest extends \Tester\TestCase
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(mt_rand())]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string) mt_rand())]]);
 		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
 			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
 		};
