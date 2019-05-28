@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -14,6 +16,7 @@ use Nette\Application\Application as NetteApplication;
 use Nette\DI\Container;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -26,9 +29,9 @@ class Application extends \Symfony\Component\Console\Application
 
 	use \Kdyby\StrictObjects\Scream;
 
-	const CLI_SAPI = 'cli';
-	const INPUT_ERROR_EXIT_CODE = 253;
-	const INVALID_APP_MODE_EXIT_CODE = 252;
+	public const CLI_SAPI = 'cli';
+	public const INPUT_ERROR_EXIT_CODE = 253;
+	public const INVALID_APP_MODE_EXIT_CODE = 252;
 
 	/**
 	 * @var string[]
@@ -44,11 +47,7 @@ class Application extends \Symfony\Component\Console\Application
 	 */
 	private $serviceLocator;
 
-	/**
-	 * @param string $name
-	 * @param string $version
-	 */
-	public function __construct($name = 'Nette Framework', $version = 'UNKNOWN')
+	public function __construct(string $name = 'Nette Framework', string $version = 'UNKNOWN')
 	{
 		if ( ! $version && \class_exists(\Nette\DI\Definitions\ServiceDefinition::class)) {
 			$version = \Kdyby\Console\DI\ConsoleExtension::NETTE_VERSION_30;
@@ -63,18 +62,21 @@ class Application extends \Symfony\Component\Console\Application
 		$this->setAutoExit(FALSE);
 	}
 
-	public function injectServiceLocator(Container $sl)
+	public function injectServiceLocator(Container $sl): void
 	{
 		$this->serviceLocator = $sl;
 	}
 
-	public function find($name)
+	/**
+	 * @param string $name
+	 */
+	public function find($name): Command
 	{
 		try {
 			return parent::find($name);
 
 		} catch (\InvalidArgumentException $e) {
-			throw new Exception\UnknownCommandException($e->getMessage(), $e->getCode(), $e);
+			throw new \Kdyby\Console\Exception\UnknownCommandException($e->getMessage(), $e->getCode(), $e);
 		}
 	}
 
@@ -84,7 +86,7 @@ class Application extends \Symfony\Component\Console\Application
 	 * @return int
 	 * @throws \Exception
 	 */
-	public function run(InputInterface $input = NULL, OutputInterface $output = NULL)
+	public function run(?InputInterface $input = NULL, ?OutputInterface $output = NULL): int
 	{
 		$input = $input ?: new ArgvInput();
 		$output = $output ?: new ConsoleOutput();
@@ -92,7 +94,7 @@ class Application extends \Symfony\Component\Console\Application
 		if ($input->hasParameterOption('--debug-mode')) {
 			if ($input->hasParameterOption(['--debug-mode=no', '--debug-mode=off', '--debug-mode=false', '--debug-mode=0'])) {
 				if ($this->serviceLocator->parameters['debugMode']) {
-					$this->renderException(new Exception\InvalidApplicationModeException(
+					$this->renderException(new \Kdyby\Console\Exception\InvalidApplicationModeException(
 						'The app is running in debug mode. You have to use Kdyby\Console\DI\BootstrapHelper in app/bootstrap.php, ' .
 						'Kdyby\Console cannot switch already running app to production mode.'
 					), $output);
@@ -102,7 +104,7 @@ class Application extends \Symfony\Component\Console\Application
 
 			} else {
 				if (!$this->serviceLocator->parameters['debugMode']) {
-					$this->renderException(new Exception\InvalidApplicationModeException(
+					$this->renderException(new \Kdyby\Console\Exception\InvalidApplicationModeException(
 						'The app is running in production mode. You have to use Kdyby\Console\DI\BootstrapHelper in app/bootstrap.php, ' .
 						'Kdyby\Console cannot switch already running app to debug mode.'
 					), $output);
@@ -119,9 +121,9 @@ class Application extends \Symfony\Component\Console\Application
 		try {
 			return parent::run($input, $output);
 
-		} catch (Exception\UnknownCommandException $e) {
+		} catch (\Kdyby\Console\Exception\UnknownCommandException $e) {
 			$this->renderException($e->getPrevious(), $output);
-			list($message) = explode("\n", $e->getMessage());
+			[$message] = explode("\n", $e->getMessage());
 			Debugger::log($message, Debugger::ERROR);
 
 			return self::INPUT_ERROR_EXIT_CODE;
@@ -154,7 +156,7 @@ class Application extends \Symfony\Component\Console\Application
 	 * @param \Exception|\Throwable $e
 	 * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
 	 */
-	public function handleException($e, OutputInterface $output = NULL)
+	public function handleException($e, ?OutputInterface $output = NULL): void
 	{
 		$output = $output ?: new ConsoleOutput();
 		if ($e instanceof \Exception) {
@@ -179,7 +181,7 @@ class Application extends \Symfony\Component\Console\Application
 		}
 	}
 
-	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
+	protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output): int
 	{
 		if ($this->serviceLocator) {
 			$this->serviceLocator->callInjects($command);
@@ -188,7 +190,7 @@ class Application extends \Symfony\Component\Console\Application
 		return parent::doRunCommand($command, $input, $output);
 	}
 
-	protected function getDefaultInputDefinition()
+	protected function getDefaultInputDefinition(): InputDefinition
 	{
 		$definition = parent::getDefaultInputDefinition();
 		$definition->addOption(new InputOption('--debug-mode', NULL, InputOption::VALUE_OPTIONAL, 'Run the application in debug mode?'));

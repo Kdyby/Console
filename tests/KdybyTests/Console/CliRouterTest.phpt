@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * Test: Kdyby\Console\CliRouter.
  *
@@ -26,11 +28,11 @@ require_once __DIR__ . '/../bootstrap.php';
 class CliRouterTest extends \Tester\TestCase
 {
 
-	public function testFunctionality()
+	public function testFunctionality(): void
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler) : void {
+		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler): void {
 			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
 		};
 		$config->addConfig(__DIR__ . '/config/short-url.neon');
@@ -43,7 +45,7 @@ class CliRouterTest extends \Tester\TestCase
 		/** @var \Nette\Application\Routers\RouteList $router */
 		Assert::true($router instanceof RouteList);
 
-		list($cliRouter) = iterator_to_array($router->getIterator());
+		[$cliRouter] = iterator_to_array($router->getIterator());
 		/** @var \Kdyby\Console\CliRouter $cliRouter */
 		Assert::true($cliRouter instanceof CliRouter);
 

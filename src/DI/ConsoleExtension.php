@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -38,11 +40,11 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 	/** @deprecated */
 	public const COMMAND_TAG = self::TAG_COMMAND;
 
-	public const TAG_HELPER         = 'kdyby.console.helper';
-	public const TAG_COMMAND        = 'kdyby.console.command';
-	public const NETTE_FRAMEWORK    = 'Nette Framework';
-	public const NETTE_VERSION_30   = '3.0';
-	public const NETTE_VERSION_24   = '2.4';
+	public const TAG_HELPER = 'kdyby.console.helper';
+	public const TAG_COMMAND = 'kdyby.console.command';
+	public const NETTE_FRAMEWORK = 'Nette Framework';
+	public const NETTE_VERSION_30 = '3.0';
+	public const NETTE_VERSION_24 = '2.4';
 
 	/**
 	 * @var mixed[]
@@ -71,7 +73,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->validateConfig($this->defaults);
@@ -110,7 +112,10 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	protected function loadHelperSet(array $config)
+	/**
+	 * @param mixed[] $config
+	 */
+	protected function loadHelperSet(array $config): void
 	{
 		$builder = $this->getContainerBuilder();
 
@@ -130,7 +135,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 
 		/** @var \Nette\DI\Statement[] $helpers */
-		$helpers = array_map(function ($class) {
+		$helpers = array_map(static function ($class) {
 			return new Statement($class);
 		}, $helperClasses);
 
@@ -149,7 +154,7 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$helperSet->addSetup('set', [new Statement(ContainerHelper::class), 'dic']);
 	}
 
-	public function beforeCompile()
+	public function beforeCompile(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$config = \Nette\DI\Config\Helpers::merge($this->getConfig(), $this->defaults);
@@ -181,7 +186,10 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		}
 	}
 
-	protected function beforeCompileHookApplication(array $config)
+	/**
+	 * @param mixed[] $config
+	 */
+	protected function beforeCompileHookApplication(array $config): void
 	{
 		if (!$config['application'] || !$this->isNetteApplicationPresent()) {
 			return; // ignore
@@ -212,16 +220,20 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		/** @var \Nette\DI\Definitions\ServiceDefinition $presenterFactory */
 		$presenterFactory = $builder->getDefinition($builder->getByType(IPresenterFactory::class) ?: 'nette.presenterFactory');
 		$presenterFactory->addSetup(
-				'if (method_exists($service, ?)) { $service->setMapping([? => ?]); }',
-				[
-					'setMapping',
-					'Kdyby',
-					'KdybyModule\*\*Presenter',
-				]
-			);
+			'if (method_exists($service, ?)) { $service->setMapping([? => ?]); }',
+			[
+				'setMapping',
+				'Kdyby',
+				'KdybyModule\*\*Presenter',
+			]
+		);
 	}
 
-	protected function beforeCompileFakeHttp(array $config)
+	/**
+	 * @param mixed[] $config
+	 * @throws \Nette\Utils\AssertionException
+	 */
+	protected function beforeCompileFakeHttp(array $config): void
 	{
 		if (!$config['fakeHttp'] || !$this->isNetteHttpPresent()) {
 			return; // ignore
@@ -235,32 +247,21 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 			$httpRequestFactory = $builder->getDefinition($builder->getByType(\Nette\Http\RequestFactory::class) ?: 'nette.httpRequestFactory');
 			$httpRequestFactory
 				->setFactory(\Kdyby\Console\HttpRequestFactory::class)
-				->addSetup('setFakeRequestUrl', [$config['url'], $config['urlScriptPath']])
-			;
+				->addSetup('setFakeRequestUrl', [$config['url'], $config['urlScriptPath']]);
 		}
 	}
 
-	/**
-	 * @param string $class
-	 * @return bool
-	 */
-	private static function hasConstructor($class)
+	private static function hasConstructor(string $class): bool
 	{
 		return class_exists($class) && method_exists($class, '__construct');
 	}
 
-	/**
-	 * @return bool
-	 */
-	private function isNetteApplicationPresent()
+	private function isNetteApplicationPresent(): bool
 	{
 		return (bool) $this->compiler->getExtensions(ApplicationExtension::class);
 	}
 
-	/**
-	 * @return bool
-	 */
-	private function isNetteHttpPresent()
+	private function isNetteHttpPresent(): bool
 	{
 		return interface_exists(IRequest::class);
 	}

@@ -1,4 +1,23 @@
 <?xml version="1.0"?>
 <ruleset name="Kdyby/Console">
 	<rule ref="vendor/kdyby/coding-standard/ruleset.xml"/>
+	<rule ref="Consistence.Exceptions.ExceptionDeclaration.NotEndingWithException">
+		<exclude-pattern>src/FatalThrowableError.php</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException">
+		<exclude-pattern>src/FatalThrowableError.php</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic">
+		<exclude-pattern>tests/KdybyTests/Console/ApplicationTest.phpt</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint">
+		<exclude-pattern>src/Application.php</exclude-pattern>
+		<exclude-pattern>src/StringOutput.php</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint">
+		<exclude-pattern>src/ContainerHelper</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable">
+		<exclude-pattern>src/DI/ConsoleExtension.php</exclude-pattern>
+	</rule>
 </ruleset>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 /**
  * This file is part of the Kdyby (http://www.kdyby.org)
  *
@@ -35,24 +37,20 @@ class CliRouter implements \Nette\Routing\Router
 	 */
 	private $output;
 
-	/**
-	 * @param \Symfony\Component\Console\Output\OutputInterface $output
-	 */
-	public function setOutput(OutputInterface $output)
+	public function setOutput(OutputInterface $output): void
 	{
 		$this->output = $output;
 	}
 
-	/**
-	 * @param \Symfony\Component\Console\Input\InputInterface $input
-	 */
-	public function setInput(InputInterface $input)
+	public function setInput(InputInterface $input): void
 	{
 		$this->input = $input;
 	}
 
 	/**
 	 * Maps HTTP request to a Request object.
+	 *
+	 * @return mixed[]
 	 */
 	public function match(\Nette\Http\IRequest $httpRequest): ?array
 	{
@@ -85,8 +83,10 @@ class CliRouter implements \Nette\Routing\Router
 
 	/**
 	 * Constructs absolute URL from Request object.
+	 *
+	 * @param mixed[] $params
 	 */
-	public function constructUrl(array $params, \Nette\Http\UrlScript $refUrl) : ?string
+	public function constructUrl(array $params, \Nette\Http\UrlScript $refUrl): ?string
 	{
 		return NULL;
 	}
