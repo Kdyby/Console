@@ -22,7 +22,7 @@
 		"nette/routing": "^3.0.0",
 		"tracy/tracy": "^2.5 || ^3.0",
 		"kdyby/strict-objects": "^2.0",
-		"symfony/console": "~2.3 || ^3.0 || ^4.0"
+		"symfony/console": "~2.3 || ^3.0 || < 4.3"
 	},
 	"require-dev": {
 		"nette/application": "^3.0",
@@ -30,7 +30,7 @@
 		"nette/caching": "^2.5 || ^3.0",
 		"nette/http": "^3.0",
 		"kdyby/events": "^3.2@dev",
-		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0",
+		"symfony/event-dispatcher": "~2.3 || ^3.0 || ^4.0 < 4.3",
 
 		"nette/tester": "^2.2",
 		"phpstan/phpstan-shim": "^0.11.5",
