@@ -209,13 +209,12 @@ class ConsoleExtension extends \Nette\DI\CompilerExtension
 		$routerServiceName = $builder->getByType(IRouter::class) ?: 'router';
 		$routerDefinition = $builder->getDefinition($routerServiceName);
 		$routerDefinition->setAutowired(FALSE);
-
+		$builder->addDefinition($this->prefix('originalRouter'), clone $routerDefinition);
 		$builder->removeDefinition($routerServiceName);
-
 		$builder->addDefinition($routerServiceName)
 			->setType(RouteList::class)
 			->addSetup('offsetSet', [NULL, $this->prefix('@router')])
-			->addSetup('offsetSet', [NULL, '@' . $routerDefinition->getName()]);
+			->addSetup('offsetSet', [NULL, $this->prefix('@originalRouter')]);
 
 		/** @var \Nette\DI\Definitions\ServiceDefinition $presenterFactory */
 		$presenterFactory = $builder->getDefinition($builder->getByType(IPresenterFactory::class) ?: 'nette.presenterFactory');
