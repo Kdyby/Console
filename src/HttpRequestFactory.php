@@ -37,10 +37,10 @@ class HttpRequestFactory extends \Nette\Http\RequestFactory
 		}
 	}
 
-	public function createHttpRequest(): \Nette\Http\Request
+	public function fromGlobals(): \Nette\Http\Request
 	{
 		if ($this->fakeUrl === NULL || PHP_SAPI !== Application::CLI_SAPI || !empty($_SERVER['REMOTE_HOST'])) {
-			return parent::createHttpRequest();
+			return parent::fromGlobals();
 		}
 
 		return new HttpRequest($this->fakeUrl, NULL, [], [], [], PHP_SAPI, PHP_SAPI, '127.0.0.1', NULL);
