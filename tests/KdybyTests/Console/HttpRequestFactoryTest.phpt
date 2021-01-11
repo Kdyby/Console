@@ -31,7 +31,7 @@ class HttpRequestFactoryTest extends \Tester\TestCase
 			'/path/'
 		);
 
-		$httpRequest = $requestFactory->createHttpRequest();
+		$httpRequest = $requestFactory->fromGlobals();
 		Assert::same(Application::CLI_SAPI, $httpRequest->getMethod());
 
 		$presenterFactory = new PresenterFactory();
