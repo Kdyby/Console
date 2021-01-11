@@ -73,11 +73,11 @@ class CliRouter implements \Nette\Routing\Router
 		}
 
 		return [
-			'action'    => 'default',
-			'method'    => \Kdyby\Console\Application::CLI_SAPI,
+			'action' => 'default',
+			'method' => \Kdyby\Console\Application::CLI_SAPI,
 			'presenter' => \KdybyModule\CliPresenter::NAME,
-			'input'     => $input,
-			'output'    => $output,
+			'input' => $input,
+			'output' => $output,
 		];
 	}
 
