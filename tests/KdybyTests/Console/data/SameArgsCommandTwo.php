@@ -11,7 +11,7 @@ use Tester\Assert;
 class SameArgsCommandTwo extends \Symfony\Component\Console\Command\Command
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	/**
 	 * @var \KdybyTests\Console\ArgCommand

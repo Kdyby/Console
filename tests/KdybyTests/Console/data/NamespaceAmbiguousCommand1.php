@@ -11,7 +11,7 @@ use Tester\Assert;
 class NamespaceAmbiguousCommand1 extends \Symfony\Component\Console\Command\Command
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	protected function configure()
 	{

@@ -19,7 +19,7 @@ use Nette\Http\IResponse;
 class CliResponse implements \Nette\Application\IResponse
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	/**
 	 * @var int

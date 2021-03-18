@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CliRouter implements \Nette\Routing\Router
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	/**
 	 * @var string[]

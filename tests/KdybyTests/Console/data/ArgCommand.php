@@ -13,7 +13,7 @@ use Tester\Assert;
 class ArgCommand extends \Symfony\Component\Console\Command\Command
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	protected function configure()
 	{

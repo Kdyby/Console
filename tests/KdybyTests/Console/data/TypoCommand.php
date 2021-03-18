@@ -11,7 +11,7 @@ use Tester\Assert;
 class TypoCommand extends \Symfony\Component\Console\Command\Command
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	protected function configure()
 	{
