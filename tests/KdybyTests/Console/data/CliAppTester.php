@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\StreamOutput;
 class CliAppTester
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	/**
 	 * @var \Symfony\Component\Console\Application
