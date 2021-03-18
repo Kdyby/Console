@@ -27,7 +27,7 @@ use Tracy\Dumper;
 class Application extends \Symfony\Component\Console\Application
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	public const CLI_SAPI = 'cli';
 	public const INPUT_ERROR_EXIT_CODE = 253;

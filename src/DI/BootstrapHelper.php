@@ -39,7 +39,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 class BootstrapHelper
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	/**
 	 * @param \Nette\Configurator $configurator
