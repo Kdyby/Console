@@ -17,7 +17,7 @@ use Nette\DI\Container as DIContainer;
 class ContainerHelper extends \Symfony\Component\Console\Helper\Helper
 {
 
-	use \Kdyby\StrictObjects\Scream;
+	use \Nette\SmartObject;
 
 	/**
 	 * @var \Nette\DI\Container
