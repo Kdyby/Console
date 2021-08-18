@@ -18,6 +18,12 @@ class NamespaceAmbiguousCommand2 extends \Symfony\Component\Console\Command\Comm
 		$this->setName('namespace2:ambiguous');
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return void
+	 * @throws \Tester\AssertException
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		Assert::fail("This command shouldn't have been executed.");
