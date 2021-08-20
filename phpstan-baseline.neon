@@ -1,0 +1,12 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Nette\\\\Application\\\\Application\\:\\:onError\\(\\)\\.$#"
+			count: 1
+			path: src/Application.php
+
+		-
+			message: "#^Callable callable\\(Nette\\\\Application\\\\Application, Throwable\\|null\\)\\: void invoked with 1 parameter, 2 required\\.$#"
+			count: 1
+			path: src/CliResponse.php
+

@@ -2,12 +2,6 @@
 
 declare(strict_types = 1);
 
-/**
- * Test: Kdyby\Console\Application.
- *
- * @testCase
- */
-
 namespace KdybyTests\Console;
 
 use Kdyby\Console\Application;
@@ -17,10 +11,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Tester\Assert;
-use Tester\Environment as TesterEnvironment;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+/**
+ * Test: Kdyby\Console\Application.
+ *
+ * @testCase
+ */
 class ApplicationTest extends \Tester\TestCase
 {
 
@@ -54,18 +52,18 @@ class ApplicationTest extends \Tester\TestCase
 		$app = $container->getByType(Application::class);
 		$tester = new ApplicationTester($app);
 
-		Assert::same(0, $tester->run(['list']));
+		Assert::same(0, $tester->run(['command' => 'list']));
 		Assert::same([
 			['command', ListCommand::class],
 			['terminate', ListCommand::class, 0],
 		], $listener->calls);
 	}
 
+	/**
+	 * @phpVersion >= 7.0
+	 */
 	public function testRenderThrowable(): void
 	{
-		if (PHP_VERSION_ID < 70000) {
-			TesterEnvironment::skip('Testing throwable is only relevant with PHP >= 7.0');
-		}
 
 		/** @var \Nette\DI\Container $container */
 		$container = $this->prepareConfigurator()->createContainer();
@@ -80,7 +78,7 @@ class ApplicationTest extends \Tester\TestCase
 		$app->add($command);
 
 		$tester = new ApplicationTester($app);
-		$exitCode = $tester->run(['fail']);
+		$exitCode = $tester->run(['command' => 'fail']);
 		Assert::same(42, $exitCode);
 
 		$output = $tester->getDisplay();

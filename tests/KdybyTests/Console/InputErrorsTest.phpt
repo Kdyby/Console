@@ -28,7 +28,7 @@ class InputErrorsTest extends \Tester\TestCase
 	{
 		$config = new Configurator();
 		$config->setTempDirectory(TEMP_DIR);
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string) mt_rand())]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5((string)mt_rand())]]);
 		$config->onCompile[] = static function ($config, \Nette\DI\Compiler $compiler): void {
 			$compiler->addExtension('console', new \Kdyby\Console\DI\ConsoleExtension());
 		};
@@ -58,7 +58,7 @@ class InputErrorsTest extends \Tester\TestCase
 		$app = $container->getByType(Application::class);
 		$tester = new ApplicationTester($app);
 
-		Assert::same(Application::INPUT_ERROR_EXIT_CODE, $tester->run(['tipo']));
+		Assert::same(Application::INPUT_ERROR_EXIT_CODE, $tester->run(['command' => 'tipo']));
 		Assert::same([], $listener->calls);
 	}
 
@@ -68,8 +68,8 @@ class InputErrorsTest extends \Tester\TestCase
 	public function getAmbiguousCommandData(): array
 	{
 		return [
-			[['ambiguous'], '%a%ambiguous%a%'],
-			[['name:ambi'], '%a%ambiguous%a%'],
+			[['command' => 'ambiguous'], '%a%ambiguous%a%'],
+			[['command' => 'name:ambi'], '%a%ambiguous%a%'],
 		];
 	}
 

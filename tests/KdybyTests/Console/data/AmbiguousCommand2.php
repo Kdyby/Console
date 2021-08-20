@@ -18,6 +18,12 @@ class AmbiguousCommand2 extends \Symfony\Component\Console\Command\Command
 		$this->setName('ambiguous2');
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return void
+	 * @throws \Tester\AssertException
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		Assert::fail("This command shouldn't have been executed.");

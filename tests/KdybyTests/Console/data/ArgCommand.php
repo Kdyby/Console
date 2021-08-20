@@ -24,6 +24,12 @@ class ArgCommand extends \Symfony\Component\Console\Command\Command
 			->addOption('no-value', 'x', InputOption::VALUE_NONE);
 	}
 
+	/**
+	 * @param InputInterface $input
+	 * @param OutputInterface $output
+	 * @return void
+	 * @throws \Tester\AssertException
+	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		Assert::fail("This command shouldn't have been executed.");
