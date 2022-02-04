@@ -24,8 +24,8 @@ class ConsoleListener implements \Kdyby\Events\Subscriber
 	public function getSubscribedEvents()
 	{
 		return [
-			ConsoleEvents::COMMAND,
-			ConsoleEvents::TERMINATE,
+			ConsoleEvents::COMMAND => 'command',
+			ConsoleEvents::TERMINATE => 'terminate',
 		];
 	}
 
