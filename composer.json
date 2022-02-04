@@ -29,7 +29,7 @@
 		"nette/bootstrap": "^3.0",
 		"nette/caching": "^3.0",
 		"nette/http": "^3.0",
-		"kdyby/events": "dev-patch-1 as 3.2.99",
+		"kdyby/events": "^5.0",
 		"symfony/event-dispatcher": "~2.3 || ^3.0 || < 4.5",
 
 		"nette/tester": "^2.2",
@@ -58,15 +58,15 @@
 			"tests/KdybyTests/"
 		]
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/dakorpar/Events.git"
-		}
-	],
 	"extra": {
 		"branch-alias": {
 			"dev-master": "2.8-dev"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"typo3/class-alias-loader": true
 		}
 	}
 }
